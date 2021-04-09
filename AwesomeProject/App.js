@@ -41,6 +41,7 @@ function LogIn({ navigation }) {
     Username: "Fruit",
     Password: "Apple"
   });*/
+  //Test Comment
   const samePassword = snapshot => {
     changefailed(true);
     changeTextPassword("");
