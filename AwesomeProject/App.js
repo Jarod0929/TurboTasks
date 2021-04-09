@@ -31,6 +31,17 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import database from '@react-native-firebase/database';
 
+const TopBar = ({children}) => {
+
+  return(
+    <View style = {styles.container}>
+      <View style = {styles.topBarCon}>
+
+      </View>
+      {children}
+    </View>
+  )
+};
 
 function LogIn({ navigation }) {
   const [textUserName, changeTextUserName] = useState('');//For the Username Field
@@ -171,11 +182,24 @@ function CreateAccount({ navigation }) {
 
 function ProjectList ({ navigation }) {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Hello World</Text>
-    </View>
+    <TopBar>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Hello World</Text>
+      </View>
+    </TopBar>
   );
 }
+
+function Project ({ navigation }) {
+  return (
+    <TopBar>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Hello World</Text>
+      </View>
+    </TopBar>
+  );
+}
+
 
 const Drawer = createDrawerNavigator();
 
@@ -205,5 +229,13 @@ const styles = StyleSheet.create({
   textInputLogIn: {
     marginTop: 50,
     marginBottom: 50,
+  },
+  topBarCon: {
+    position: "absolute",
+    top:0,
+    right:0,
+    height: "15%",
+    width: "100%",
+    backgroundColor: "blue",
   }
 });
