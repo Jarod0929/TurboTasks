@@ -50,7 +50,8 @@ function LogIn({ navigation }) {
   /*const FirstUsers = database().ref("/Database/Users").push(); //First Account and is structure of how it should look
   FirstUsers.set({ 
     Username: "Fruit",
-    Password: "Apple"
+    Password: "Apple",
+    Projects: [],
   });*/
   //This should work as intended, only one press is needed
   const samePassword = snapshot => {
@@ -113,30 +114,30 @@ function CreateAccount({ navigation }) {
   const [textUserName, changeTextUserName] = useState('');//For the Username Field
   const [textPassword, changeTextPassword] = useState('');//For the Password Field
   const [failed, changefailed] = useState(false);//Only sets to true when they failed once on account and sets feedback message
-  const [succeed, changeSucceed] = useState(false);//Sets to true when succeed after passing by all names
 
   const anyPreviousUsernames = snapshot => {
-    changeSucceed(false);
-    changefailed(true);
-    database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).off("child_added", anyPreviousUsernames); 
+    if(snapshot.val() !== null){
+      changefailed(true);
+    }
+    else{
+      changefailed(false);
+      database().ref("/Database/Users").push({
+        Username: textUserName,
+        Password: textPassword,
+        Reference: {
+          theme: "light",
+        },
+      });
+      navigation.navigate("LogIn");
+    }
+    database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).off("value", anyPreviousUsernames); 
   };
   
   const createNewAccount = () => {
     //TODO: Find out way so Users can not spam and by pass multiple Usernames
     //Tried: Async and Promises shallowly
     //TODO: Also for some Reason you have to press the button twice
-    changeSucceed(true);
-    database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).on("child_added", anyPreviousUsernames);//Only works with on, not once
-
-    if(succeed){
-      changeSucceed(false);
-      changefailed(false);
-      database().ref("/Database/Users").push({
-        Username: textUserName,
-        Password: textPassword
-      });
-      navigation.navigate("LogIn");
-    }
+    database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).on("value", anyPreviousUsernames);
   };
   //TODO: Create Better UI
   return (
