@@ -211,16 +211,14 @@ function ProjectCreation ({ navigation }) {
         tasks: ["PlaceHolder"]
       });
       changeProjectName("");
-      addUsersList([]);
+      addUsersList(["placeHolder"]);
   };
   const addUsersToList = () =>{
-    let list = ["placeHolder"];
     if(invUsers != ""){
-      if(invUsersList[0] === "placeHolder" || list[0] === "placeHolder"){
+      if(invUsersList[0] === "placeHolder" ){
         invUsersList.pop();
-        list.pop();
       }
-      list = invUsersList.slice();
+      let list = invUsersList.slice();
       list.push(invUsers);
       addUsersList(list);
     }
