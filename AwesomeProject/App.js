@@ -206,6 +206,7 @@ function ProjectCreation ({ navigation }) {
   const [invUsersList, addUsersList] = useState(["placeHolder"]);//For the inviteUsers button
 
   const createNewProject = () => {
+    if(projectName != ""){
       database().ref("/Database/Projects").push({
         title: projectName,
         users: invUsersList,
@@ -213,6 +214,7 @@ function ProjectCreation ({ navigation }) {
       });
       changeProjectName("");
       addUsersList(["placeHolder"]);
+    }
   };
   const addUsersToList = () =>{
     if(invUsers != ""){
