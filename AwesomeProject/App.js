@@ -200,27 +200,57 @@ function ProjectList ({ navigation }) {
 }
 function ProjectCreation ({ navigation }) { 
   //Insert the Project Code here
+  const [projectName, changeProjectName] = useState('');//For the projectName field
+  const [invUsers, changeInvUsers] = useState('');//For the inviteUsers field
+  const [invUsersList, addUsersList] = useState(["placeHolder"]);//For the inviteUsers button
 
+  const createNewProject = () => {
+      database().ref("/Database/Projects").push({
+        title: projectName,
+        users: invUsersList,
+        tasks: ["PlaceHolder"]
+      });
+      changeProjectName("");
+      addUsersList([]);
+  };
+  const addUsersToList = () =>{
+    let list = ["placeHolder"];
+    if(invUsers != ""){
+      if(invUsersList[0] === "placeHolder" || list[0] === "placeHolder"){
+        invUsersList.pop();
+        list.pop();
+      }
+      list = invUsersList.slice();
+      list.push(invUsers);
+      addUsersList(list);
+    }
+    changeInvUsers("");
+  };
+  
   return (// TopBar is supposed to handle the Drawer and don't forget about it
     <TopBar> 
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <TextInput
         style = {styles.textInputLogIn}
         placeholder = "Project Name"
+        onChangeText = {text => changeProjectName(text)}
+        value={projectName}
       />
       <Text>Invite Users</Text>
       <TextInput
         style = {styles.textInputLogIn}
         placeholder = "Username"
+        onChangeText = {text => changeInvUsers(text)}
+        value={invUsers}
       />
-      <TouchableHighlight>
+      <TouchableHighlight onPress = {addUsersToList}>
         <View
           style = {styles.buttonLogIn}
         >
           <Text>Invite User</Text>
         </View>
       </TouchableHighlight>
-      <TouchableHighlight>
+      <TouchableHighlight onPress = {createNewProject}>
         <View
           style = {styles.buttonLogIn}
         >
