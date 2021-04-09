@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
   buttonLogIn: {
     alignItems: "center",
     backgroundColor: "red",
-    marginTop: 50,
+    marginTop: 51,
     marginBottom: 50,
   },
   textInputLogIn: {
