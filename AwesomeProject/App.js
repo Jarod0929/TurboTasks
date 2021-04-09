@@ -185,13 +185,85 @@ function ProjectList ({ navigation }) {
   return (// TopBar is supposed to handle the Drawer and don't forget about it
     <TopBar>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Hello World</Text>
+        <TouchableHighlight style={{width: 100, height: 100, justifyContent: 'center', alignItems: 'center',
+         padding: 10, borderRadius: 100, backgroundColor: "blue", left: 120, top: 270, zIndex: 1}}
+         onPress={() => {
+            navigation.navigate("ProjectCreation");
+          }}
+         >
+         <View style={{zIndex: 0}}>
+          <Text style={{color: "white", fontSize: 50}}>+</Text>
+         </View> 
+        </TouchableHighlight>
+      </View>
+    </TopBar>
+  );
+}
+function ProjectCreation ({ navigation }) { 
+  //Insert the Project Code here
+  const [projectName, changeProjectName] = useState('');//For the projectName field
+  const [invUsers, changeInvUsers] = useState('');//For the inviteUsers field
+  const [invUsersList, addUsersList] = useState(["placeHolder"]);//For the inviteUsers button
+
+  const createNewProject = () => {
+      database().ref("/Database/Projects").push({
+        title: projectName,
+        users: invUsersList,
+        tasks: ["PlaceHolder"]
+      });
+      changeProjectName("");
+      addUsersList(["placeHolder"]);
+  };
+  const addUsersToList = () =>{
+    if(invUsers != ""){
+      if(invUsersList[0] === "placeHolder" ){
+        invUsersList.pop();
+      }
+      let list = invUsersList.slice();
+      list.push(invUsers);
+      addUsersList(list);
+    }
+    changeInvUsers("");
+  };
+  
+  return (// TopBar is supposed to handle the Drawer and don't forget about it
+    <TopBar> 
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <TextInput
+        style = {styles.textInputLogIn}
+        placeholder = "Project Name"
+        onChangeText = {text => changeProjectName(text)}
+        value={projectName}
+      />
+      <Text>Invite Users</Text>
+      <TextInput
+        style = {styles.textInputLogIn}
+        placeholder = "Username"
+        onChangeText = {text => changeInvUsers(text)}
+        value={invUsers}
+      />
+      <TouchableHighlight onPress = {addUsersToList}>
+        <View
+          style = {styles.buttonLogIn}
+        >
+          <Text>Invite User</Text>
+        </View>
+      </TouchableHighlight>
+      <TouchableHighlight onPress = {createNewProject}>
+        <View
+          style = {styles.buttonLogIn}
+        >
+          <Text>Creat Project</Text>
+        </View>
+      </TouchableHighlight>
       </View>
     </TopBar>
   );
 }
 
-function Project ({ navigation }) { //Insert the Project Code here
+function Project ({ navigation }) { 
+  //Insert the Project Code here
+
   return (// TopBar is supposed to handle the Drawer and don't forget about it
     <TopBar> 
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -212,6 +284,7 @@ export default function App() {
         <Drawer.Screen name="CreateAccount" component={CreateAccount} />
         <Drawer.Screen name="ProjectList" component={ProjectList}/>
         <Drawer.Screen name="Project" component={ProjectList}/>
+        <Drawer.Screen name="ProjectCreation" component={ProjectCreation}/>
       </Drawer.Navigator>
     </NavigationContainer>
   );
