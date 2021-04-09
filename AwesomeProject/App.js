@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
   },
   buttonLogIn: {
     alignItems: "center",
-    backgroundColor: "red",
+    backgroundColor: "orange",
     marginTop: 50,
     marginBottom: 50,
   },
