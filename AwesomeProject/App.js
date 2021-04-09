@@ -31,8 +31,8 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import database from '@react-native-firebase/database';
 
-const TopBar = ({children}) => {
-
+const TopBar = ({children}) => {//This creates the Top bar to the 
+  //TODO Create TopBar with Drawer
   return(
     <View style = {styles.container}>
       <View style = {styles.topBarCon}>
@@ -52,7 +52,7 @@ function LogIn({ navigation }) {
     Username: "Fruit",
     Password: "Apple"
   });*/
-  //Test Comment
+  //This should work as intended, only one press is needed
   const samePassword = snapshot => {
     changefailed(true);
     changeTextPassword("");
@@ -67,7 +67,7 @@ function LogIn({ navigation }) {
   const isAccount = () => { //Checks if there is an account
     database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).on("child_added", samePassword);//Only works with on, not once
   };
-
+  //TODO: Create better UI
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <TouchableHighlight
@@ -138,7 +138,7 @@ function CreateAccount({ navigation }) {
       navigation.navigate("LogIn");
     }
   };
-
+  //TODO: Create Better UI
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <TouchableHighlight
@@ -171,7 +171,7 @@ function CreateAccount({ navigation }) {
           <Text>Create Account</Text>
         </View>
       </TouchableHighlight>
-      {failed &&
+      {failed && //TODO: Create new better message
         <View>
           <Text>You Have Failed</Text>
         </View>
@@ -181,7 +181,7 @@ function CreateAccount({ navigation }) {
 }
 
 function ProjectList ({ navigation }) {
-  return (
+  return (// TopBar is supposed to handle the Drawer and don't forget about it
     <TopBar>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>Hello World</Text>
@@ -190,9 +190,9 @@ function ProjectList ({ navigation }) {
   );
 }
 
-function Project ({ navigation }) {
-  return (
-    <TopBar>
+function Project ({ navigation }) { //Insert the Project Code here
+  return (// TopBar is supposed to handle the Drawer and don't forget about it
+    <TopBar> 
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>Hello World</Text>
       </View>
@@ -210,6 +210,7 @@ export default function App() {
         <Drawer.Screen name="LogIn" component={LogIn} />
         <Drawer.Screen name="CreateAccount" component={CreateAccount} />
         <Drawer.Screen name="ProjectList" component={ProjectList}/>
+        <Drawer.Screen name="Project" component={ProjectList}/>
       </Drawer.Navigator>
     </NavigationContainer>
   );
