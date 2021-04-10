@@ -17,6 +17,7 @@ import {
   View,
   TouchableHighlight,
   TextInput,
+  FlatList,
 } from 'react-native';
 
 import {
@@ -52,7 +53,7 @@ function LogIn({ navigation }) {
   FirstUsers.set({ 
     Username: "Fruit",
     Password: "Apple",
-    Projects: [],
+    Projects: [""],
   });*/
   //This should work as intended, only one press is needed
   const samePassword = snapshot => {
@@ -61,7 +62,7 @@ function LogIn({ navigation }) {
     if(snapshot.val().Password === textPassword){
       changeTextUserName("");
       changefailed(false);
-      navigation.navigate("ProjectList");
+      navigation.navigate("ProjectList", {user: snapshot.val()});
     }
     database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).off("child_added", samePassword); 
   };
@@ -182,24 +183,70 @@ function CreateAccount({ navigation }) {
   );
 }
 
-function ProjectList ({ navigation }) {
+function ProjectList ({ route, navigation }) {
+  const [user, changeUser] = useState(route.params.user);//For the projectName field
+  const [projects, changeProjects] = useState(user.projects);
+  const [projectList, changeProjectsList] = useState([]);
+
+  const handleProject = snapshot => {
+    let project = snapshot.val();
+    let list = projectList.slice();
+    list.push(project);
+    changeProjectsList(list);
+  }
+  
+  if(projects.length > 0){
+    let project = database().ref("/Database/Projects/-" + projects[0]);
+    project.once("value", handleProject);
+    projects.shift();
+  }
+
   return (// TopBar is supposed to handle the Drawer and don't forget about it
     <TopBar>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <TouchableHighlight style={{width: 100, height: 100, justifyContent: 'center', alignItems: 'center',
-         padding: 10, borderRadius: 100, backgroundColor: "blue", left: 120, top: 270, zIndex: 1}}
-         onPress={() => {
-            navigation.navigate("ProjectCreation");
-          }}
-         >
-         <View style={{zIndex: 0}}>
+      <TouchableHighlight 
+        style={{width: "15%", height: "15%", padding: 10, 
+                backgroundColor: "blue", left: "85%", top: 0}}
+        onPress={() => {
+          navigation.navigate("ProjectCreation");
+        }}
+      >
+        <View>
           <Text style={{color: "white", fontSize: 50}}>+</Text>
-         </View> 
-        </TouchableHighlight>
+        </View> 
+      </TouchableHighlight>
+      <View style={{ top: "0%", height: "85%", backgroundColor: "white", flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <FlatList
+          style={{width: "100%"}}
+          data={projectList}
+          renderItem={({item}) => 
+            <ProjectPanel
+              project = {item}
+            />
+          }
+          keyExtractor={item => 0}
+        />
       </View>
     </TopBar>
   );
+  
 }
+
+const ProjectPanel = (props) => {
+  console.log(props.project);
+  return (
+    <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
+      <Text style={{fontSize: 20}}>
+        {props.project.title}
+      </Text>
+      <Text>{props.project.tasks.length} Task(s)</Text>
+      <Text>Due Date: (would go here) </Text>
+      <Text>{props.project.users.length} User(s)</Text>
+    </View>
+
+  );
+}
+
+
 function ProjectCreation ({ navigation }) { 
   //Insert the Project Code here
   const [projectName, changeProjectName] = useState('');//For the projectName field
