@@ -63,13 +63,8 @@ function LogIn({ navigation }) {
     if(snapshot.val().Password === textPassword){
       changeTextUserName("");
       changefailed(false);
-
       navigation.navigate("ProjectList", {user: snapshot.val().ID});
       GLOBALUSERID=snapshot.val().ID;
-      
-      
-
-      
 
     }
     database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).off("child_added", samePassword); 
