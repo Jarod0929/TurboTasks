@@ -30,6 +30,7 @@ import {
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import database from '@react-native-firebase/database';
+import DatePicker from 'react-native-date-picker'
 
 const TopBar = ({children}) => {//This creates the Top bar to the 
   //TODO Create TopBar with Drawer
@@ -204,17 +205,20 @@ function ProjectCreation ({ navigation }) {
   const [projectName, changeProjectName] = useState('');//For the projectName field
   const [invUsers, changeInvUsers] = useState('');//For the inviteUsers field
   const [invUsersList, addUsersList] = useState(["placeHolder"]);//For the inviteUsers button
+  const [date, setDate] = useState(new Date())
 
   const createNewProject = () => {
     if(projectName != ""){
       database().ref("/Database/Projects").push({
         title: projectName,
         users: invUsersList,
-        tasks: ["PlaceHolder"]
+        tasks: ["PlaceHolder"],
+        dueDate: date.getMonth() + " " + date.getDate() + " " + date.getFullYear()
       });
       changeProjectName("");
       addUsersList(["placeHolder"]);
     }
+    console.log(date.getMonth() + " " + date.getDate() + " " + date.getFullYear());
   };
   const addUsersToList = () =>{
     if(invUsers != ""){
@@ -237,6 +241,11 @@ function ProjectCreation ({ navigation }) {
         onChangeText = {text => changeProjectName(text)}
         value={projectName}
       />
+      <DatePicker
+      date={date}
+      mode = "date"
+      onDateChange={setDate}
+    />
       <Text>Invite Users</Text>
       <TextInput
         style = {styles.textInputLogIn}
@@ -281,7 +290,7 @@ const Drawer = createDrawerNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="LogIn">
+      <Drawer.Navigator initialRouteName="ProjectCreation">
         <Drawer.Screen name="LogIn" component={LogIn} />
         <Drawer.Screen name="CreateAccount" component={CreateAccount} />
         <Drawer.Screen name="ProjectList" component={ProjectList}/>
