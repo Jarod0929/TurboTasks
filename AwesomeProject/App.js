@@ -219,7 +219,6 @@ function ProjectCreation ({ navigation }) {
       changeProjectName("");
       addUsersList(["placeHolder"]);
     }
-    console.log(date.getMonth() + " " + date.getDate() + " " + date.getFullYear());
   };
   const addUsersToList = () =>{
     if(invUsers != ""){
