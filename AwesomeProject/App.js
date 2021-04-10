@@ -33,6 +33,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import database from '@react-native-firebase/database';
 import DatePicker from 'react-native-date-picker'
 
+
 const TopBar = ({children}) => {//This creates the Top bar to the 
   //TODO Create TopBar with Drawer
   return(
@@ -49,12 +50,12 @@ function LogIn({ navigation }) {
   const [textUserName, changeTextUserName] = useState('');//For the Username Field
   const [textPassword, changeTextPassword] = useState('');//For the Password Field
   const [failed, changefailed] = useState(false);//Only sets to true when they failed once on account and sets feedback message
-  /*const FirstUsers = database().ref("/Database/Users").push(); //First Account and is structure of how it should look
-  FirstUsers.set({ 
-    Username: "Fruit",
-    Password: "Apple",
-    Projects: [""],
-  });*/
+  //const FirstUsers = database().ref("/Database/Users").push(); //First Account and is structure of how it should look
+  //FirstUsers.set({ 
+  //  Username: "Fruit",
+  //  Password: "Apple",
+  //  Projects: [""],
+  //});
   //This should work as intended, only one press is needed
   const samePassword = snapshot => {
     changefailed(true);
