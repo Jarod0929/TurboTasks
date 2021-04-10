@@ -208,12 +208,13 @@ function ProjectCreation ({ navigation }) {
   const [date, setDate] = useState(new Date())
 
   const createNewProject = () => {
+    let month = date.getMonth() + 1;
     if(projectName != ""){
       database().ref("/Database/Projects").push({
         title: projectName,
         users: invUsersList,
         tasks: ["PlaceHolder"],
-        dueDate: date.getMonth() + " " + date.getDate() + " " + date.getFullYear()
+        dueDate: month + " " + date.getDate() + " " + date.getFullYear()
       });
       changeProjectName("");
       addUsersList(["placeHolder"]);
