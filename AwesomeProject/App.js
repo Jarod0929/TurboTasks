@@ -33,6 +33,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import database from '@react-native-firebase/database';
 import DatePicker from 'react-native-date-picker'
 
+let GLOBALUSERID;
 const TopBar = ({children}) => {//This creates the Top bar to the 
   //TODO Create TopBar with Drawer
   return(
@@ -64,6 +65,11 @@ function LogIn({ navigation }) {
       changefailed(false);
 
       navigation.navigate("ProjectList", {user: snapshot.val().ID});
+      GLOBALUSERID=snapshot.val().ID;
+      
+      
+
+      
 
     }
     database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).off("child_added", samePassword); 
@@ -382,10 +388,37 @@ export default function App() {
         <Drawer.Screen name="ProjectList" component={ProjectList}/>
         <Drawer.Screen name="Project" component={ProjectList}/>
         <Drawer.Screen name="ProjectCreation" component={ProjectCreation}/>
+        <Drawer.Screen name = "Settings⚙️" component={Settings}/>
       </Drawer.Navigator>
     </NavigationContainer>
   </React.StrictMode>
 
+  );
+}
+
+function Settings(){
+  const [username, changeUsername] = useState(null);
+  const [password,changePassword] = useState(null);
+  const[prefrence,changePrefrence]=useState(null);
+
+  const handleUser = snapshot => {
+    changeUsername(snapshot.val().Username);
+    
+    changePassword(snapshot.val().Password);
+    
+    
+  }
+
+  if(username == null){
+    database().ref("/Database/Users/" + GLOBALUSERID).once("value", handleUser);
+  }
+  return(
+  <TopBar>
+  <View>
+    <Text>Hello {username}</Text>
+    <Text>Your Password is: {password}</Text>
+  </View>
+  </TopBar>
   );
 }
 
