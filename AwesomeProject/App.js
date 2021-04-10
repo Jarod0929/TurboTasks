@@ -17,6 +17,7 @@ import {
   View,
   TouchableHighlight,
   TextInput,
+  FlatList,
 } from 'react-native';
 
 import {
@@ -30,6 +31,7 @@ import {
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import database from '@react-native-firebase/database';
+import DatePicker from 'react-native-date-picker'
 
 const TopBar = ({children}) => {//This creates the Top bar to the 
   //TODO Create TopBar with Drawer
@@ -51,7 +53,7 @@ function LogIn({ navigation }) {
   FirstUsers.set({ 
     Username: "Fruit",
     Password: "Apple",
-    Projects: [],
+    Projects: [""],
   });*/
   //This should work as intended, only one press is needed
   const samePassword = snapshot => {
@@ -60,8 +62,9 @@ function LogIn({ navigation }) {
     if(snapshot.val().Password === textPassword){
       changeTextUserName("");
       changefailed(false);
-      navigation.navigate("ProjectList");
-      console.log(snapshot.val());
+
+      navigation.navigate("ProjectList", {user: snapshot.val().ID});
+
     }
     database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).off("child_added", samePassword); 
   };
@@ -184,17 +187,145 @@ function CreateAccount({ navigation }) {
   );
 }
 
-function ProjectList ({ navigation }) {
+function ProjectList ({ route, navigation }) {
+  const [user, changeUser] = useState(route.params.user);//For the projectName field
+  const [projects, changeProjects] = useState(user.projects);
+  const [projectList, changeProjectsList] = useState([]);
+
+  const handleProject = snapshot => {
+    let project = snapshot.val();
+    let list = projectList.slice();
+    list.push(project);
+    changeProjectsList(list);
+  }
+  
+  if(projects.length > 0){
+    let project = database().ref("/Database/Projects/-" + projects[0]);
+    project.once("value", handleProject);
+    projects.shift();
+  }
+
   return (// TopBar is supposed to handle the Drawer and don't forget about it
     <TopBar>
+      <TouchableHighlight 
+        style={{width: "15%", height: "15%", padding: 10, 
+                backgroundColor: "blue", left: "85%", top: 0}}
+        onPress={() => {
+          navigation.navigate("ProjectCreation");
+        }}
+      >
+        <View>
+          <Text style={{color: "white", fontSize: 50}}>+</Text>
+        </View> 
+      </TouchableHighlight>
+      <View style={{ top: "0%", height: "85%", backgroundColor: "white", flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <FlatList
+          style={{width: "100%"}}
+          data={projectList}
+          renderItem={({item}) => 
+            <ProjectPanel
+              project = {item}
+            />
+          }
+          keyExtractor={item => 0}
+        />
+      </View>
+    </TopBar>
+  );
+  
+}
+
+const ProjectPanel = (props) => {
+  console.log(props.project);
+  return (
+    <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
+      <Text style={{fontSize: 20}}>
+        {props.project.title}
+      </Text>
+      <Text>{props.project.tasks.length} Task(s)</Text>
+      <Text>Due Date: (would go here) </Text>
+      <Text>{props.project.users.length} User(s)</Text>
+    </View>
+
+  );
+}
+
+
+function ProjectCreation ({ navigation }) { 
+  //Insert the Project Code here
+  const [projectName, changeProjectName] = useState('');//For the projectName field
+  const [invUsers, changeInvUsers] = useState('');//For the inviteUsers field
+  const [invUsersList, addUsersList] = useState(["placeHolder"]);//For the inviteUsers button
+  const [date, setDate] = useState(new Date())
+
+  const createNewProject = () => {
+    let month = date.getMonth() + 1;
+    if(projectName != ""){
+      database().ref("/Database/Projects").push({
+        title: projectName,
+        users: invUsersList,
+        tasks: ["PlaceHolder"],
+        dueDate: month + " " + date.getDate() + " " + date.getFullYear()
+      });
+      changeProjectName("");
+      addUsersList(["placeHolder"]);
+    }
+  };
+  const addUsersToList = () =>{
+    if(invUsers != ""){
+      if(invUsersList[0] === "placeHolder" ){
+        invUsersList.pop();
+      }
+      let list = invUsersList.slice();
+      list.push(invUsers);
+      addUsersList(list);
+    }
+    changeInvUsers("");
+  };
+  
+  return (// TopBar is supposed to handle the Drawer and don't forget about it
+    <TopBar> 
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Hello World</Text>
+      <TextInput
+        style = {styles.textInputLogIn}
+        placeholder = "Project Name"
+        onChangeText = {text => changeProjectName(text)}
+        value={projectName}
+      />
+      <DatePicker
+      date={date}
+      mode = "date"
+      onDateChange={setDate}
+    />
+      <Text>Invite Users</Text>
+      <TextInput
+        style = {styles.textInputLogIn}
+        placeholder = "Username"
+        onChangeText = {text => changeInvUsers(text)}
+        value={invUsers}
+      />
+      <TouchableHighlight onPress = {addUsersToList}>
+        <View
+          style = {styles.buttonLogIn}
+        >
+          <Text>Invite User</Text>
+        </View>
+      </TouchableHighlight>
+      <TouchableHighlight onPress = {createNewProject}>
+        <View
+          style = {styles.buttonLogIn}
+        >
+          <Text>Creat Project</Text>
+        </View>
+      </TouchableHighlight>
       </View>
     </TopBar>
   );
 }
 
-function Project ({ navigation }) { //Insert the Project Code here
+function Project ({ navigation }) { 
+  //Insert the Project Code here
+
   return (// TopBar is supposed to handle the Drawer and don't forget about it
     <TopBar> 
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -215,6 +346,7 @@ export default function App() {
         <Drawer.Screen name="CreateAccount" component={CreateAccount} />
         <Drawer.Screen name="ProjectList" component={ProjectList}/>
         <Drawer.Screen name="Project" component={ProjectList}/>
+        <Drawer.Screen name="ProjectCreation" component={ProjectCreation}/>
       </Drawer.Navigator>
     </NavigationContainer>
   );
