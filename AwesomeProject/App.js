@@ -62,7 +62,9 @@ function LogIn({ navigation }) {
     if(snapshot.val().Password === textPassword){
       changeTextUserName("");
       changefailed(false);
-      navigation.navigate("ProjectList", {user: snapshot.val()});
+
+      navigation.navigate("ProjectList", {user: snapshot.val().ID});
+
     }
     database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).off("child_added", samePassword); 
   };
@@ -123,13 +125,15 @@ function CreateAccount({ navigation }) {
     }
     else{
       changefailed(false);
-      database().ref("/Database/Users").push({
+      const newData = database().ref("/Database/Users").push({
         Username: textUserName,
         Password: textPassword,
         Reference: {
           theme: "light",
         },
       });
+      const newDataKey = newData.key;
+      newData.update({ID: newDataKey});
       navigation.navigate("LogIn");
     }
     database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).off("value", anyPreviousUsernames); 
