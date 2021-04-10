@@ -212,6 +212,8 @@ function ProjectList ({ route, navigation }) {
   if(projects.length > projectList.length && user != null){
     database().ref("/Database/Projects/" + projects[projectList.length]).once("value", handleProject);
   }
+  
+
 
   if(projectList.length == 0){
     return (// TopBar is supposed to handle the Drawer and don't forget about it
@@ -220,7 +222,7 @@ function ProjectList ({ route, navigation }) {
         style={{width: "15%", height: "15%", padding: 10, 
                 backgroundColor: "blue", left: "85%", top: 0}}
         onPress={() => {
-          navigation.navigate("ProjectCreation");
+          navigation.navigate("ProjectCreation", {user: route.params.user});
         }}
       >
         <View>
@@ -240,8 +242,8 @@ function ProjectList ({ route, navigation }) {
           style={{width: "15%", height: "15%", padding: 10, 
                   backgroundColor: "blue", left: "85%", top: 0}}
           onPress={() => {
-            navigation.navigate("ProjectCreation");
-          }}
+          navigation.navigate("ProjectCreation", {user: route.params.user});
+        }}
         >
           <View>
             <Text style={{color: "white", fontSize: 50}}>+</Text>
@@ -285,31 +287,49 @@ const ProjectPanel = (props) => {
 }
 
 
-function ProjectCreation ({ navigation }) { 
+function ProjectCreation ({route, navigation }) { 
   //Insert the Project Code here
+  const {user} = route.params;
   const [projectName, changeProjectName] = useState('');//For the projectName field
   const [invUsers, changeInvUsers] = useState('');//For the inviteUsers field
-  const [invUsersList, addUsersList] = useState(["placeHolder"]);//For the inviteUsers button
+  const [invUsersList, addUsersList] = useState([user]);//For the inviteUsers button
   const [date, setDate] = useState(new Date())
 
+  const addProjectIds = (userId, projectId) => {
+    database().ref(`/Database/Users/${userId}/projects`).on('value', snap => {
+      let temp = ["-MXwNjw-5ezU6gGEORTN", "-MXwgMuybzZ9gMGYcBw0"];
+      //temp.push(projectId);
+      database().ref(`/Database/Users/${userId}`).set({
+         projects: temp,
+      });
+    });
+
+  }
   const createNewProject = () => {
+    //Sets proper month
     let month = date.getMonth() + 1;
     if(projectName != ""){
-      database().ref("/Database/Projects").push({
+      //Initializes the new project
+      const newData = database().ref("/Database/Projects").push({
         title: projectName,
         users: invUsersList,
         tasks: ["PlaceHolder"],
-        dueDate: month + " " + date.getDate() + " " + date.getFullYear()
+        dueDate: month + " " + date.getDate() + " " + date.getFullYear() 
       });
+      //Project ID
+      const newDataKey = newData.key;
+      //Sets project ID
+      newData.update({ID: newDataKey});
+      //Loops through users in invUsersList and adds project: id 
+      //invUsersList.forEach(element => addProjectIds(element, newDataKey));
+      addProjectIds(user, newDataKey)
       changeProjectName("");
-      addUsersList(["placeHolder"]);
+      addUsersList([user]);
     }
   };
   const addUsersToList = () =>{
+    console.log(user);
     if(invUsers != ""){
-      if(invUsersList[0] === "placeHolder" ){
-        invUsersList.pop();
-      }
       let list = invUsersList.slice();
       list.push(invUsers);
       addUsersList(list);
