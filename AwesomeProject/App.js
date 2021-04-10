@@ -188,37 +188,30 @@ function CreateAccount({ navigation }) {
 }
 
 function ProjectList ({ route, navigation }) {
-  const [user, changeUser] = useState("");//For the projectName field
+  const [user, changeUser] = useState(null);
   const [projects, changeProjects] = useState([]);
-  const [projectList, changeProjectsList] = useState([]);
-  const [key, changeKey] = useState(0);
+  const [projectList, changeProjectList] = useState([]);
 
-  if(user === ""){
-    database().ref("/Database/Users/" + route.params.user).once("value", handleUser);
-  } else {
-    changeProjects(user.projects);
-  }
   const handleUser = snapshot => {
+    if(snapshot.val().projects.length != 0){
+      changeProjects(snapshot.val().projects);
+    }
     changeUser(snapshot.val());
   }
-  console.log(user);
 
+  if(user == null){
+    database().ref("/Database/Users/" + route.params.user).once("value", handleUser);
+  }
 
   const handleProject = snapshot => {
-    console.log('here');
-    console.log(projects);
-    console.log(snapshot.val());
-    let project = snapshot.val();
-    let list = projectList.slice();
+    let list = projectList.slice()
     list.push(snapshot.val());
-    changeProjectsList(list);
+    changeProjectList(list);
   }
   
-  if(projects.length > key){
-    let project = database().ref("/Database/Projects/" + projects[key]);
-    project.once("value", handleProject);
+  if(projects.length > projectList.length && user != null){
+    database().ref("/Database/Projects/" + projects[projectList.length]).once("value", handleProject);
   }
-
 
   if(projectList.length == 0){
     return (// TopBar is supposed to handle the Drawer and don't forget about it
@@ -238,9 +231,10 @@ function ProjectList ({ route, navigation }) {
         <Text>No Projects</Text> 
       </View>
     </TopBar>
-  );
+    );
   } else {
     return (// TopBar is supposed to handle the Drawer and don't forget about it
+      
       <TopBar>
         <TouchableHighlight 
           style={{width: "15%", height: "15%", padding: 10, 
@@ -253,19 +247,25 @@ function ProjectList ({ route, navigation }) {
             <Text style={{color: "white", fontSize: 50}}>+</Text>
           </View> 
         </TouchableHighlight>
+
         <View style={{ top: "0%", height: "85%", backgroundColor: "white", flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <FlatList
             style={{width: "100%"}}
             data={projectList}
             renderItem={({item}) => 
+            <React.StrictMode>
               <ProjectPanel
                 project = {item}
               />
+            </React.StrictMode>
+
             }
             keyExtractor={item => 0}
           />
         </View>
+
       </TopBar>
+
     );
   }
 }
@@ -281,7 +281,6 @@ const ProjectPanel = (props) => {
       <Text>Due Date: (would go here) </Text>
       <Text>{props.project.users.length} User(s)</Text>
     </View>
-
   );
 }
 
@@ -375,6 +374,7 @@ const Drawer = createDrawerNavigator();
 
 export default function App() {
   return (
+  <React.StrictMode>
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="LogIn">
         <Drawer.Screen name="LogIn" component={LogIn} />
@@ -384,6 +384,8 @@ export default function App() {
         <Drawer.Screen name="ProjectCreation" component={ProjectCreation}/>
       </Drawer.Navigator>
     </NavigationContainer>
+  </React.StrictMode>
+
   );
 }
 
