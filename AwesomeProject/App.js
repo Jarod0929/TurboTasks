@@ -33,7 +33,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import database from '@react-native-firebase/database';
 import DatePicker from 'react-native-date-picker'
 
-
+let GLOBALUSERID;
 const TopBar = ({children}) => {//This creates the Top bar to the 
   //TODO Create TopBar with Drawer
   return(
@@ -65,6 +65,11 @@ function LogIn({ navigation }) {
       changefailed(false);
 
       navigation.navigate("ProjectList", {user: snapshot.val().ID});
+      GLOBALUSERID=snapshot.val().ID;
+      
+      
+
+      
 
     }
     database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).off("child_added", samePassword); 
@@ -189,24 +194,33 @@ function CreateAccount({ navigation }) {
 }
 
 function ProjectList ({ route, navigation }) {
-  const [user, changeUser] = useState(route.params.user);//For the projectName field
-  const [projects, changeProjects] = useState(user.projects);
-  const [projectList, changeProjectsList] = useState([]);
+  const [user, changeUser] = useState(null);
+  const [projects, changeProjects] = useState([]);
+  const [projectList, changeProjectList] = useState([]);
+
+  const handleUser = snapshot => {
+    if(snapshot.val().projects.length != 0){
+      changeProjects(snapshot.val().projects);
+    }
+    changeUser(snapshot.val());
+  }
+
+  if(user == null){
+    database().ref("/Database/Users/" + route.params.user).once("value", handleUser);
+  }
 
   const handleProject = snapshot => {
-    let project = snapshot.val();
-    let list = projectList.slice();
-    list.push(project);
-    changeProjectsList(list);
+    let list = projectList.slice()
+    list.push(snapshot.val());
+    changeProjectList(list);
   }
   
-  if(projects.length > 0){
-    let project = database().ref("/Database/Projects/-" + projects[0]);
-    project.once("value", handleProject);
-    projects.shift();
+  if(projects.length > projectList.length && user != null){
+    database().ref("/Database/Projects/" + projects[projectList.length]).once("value", handleProject);
   }
 
-  return (// TopBar is supposed to handle the Drawer and don't forget about it
+  if(projectList.length == 0){
+    return (// TopBar is supposed to handle the Drawer and don't forget about it
     <TopBar>
       <TouchableHighlight 
         style={{width: "15%", height: "15%", padding: 10, 
@@ -220,20 +234,46 @@ function ProjectList ({ route, navigation }) {
         </View> 
       </TouchableHighlight>
       <View style={{ top: "0%", height: "85%", backgroundColor: "white", flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <FlatList
-          style={{width: "100%"}}
-          data={projectList}
-          renderItem={({item}) => 
-            <ProjectPanel
-              project = {item}
-            />
-          }
-          keyExtractor={item => 0}
-        />
+        <Text>No Projects</Text> 
       </View>
     </TopBar>
-  );
-  
+    );
+  } else {
+    return (// TopBar is supposed to handle the Drawer and don't forget about it
+      
+      <TopBar>
+        <TouchableHighlight 
+          style={{width: "15%", height: "15%", padding: 10, 
+                  backgroundColor: "blue", left: "85%", top: 0}}
+          onPress={() => {
+            navigation.navigate("ProjectCreation");
+          }}
+        >
+          <View>
+            <Text style={{color: "white", fontSize: 50}}>+</Text>
+          </View> 
+        </TouchableHighlight>
+
+        <View style={{ top: "0%", height: "85%", backgroundColor: "white", flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <FlatList
+            style={{width: "100%"}}
+            data={projectList}
+            renderItem={({item}) => 
+            <React.StrictMode>
+              <ProjectPanel
+                project = {item}
+              />
+            </React.StrictMode>
+
+            }
+            keyExtractor={item => 0}
+          />
+        </View>
+
+      </TopBar>
+
+    );
+  }
 }
 
 const ProjectPanel = (props) => {
@@ -247,7 +287,6 @@ const ProjectPanel = (props) => {
       <Text>Due Date: (would go here) </Text>
       <Text>{props.project.users.length} User(s)</Text>
     </View>
-
   );
 }
 
@@ -341,6 +380,7 @@ const Drawer = createDrawerNavigator();
 
 export default function App() {
   return (
+  <React.StrictMode>
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="LogIn">
         <Drawer.Screen name="LogIn" component={LogIn} />
@@ -348,8 +388,37 @@ export default function App() {
         <Drawer.Screen name="ProjectList" component={ProjectList}/>
         <Drawer.Screen name="Project" component={ProjectList}/>
         <Drawer.Screen name="ProjectCreation" component={ProjectCreation}/>
+        <Drawer.Screen name = "Settings⚙️" component={Settings}/>
       </Drawer.Navigator>
     </NavigationContainer>
+  </React.StrictMode>
+
+  );
+}
+
+function Settings(){
+  const [username, changeUsername] = useState(null);
+  const [password,changePassword] = useState(null);
+  const[prefrence,changePrefrence]=useState(null);
+
+  const handleUser = snapshot => {
+    changeUsername(snapshot.val().Username);
+    
+    changePassword(snapshot.val().Password);
+    
+    
+  }
+
+  if(username == null){
+    database().ref("/Database/Users/" + GLOBALUSERID).once("value", handleUser);
+  }
+  return(
+  <TopBar>
+  <View>
+    <Text>Hello {username}</Text>
+    <Text>Your Password is: {password}</Text>
+  </View>
+  </TopBar>
   );
 }
 
