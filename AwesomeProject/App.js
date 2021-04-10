@@ -188,24 +188,40 @@ function CreateAccount({ navigation }) {
 }
 
 function ProjectList ({ route, navigation }) {
-  const [user, changeUser] = useState(route.params.user);//For the projectName field
-  const [projects, changeProjects] = useState(user.projects);
+  const [user, changeUser] = useState("");//For the projectName field
+  const [projects, changeProjects] = useState([]);
   const [projectList, changeProjectsList] = useState([]);
+  const [key, changeKey] = useState(0);
+
+  if(user === ""){
+    database().ref("/Database/Users/" + route.params.user).once("value", handleUser);
+  } else {
+    changeProjects(user.projects);
+  }
+  const handleUser = snapshot => {
+    changeUser(snapshot.val());
+  }
+  console.log(user);
+
 
   const handleProject = snapshot => {
+    console.log('here');
+    console.log(projects);
+    console.log(snapshot.val());
     let project = snapshot.val();
     let list = projectList.slice();
-    list.push(project);
+    list.push(snapshot.val());
     changeProjectsList(list);
   }
   
-  if(projects.length > 0){
-    let project = database().ref("/Database/Projects/-" + projects[0]);
+  if(projects.length > key){
+    let project = database().ref("/Database/Projects/" + projects[key]);
     project.once("value", handleProject);
-    projects.shift();
   }
 
-  return (// TopBar is supposed to handle the Drawer and don't forget about it
+
+  if(projectList.length == 0){
+    return (// TopBar is supposed to handle the Drawer and don't forget about it
     <TopBar>
       <TouchableHighlight 
         style={{width: "15%", height: "15%", padding: 10, 
@@ -219,20 +235,39 @@ function ProjectList ({ route, navigation }) {
         </View> 
       </TouchableHighlight>
       <View style={{ top: "0%", height: "85%", backgroundColor: "white", flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <FlatList
-          style={{width: "100%"}}
-          data={projectList}
-          renderItem={({item}) => 
-            <ProjectPanel
-              project = {item}
-            />
-          }
-          keyExtractor={item => 0}
-        />
+        <Text>No Projects</Text> 
       </View>
     </TopBar>
   );
-  
+  } else {
+    return (// TopBar is supposed to handle the Drawer and don't forget about it
+      <TopBar>
+        <TouchableHighlight 
+          style={{width: "15%", height: "15%", padding: 10, 
+                  backgroundColor: "blue", left: "85%", top: 0}}
+          onPress={() => {
+            navigation.navigate("ProjectCreation");
+          }}
+        >
+          <View>
+            <Text style={{color: "white", fontSize: 50}}>+</Text>
+          </View> 
+        </TouchableHighlight>
+        <View style={{ top: "0%", height: "85%", backgroundColor: "white", flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <FlatList
+            style={{width: "100%"}}
+            data={projectList}
+            renderItem={({item}) => 
+              <ProjectPanel
+                project = {item}
+              />
+            }
+            keyExtractor={item => 0}
+          />
+        </View>
+      </TopBar>
+    );
+  }
 }
 
 const ProjectPanel = (props) => {
