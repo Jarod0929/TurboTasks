@@ -188,12 +188,14 @@ function CreateAccount({ navigation }) {
   );
 }
 
+let count = 0;
 function ProjectList ({ route, navigation }) {
   const [user, changeUser] = useState(null);
   const [projects, changeProjects] = useState([]);
   const [projectList, changeProjectList] = useState([]);
 
   const handleUser = snapshot => {
+    console.log(snapshot.val());
     if(snapshot.val().projects.length != 0){
       changeProjects(snapshot.val().projects);
     }
@@ -261,7 +263,10 @@ function ProjectList ({ route, navigation }) {
             </React.StrictMode>
 
             }
-            keyExtractor={item => 0}
+            keyExtractor={item => {
+              count++;
+              return count;
+            }}
           />
         </View>
 
