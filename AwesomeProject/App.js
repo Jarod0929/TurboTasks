@@ -64,7 +64,6 @@ function LogIn({ navigation }) {
       changefailed(false);
 
       navigation.navigate("ProjectList", {user: snapshot.val().ID});
-
     }
     database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).off("child_added", samePassword); 
   };
@@ -280,7 +279,7 @@ const ProjectPanel = (props) => {
         {props.project.title}
       </Text>
       <Text>{props.project.tasks.length} Task(s)</Text>
-      <Text>Due Date: (would go here) </Text>
+      <Text>Due Date: {props.project.dueDate} </Text>
       <Text>{props.project.users.length} User(s)</Text>
     </View>
   );
@@ -296,12 +295,14 @@ function ProjectCreation ({route, navigation }) {
   const [date, setDate] = useState(new Date())
 
   const addProjectIds = (userId, projectId) => {
-    database().ref(`/Database/Users/${userId}/projects`).on('value', snap => {
-      let temp = ["-MXwNjw-5ezU6gGEORTN", "-MXwgMuybzZ9gMGYcBw0"];
-      //temp.push(projectId);
-      database().ref(`/Database/Users/${userId}`).set({
+    let add = database().ref(`/Database/Users/${userId}/projects`).on('value', snap => {
+      let temp = snap.val();
+      temp.push(projectId);
+      console.log(temp);
+      database().ref(`/Database/Users/${userId}`).update({
          projects: temp,
       });
+      database().ref(`/Database/Users/${userId}/projects`).off("value", add);
     });
 
   }
@@ -321,8 +322,8 @@ function ProjectCreation ({route, navigation }) {
       //Sets project ID
       newData.update({ID: newDataKey});
       //Loops through users in invUsersList and adds project: id 
-      //invUsersList.forEach(element => addProjectIds(element, newDataKey));
-      addProjectIds(user, newDataKey)
+      invUsersList.forEach(element => addProjectIds(user, newDataKey));
+      //addProjectIds(user, newDataKey);
       changeProjectName("");
       addUsersList([user]);
     }
