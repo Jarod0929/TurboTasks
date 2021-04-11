@@ -272,7 +272,6 @@ function ProjectList ({ route, navigation }) {
 }
 
 const ProjectPanel = (props) => {
-  console.log(props.project);
   return (
     <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
       <Text style={{fontSize: 20}}>
@@ -295,14 +294,24 @@ function ProjectCreation ({route, navigation }) {
   const [date, setDate] = useState(new Date())
 
   const addProjectIds = (userId, projectId) => {
+    //Gets projects[] from user
+    
     let add = database().ref(`/Database/Users/${userId}/projects`).on('value', snap => {
-      let temp = snap.val();
-      temp.push(projectId);
-      console.log(temp);
-      database().ref(`/Database/Users/${userId}`).update({
-         projects: temp,
-      });
-      database().ref(`/Database/Users/${userId}/projects`).off("value", add);
+      if(snap.val() != null){
+        let temp = snap.val();
+        temp.push(projectId);
+        //updates users project[] with newly created project
+        database().ref(`/Database/Users/${userId}`).update({
+          projects: temp,
+        });
+        database().ref(`/Database/Users/${userId}/projects`).off("value", add);
+      }
+      else{
+        database().ref(`/Database/Users/${userId}`).update({
+          projects: [projectId],
+        });
+        database().ref(`/Database/Users/${userId}/projects`).off("value", add);
+      }
     });
 
   }
@@ -322,19 +331,25 @@ function ProjectCreation ({route, navigation }) {
       //Sets project ID
       newData.update({ID: newDataKey});
       //Loops through users in invUsersList and adds project: id 
-      invUsersList.forEach(element => addProjectIds(user, newDataKey));
-      //addProjectIds(user, newDataKey);
+      invUsersList.forEach(element => addProjectIds(element, newDataKey));
       changeProjectName("");
       addUsersList([user]);
+      
     }
   };
   const addUsersToList = () =>{
-    console.log(user);
-    if(invUsers != ""){
-      let list = invUsersList.slice();
-      list.push(invUsers);
-      addUsersList(list);
-    }
+    let userID = "";
+    let something = database().ref("/Database/Users").orderByChild("Username").equalTo(invUsers).on("value", snapshot => {
+      for(let key in snapshot.val()){
+        userID = key;
+      }
+      if(invUsers != "" && userID != ""){
+        let list = invUsersList.slice();
+        list.push(userID);
+        addUsersList(list);
+      }
+      database().ref("/Database/Users").orderByChild("Username").equalTo(invUsers).off("value", something);
+    });
     changeInvUsers("");
   };
   
