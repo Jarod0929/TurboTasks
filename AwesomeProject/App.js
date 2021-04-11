@@ -56,15 +56,16 @@ function LogIn({ navigation }) {
     Password: "Apple",
     Projects: [""],
   });*/
-  //This should work as intended, only one press is needed
+  //This should work as intended, o"AfterLogin"nly one press is needed
   const samePassword = snapshot => {
     changefailed(true);
     changeTextPassword("");
     if(snapshot.val().Password === textPassword){
       changeTextUserName("");
       changefailed(false);
-
-      navigation.navigate("ProjectList", {user: snapshot.val().ID});
+/*user: snapshot.val().ID} */
+     navigation.navigate("Main",{screen: 'ProjectList', params: { user: snapshot.val().ID }});
+     /*comma add in*/
 
 
       GLOBALUSERID=snapshot.val().ID;
@@ -117,16 +118,18 @@ function LogIn({ navigation }) {
     </View>
   );
 }
-
+/*Creates a User Account*/
 function CreateAccount({ navigation }) {
   const [textUserName, changeTextUserName] = useState('');//For the Username Field
   const [textPassword, changeTextPassword] = useState('');//For the Password Field
   const [failed, changefailed] = useState(false);//Only sets to true when they failed once on account and sets feedback message
 
+  /*Checks if there are other usernames usernames */
   const anyPreviousUsernames = snapshot => {
     if(snapshot.val() !== null){
       changefailed(true);
     }
+    /* Pushes the new Users Info onto the database*/
     else{
       changefailed(false);
       const newData = database().ref("/Database/Users").push({
@@ -190,23 +193,27 @@ function CreateAccount({ navigation }) {
     </View>
   );
 }
-
+/*List all the projects*/
 function ProjectList ({ route, navigation }) {
+  console.log(route.params.user);
   const [user, changeUser] = useState(null);
   const [projects, changeProjects] = useState([]);
-  const [projectList, changeProjectList] = useState([]);
+  const [projectList, changeProjectList] = useState([]); /*List of the projects */
 
+  /* Takes the users info looking for the users projects */
   const handleUser = snapshot => {
     if(snapshot.val().projects.length != 0){
+      
       changeProjects(snapshot.val().projects);
     }
     changeUser(snapshot.val());
   }
 
+  /* if the user is null find the user using route params*/
   if(user == null){
     database().ref("/Database/Users/" + route.params.user).once("value", handleUser);
   }
-
+   /* handles the projects adds new projects to the list*/
   const handleProject = snapshot => {
     let list = projectList.slice()
     list.push(snapshot.val());
@@ -218,7 +225,7 @@ function ProjectList ({ route, navigation }) {
   }
   
 
-
+/* if no projects are rpesent ouuput this*/
   if(projectList.length == 0){
     return (// TopBar is supposed to handle the Drawer and don't forget about it
     <TopBar>
@@ -226,7 +233,8 @@ function ProjectList ({ route, navigation }) {
         style={{width: "15%", height: "15%", padding: 10, 
                 backgroundColor: "blue", left: "85%", top: 0}}
         onPress={() => {
-          navigation.navigate("ProjectCreation", {user: route.params.user});
+         /* navigation.navigate("ProjectCreation",{user: route.params.user});*/
+          
         }}
       >
         <View>
@@ -238,15 +246,20 @@ function ProjectList ({ route, navigation }) {
       </View>
     </TopBar>
     );
-  } else {
+
+  } 
+  /*If the user has at least one project output this*/
+  else {
     return (// TopBar is supposed to handle the Drawer and don't forget about it
       
       <TopBar>
         <TouchableHighlight 
           style={{width: "15%", height: "15%", padding: 10, 
                   backgroundColor: "blue", left: "85%", top: 0}}
+          
           onPress={() => {
-          navigation.navigate("ProjectCreation", {user: route.params.user});
+            console.log(route.params.user);
+            /*navigation.navigate("ProjectCreation", { user: route.params.user});*/
         }}
         >
           <View>
@@ -275,7 +288,7 @@ function ProjectList ({ route, navigation }) {
     );
   }
 }
-
+/* Each project Box the user has*/
 const ProjectPanel = (props) => {
   return (
     <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
@@ -289,7 +302,7 @@ const ProjectPanel = (props) => {
   );
 }
 
-
+/*Project creation Page*/
 function ProjectCreation ({route, navigation }) { 
   //Insert the Project Code here
   const {user} = route.params;
@@ -411,25 +424,42 @@ function Project ({ navigation }) {
 }
 
 
-const Drawer = createDrawerNavigator();
+const RootScreen = createDrawerNavigator();
 
 export default function App() {
   return (
-  <React.StrictMode>
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="LogIn">
-        <Drawer.Screen name="LogIn" component={LogIn} />
-        <Drawer.Screen name="CreateAccount" component={CreateAccount} />
-        <Drawer.Screen name="ProjectList" component={ProjectList}/>
-        <Drawer.Screen name="Project" component={ProjectList}/>
-        <Drawer.Screen name="ProjectCreation" component={ProjectCreation}/>
-        <Drawer.Screen name = "Settings⚙️" component={Settings}/>
-      </Drawer.Navigator>
-    </NavigationContainer>
-  </React.StrictMode>
+      <RootScreen.Navigator initialRouteName="LogIn">
+        <RootScreen.Screen name="Main" component={AfterLogin} options={{
+                drawerLabel: () => null,
+                title: null,
+                drawerIcon: () => null }}/>
 
+        <RootScreen.Screen name="LogIn" component={LogIn} />
+        <RootScreen.Screen name="CreateAccount" component={CreateAccount}/>
+        </RootScreen.Navigator>
+      </NavigationContainer>
+      
   );
 }
+
+const SecondDrawer = createDrawerNavigator();
+ function AfterLogin({route,navigation}){
+  return(
+    
+    <SecondDrawer.Navigator>
+    <SecondDrawer.Screen name="LogIn" component={LogIn} />
+    <SecondDrawer.Screen name="ProjectList" component={ProjectList} />
+    <SecondDrawer.Screen name="Project" component={ProjectList}/>
+    <SecondDrawer.Screen name="ProjectCreation" component={ProjectCreation}/>
+    <SecondDrawer.Screen name = "Settings⚙️" component={Settings}/>
+  </SecondDrawer.Navigator>
+  
+
+  );
+
+}
+
 
 function Settings(){
   const [username, changeUsername] = useState(null);
