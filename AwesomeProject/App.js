@@ -65,12 +65,10 @@ function LogIn({ navigation }) {
       changefailed(false);
 
       navigation.navigate("ProjectList", {user: snapshot.val().ID});
+
+
       GLOBALUSERID=snapshot.val().ID;
       
-      
-
-      
-
     }
     database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).off("child_added", samePassword); 
   };
@@ -218,6 +216,8 @@ function ProjectList ({ route, navigation }) {
   if(projects.length > projectList.length && user != null){
     database().ref("/Database/Projects/" + projects[projectList.length]).once("value", handleProject);
   }
+  
+
 
   if(projectList.length == 0){
     return (// TopBar is supposed to handle the Drawer and don't forget about it
@@ -226,7 +226,7 @@ function ProjectList ({ route, navigation }) {
         style={{width: "15%", height: "15%", padding: 10, 
                 backgroundColor: "blue", left: "85%", top: 0}}
         onPress={() => {
-          navigation.navigate("ProjectCreation");
+          navigation.navigate("ProjectCreation", {user: route.params.user});
         }}
       >
         <View>
@@ -246,8 +246,8 @@ function ProjectList ({ route, navigation }) {
           style={{width: "15%", height: "15%", padding: 10, 
                   backgroundColor: "blue", left: "85%", top: 0}}
           onPress={() => {
-            navigation.navigate("ProjectCreation");
-          }}
+          navigation.navigate("ProjectCreation", {user: route.params.user});
+        }}
         >
           <View>
             <Text style={{color: "white", fontSize: 50}}>+</Text>
@@ -277,49 +277,84 @@ function ProjectList ({ route, navigation }) {
 }
 
 const ProjectPanel = (props) => {
-  console.log(props.project);
   return (
     <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
       <Text style={{fontSize: 20}}>
         {props.project.title}
       </Text>
       <Text>{props.project.tasks.length} Task(s)</Text>
-      <Text>Due Date: (would go here) </Text>
+      <Text>Due Date: {props.project.dueDate} </Text>
       <Text>{props.project.users.length} User(s)</Text>
     </View>
   );
 }
 
 
-function ProjectCreation ({ navigation }) { 
+function ProjectCreation ({route, navigation }) { 
   //Insert the Project Code here
+  const {user} = route.params;
   const [projectName, changeProjectName] = useState('');//For the projectName field
   const [invUsers, changeInvUsers] = useState('');//For the inviteUsers field
-  const [invUsersList, addUsersList] = useState(["placeHolder"]);//For the inviteUsers button
+  const [invUsersList, addUsersList] = useState([user]);//For the inviteUsers button
   const [date, setDate] = useState(new Date())
 
+  const addProjectIds = (userId, projectId) => {
+    //Gets projects[] from user
+    
+    let add = database().ref(`/Database/Users/${userId}/projects`).on('value', snap => {
+      if(snap.val() != null){
+        let temp = snap.val();
+        temp.push(projectId);
+        //updates users project[] with newly created project
+        database().ref(`/Database/Users/${userId}`).update({
+          projects: temp,
+        });
+        database().ref(`/Database/Users/${userId}/projects`).off("value", add);
+      }
+      else{
+        database().ref(`/Database/Users/${userId}`).update({
+          projects: [projectId],
+        });
+        database().ref(`/Database/Users/${userId}/projects`).off("value", add);
+      }
+    });
+
+  }
   const createNewProject = () => {
+    //Sets proper month
     let month = date.getMonth() + 1;
     if(projectName != ""){
-      database().ref("/Database/Projects").push({
+      //Initializes the new project
+      const newData = database().ref("/Database/Projects").push({
         title: projectName,
         users: invUsersList,
         tasks: ["PlaceHolder"],
-        dueDate: month + " " + date.getDate() + " " + date.getFullYear()
+        dueDate: month + " " + date.getDate() + " " + date.getFullYear() 
       });
+      //Project ID
+      const newDataKey = newData.key;
+      //Sets project ID
+      newData.update({ID: newDataKey});
+      //Loops through users in invUsersList and adds project: id 
+      invUsersList.forEach(element => addProjectIds(element, newDataKey));
       changeProjectName("");
-      addUsersList(["placeHolder"]);
+      addUsersList([user]);
+      
     }
   };
   const addUsersToList = () =>{
-    if(invUsers != ""){
-      if(invUsersList[0] === "placeHolder" ){
-        invUsersList.pop();
+    let userID = "";
+    let something = database().ref("/Database/Users").orderByChild("Username").equalTo(invUsers).on("value", snapshot => {
+      for(let key in snapshot.val()){
+        userID = key;
       }
-      let list = invUsersList.slice();
-      list.push(invUsers);
-      addUsersList(list);
-    }
+      if(invUsers != "" && userID != ""){
+        let list = invUsersList.slice();
+        list.push(userID);
+        addUsersList(list);
+      }
+      database().ref("/Database/Users").orderByChild("Username").equalTo(invUsers).off("value", something);
+    });
     changeInvUsers("");
   };
   
