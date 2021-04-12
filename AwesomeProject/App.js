@@ -64,11 +64,9 @@ function LogIn({ navigation }) {
       changeTextUserName("");
       changefailed(false);
 /*user: snapshot.val().ID} */
-     navigation.navigate("Main",{screen: 'ProjectList', params: { user: snapshot.val().ID }});
+    GLOBALUSERID=snapshot.val().ID;
+     navigation.navigate("Main",{screen: 'ProjectList', params: {user: snapshot.val().ID }});
      /*comma add in*/
-
-
-      GLOBALUSERID=snapshot.val().ID;
       
     }
     database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).off("child_added", samePassword); 
@@ -195,7 +193,7 @@ function CreateAccount({ navigation }) {
 }
 /*List all the projects*/
 function ProjectList ({ route, navigation }) {
-  console.log(route.params.user);
+  
   const [user, changeUser] = useState(null);
   const [projects, changeProjects] = useState([]);
   const [projectList, changeProjectList] = useState([]); /*List of the projects */
@@ -211,7 +209,7 @@ function ProjectList ({ route, navigation }) {
 
   /* if the user is null find the user using route params*/
   if(user == null){
-    database().ref("/Database/Users/" + route.params.user).once("value", handleUser);
+    database().ref("/Database/Users/" + GLOBALUSERID).once("value", handleUser);
   }
    /* handles the projects adds new projects to the list*/
   const handleProject = snapshot => {
@@ -233,7 +231,7 @@ function ProjectList ({ route, navigation }) {
         style={{width: "15%", height: "15%", padding: 10, 
                 backgroundColor: "blue", left: "85%", top: 0}}
         onPress={() => {
-         /* navigation.navigate("ProjectCreation",{user: route.params.user});*/
+         navigation.navigate("ProjectCreation",{user: GLOBALUSERID});
           
         }}
       >
@@ -259,7 +257,7 @@ function ProjectList ({ route, navigation }) {
           
           onPress={() => {
             console.log(route.params.user);
-            /*navigation.navigate("ProjectCreation", { user: route.params.user});*/
+            navigation.navigate("ProjectCreation", { user: GLOBALUSERID});
         }}
         >
           <View>
@@ -279,7 +277,7 @@ function ProjectList ({ route, navigation }) {
             </React.StrictMode>
 
             }
-            keyExtractor={item => 0}
+            keyExtractor={item => item}
           />
         </View>
 
@@ -303,9 +301,12 @@ const ProjectPanel = (props) => {
 }
 
 /*Project creation Page*/
-function ProjectCreation ({route, navigation }) { 
+function ProjectCreation ({ navigation }) { 
   //Insert the Project Code here
-  const {user} = route.params;
+  
+  /*const {user} = route.params;*/
+  
+  const {user} = GLOBALUSERID;
   const [projectName, changeProjectName] = useState('');//For the projectName field
   const [invUsers, changeInvUsers] = useState('');//For the inviteUsers field
   const [invUsersList, addUsersList] = useState([user]);//For the inviteUsers button
@@ -433,8 +434,7 @@ export default function App() {
         <RootScreen.Screen name="Main" component={AfterLogin} options={{
                 drawerLabel: () => null,
                 title: null,
-                drawerIcon: () => null }}/>
-
+                drawerIcon: () => null }} />
         <RootScreen.Screen name="LogIn" component={LogIn} />
         <RootScreen.Screen name="CreateAccount" component={CreateAccount}/>
         </RootScreen.Navigator>
@@ -446,11 +446,9 @@ export default function App() {
 const SecondDrawer = createDrawerNavigator();
  function AfterLogin({route,navigation}){
   return(
-    
     <SecondDrawer.Navigator>
     <SecondDrawer.Screen name="LogIn" component={LogIn} />
-    <SecondDrawer.Screen name="ProjectList" component={ProjectList} />
-    <SecondDrawer.Screen name="Project" component={ProjectList}/>
+    <SecondDrawer.Screen name="ProjectList" component={ProjectList}/>
     <SecondDrawer.Screen name="ProjectCreation" component={ProjectCreation}/>
     <SecondDrawer.Screen name = "Settings⚙️" component={Settings}/>
   </SecondDrawer.Navigator>
