@@ -34,11 +34,11 @@ import database from '@react-native-firebase/database';
 import DatePicker from 'react-native-date-picker'
 
 let GLOBALUSERID;
-const TopBar = ({children}) => {//This creates the Top bar to the 
-  //TODO Create TopBar with Drawer
-  return(
+
+const TopBar = ({children}) => {
+  return (
     <View style = {styles.container}>
-      <View style = {styles.topBarCon}>
+      <View style = {styles.topBarContainer}>
 
       </View>
       {children}
@@ -46,6 +46,39 @@ const TopBar = ({children}) => {//This creates the Top bar to the
   )
 };
 
+function LogIn({ navigation }){
+  return(
+    <TopBar>
+      <View style = {styles.logInContainer}>
+        <View style = {styles.logInSignInTitleContainer}>
+          <Text style = {styles.logInSignInTitleText}>Sign In</Text>
+        </View>
+        <View style = {styles.logInTextAreaContainer}>
+          <Text style = {styles.logInTextAbove}>Username</Text>
+          <View style = {styles.logInTextInputContainer}>
+            <TextInput></TextInput>
+          </View>
+        </View>
+        <View style = {styles.logInTextAreaContainer}>
+          <Text style = {styles.logInTextAbove}>Password</Text>
+          <View style = {styles.logInTextInputContainer}>
+            <TextInput></TextInput>
+          </View>
+        </View>
+        <View style = {styles.logInButtonContainer}>
+          <TouchableHighlight style = {styles.logInButton}>
+            <Text style = {styles.logInButtonText}>Log In</Text>
+          </TouchableHighlight>
+        </View>
+        <View style = {styles.logInCreateAccountContainer}>
+          <Text style = {styles.AverageWhiteText}>Don't have an Account?</Text>
+        </View>
+      </View>
+    </TopBar>
+  );
+}
+
+/*
 function LogIn({ navigation }) {
   const [textUserName, changeTextUserName] = useState('');//For the Username Field
   const [textPassword, changeTextPassword] = useState('');//For the Password Field
@@ -114,7 +147,7 @@ function LogIn({ navigation }) {
     </View>
   );
 }
-
+*/
 function CreateAccount({ navigation }) {
   const [textUserName, changeTextUserName] = useState('');//For the Username Field
   const [textPassword, changeTextPassword] = useState('');//For the Password Field
@@ -426,23 +459,66 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     height: "100%",
+    backgroundColor: "darkblue",
+    
   },
-  buttonLogIn: {
+  topBarContainer: {
+    backgroundColor: "cyan",
+    borderBottomRightRadius: 20,
+    borderWidth: 5,
+    height: '10%',
+    width: '100%',
+  },
+  logInContainer: {
+    flex: 1,
+    //justifyContent: 'center',
     alignItems: "center",
-    backgroundColor: "orange",
-    marginTop: 50,
-    marginBottom: 50,
+  }, 
+  logInSignInTitleContainer: {
+    position: 'relative',
+    top: 10,
+    paddingBottom: 30,
   },
-  textInputLogIn: {
-    marginTop: 50,
-    marginBottom: 50,
+  logInSignInTitleText: {
+    color: 'white',
+    fontSize: 28,
   },
-  topBarCon: {
-    position: "absolute",
-    top:0,
-    right:0,
-    height: "15%",
-    width: "100%",
-    backgroundColor: "blue",
-  }
+  logInTextInputContainer: {
+    borderWidth: 5,
+    height: 50,
+    width: 150,
+    backgroundColor:'white',
+  },
+  logInTextAreaContainer: {
+    paddingBottom: 30,
+  },
+  logInTextAbove: {
+    color: 'white',
+    fontSize: 16,
+  },
+  logInButtonContainer: {
+    backgroundColor: 'cyan',
+    borderWidth: 5,
+    borderRadius: 10,
+    width: 175,
+    height: 60,
+  },
+  logInButton: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logInButtonText: {
+    color: 'black',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  logInCreateAccountContainer: {
+    position: 'relative',
+    bottom: 10
+  },
+  AverageWhiteText: {
+    color: 'white',
+    fontSize: 16,
+  },
 });
