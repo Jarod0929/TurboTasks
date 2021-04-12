@@ -465,7 +465,7 @@ function Project ({ navigation, route }) {
   //});
   const [flashlight, changeFlashLight] = useState(false);
   const [allProjectTasks, changeAllProjectTasks] = useState([]);
-  const newData = [0,1,2,3,4,5,6];
+  const newData = ["Hello", "Cool", "Person"];
   if(allProjectTasks.length === 0){//Which means every time it exits, you must reset the allProjectTasks back to empty REMEMBER
     database().ref(`/Database/Projects/${testProject}`).once('value', snapshot => {
       if(snapshot.val().tasks !== undefined){
@@ -477,13 +477,13 @@ function Project ({ navigation, route }) {
   return (// TopBar is supposed to handle the Drawer and don't forget about it
   <View style = {{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <FlatList
-        data = {newData}
-        renderItem = {({item}) => {
-          <View style = {{height: 10, width: 10, backgroundColor: 'black'}}>
-
-          </View>
+        data={newData}
+        renderItem={({item}) => {
+          <Text>
+            {item}
+          </Text>
         }}
-        keyExtractor = {(item) => item}
+        keyExtractor={(item) => item}
       />
   </View>
   );
