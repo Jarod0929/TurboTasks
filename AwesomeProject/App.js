@@ -70,9 +70,12 @@ function LogIn({ navigation }){
             <Text style = {styles.logInButtonText}>Log In</Text>
           </TouchableHighlight>
         </View>
-        <View style = {styles.logInCreateAccountContainer}>
-          <Text style = {styles.AverageWhiteText}>Don't have an Account?</Text>
-        </View>
+      </View>
+      <View style = {styles.logInCreateAccountContainer}>
+          <Text style = {styles.AverageWhiteText}>Don't have an Account? </Text>
+          <TouchableHighlight>
+            <Text style = {styles.AverageWhiteTextBolded}>Sign Up</Text>
+          </TouchableHighlight>
       </View>
     </TopBar>
   );
@@ -515,10 +518,18 @@ const styles = StyleSheet.create({
   },
   logInCreateAccountContainer: {
     position: 'relative',
-    bottom: 10
+    bottom: 10,
+    left: 10,
+    flexDirection:'row', 
+    flexWrap:'wrap',
   },
   AverageWhiteText: {
     color: 'white',
     fontSize: 16,
   },
+  AverageWhiteTextBolded: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  }
 });
