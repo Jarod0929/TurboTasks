@@ -120,6 +120,14 @@ function LogIn({ navigation }){
           <Text style = {styles.logInRedFailedText}>Username does not exist or Password is false</Text>
         </View>
         }
+        <View style = {styles.logInButtonContainer}>
+          <TouchableHighlight 
+            style = {styles.logInButton}
+            onPress = {() => navigation.navigate("Project")}
+          >
+            <Text style = {styles.logInButtonText}>Goto Test Project</Text>
+          </TouchableHighlight>
+        </View>
       </View>
       <View style = {styles.logInCreateAccountContainer}>
           <Text style = {styles.AverageWhiteText}>Don't have an Account? </Text>
@@ -130,79 +138,6 @@ function LogIn({ navigation }){
           </TouchableHighlight>
       </View>
     </TopBar>
-  );
-}
-/*Creates a User Account*/
-function CreateAccount({ navigation }) {
-  const [textUserName, changeTextUserName] = useState('');//For the Username Field
-  const [textPassword, changeTextPassword] = useState('');//For the Password Field
-  const [failed, changefailed] = useState(false);//Only sets to true when they failed once on account and sets feedback message
-
-  /*Checks if there are other usernames usernames */
-  const anyPreviousUsernames = snapshot => {
-    if(snapshot.val() !== null){
-      changefailed(true);
-    }
-    /* Pushes the new Users Info onto the database*/
-    else{
-      changefailed(false);
-      const newData = database().ref("/Database/Users").push({
-        Username: textUserName,
-        Password: textPassword,
-        Reference: {
-          theme: "light",
-        },
-      });
-      const newDataKey = newData.key;
-      newData.update({ID: newDataKey});
-      navigation.navigate("LogIn");
-    }
-    database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).off("value", anyPreviousUsernames); 
-  };
-  
-  const createNewAccount = () => {
-    database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).on("value", anyPreviousUsernames);
-  };
-
-
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <TouchableHighlight
-        onPress = {() => navigation.navigate("LogIn")}
-      >
-        <View
-          style = {styles.buttonLogIn}
-        >
-          <Text>Go Back</Text>
-        </View>
-      </TouchableHighlight>
-      <TextInput
-        style = {styles.textInputLogIn}
-        onChangeText = {text => changeTextUserName(text)}
-        placeholder = "UserName"
-        value = {textUserName}
-      />
-      <TextInput
-        style = {styles.textInputLogIn}
-        onChangeText = {text => changeTextPassword(text)}
-        placeholder = "Password"
-        value = {textPassword}
-      />
-      <TouchableHighlight
-        onPress = {createNewAccount}
-      >
-        <View
-          style = {styles.buttonLogIn}
-        >
-          <Text>Create Account</Text>
-        </View>
-      </TouchableHighlight>
-      {failed && //TODO: Create new better message
-        <View>
-          <Text>You Have Failed</Text>
-        </View>
-      }
-    </View>
   );
 }
 
@@ -516,15 +451,49 @@ function ProjectCreation ({ navigation }) {
   );
 }
 
-function Project ({ navigation }) { 
+let testUser = "-MXwL_44uOouN9v7CXzh";
+let testProject = "-MXyDfORu-Q-DPJflmoE"
+let allProjectTasks = []; //We use this because Flat list doesn't allow for good dynamic changes. Maybe should be unique IDs
+function Project ({ navigation, route }) { 
   //Insert the Project Code here
+  const [text, changeText] = useState('');
+
+  if(allProjectTasks.length === 0){
+
+  }
 
   return (// TopBar is supposed to handle the Drawer and don't forget about it
-    <TopBar> 
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Hello World</Text>
-      </View>
-    </TopBar>
+  <View style = {{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <TouchableHighlight
+
+      >
+        <Text>Add Cell</Text>
+      </TouchableHighlight>
+      <FlatList
+        data = {allProjectTasks}
+        renderItem = {({item}) => {
+          <TouchableHighlight>
+            {item}
+          </TouchableHighlight>
+        }}
+
+      />
+  </View>
+  );
+}
+
+function EditTask ({ navigation, route }){
+  const [text, changeText] = useState('');
+  
+
+  return (
+    <View>
+      <TextInput 
+        onChange = {newText => changeText(newText)}
+        value = {text}
+      />
+    </View>
+
   );
 }
 
@@ -555,6 +524,7 @@ const SecondDrawer = createDrawerNavigator();
     <SecondDrawer.Screen name="ProjectList" component={ProjectList}/>
     <SecondDrawer.Screen name="ProjectCreation" component={ProjectCreation}/>
     <SecondDrawer.Screen name = "Settings⚙️" component={Settings}/>
+    <SecondDrawer.Screen name = "Project" component={Project}/>
   </SecondDrawer.Navigator>
   
 
