@@ -475,17 +475,18 @@ function Project ({ navigation, route }) {
   }
   console.log(allProjectTasks);
   return (// TopBar is supposed to handle the Drawer and don't forget about it
-  <View style = {{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <FlatList
-        data={newData}
-        renderItem={({item}) => {
-          <Text>
-            {item}
-          </Text>
-        }}
-        keyExtractor={(item) => item}
-      />
-  </View>
+  <View style={{ top: "0%", height: "85%", backgroundColor: "white", flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+  <FlatList
+    style = {{width: "75%"}}
+    data={allProjectTasks}
+    renderItem={({item}) => 
+      <View style = {{width: "100%", backgroundColor: 'orange', alignItems: "center"}}>
+        <Text>{item}</Text>
+      </View>
+    }
+    keyExtractor={item => item}
+  />
+</View>
   );
 }
 
