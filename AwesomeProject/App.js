@@ -47,42 +47,6 @@ const TopBar = ({children}) => {
 };
 
 function LogIn({ navigation }){
-  return(
-    <TopBar>
-      <View style = {styles.logInContainer}>
-        <View style = {styles.logInSignInTitleContainer}>
-          <Text style = {styles.logInSignInTitleText}>Sign In</Text>
-        </View>
-        <View style = {styles.logInTextAreaContainer}>
-          <Text style = {styles.logInTextAbove}>Username</Text>
-          <View style = {styles.logInTextInputContainer}>
-            <TextInput></TextInput>
-          </View>
-        </View>
-        <View style = {styles.logInTextAreaContainer}>
-          <Text style = {styles.logInTextAbove}>Password</Text>
-          <View style = {styles.logInTextInputContainer}>
-            <TextInput></TextInput>
-          </View>
-        </View>
-        <View style = {styles.logInButtonContainer}>
-          <TouchableHighlight style = {styles.logInButton}>
-            <Text style = {styles.logInButtonText}>Log In</Text>
-          </TouchableHighlight>
-        </View>
-      </View>
-      <View style = {styles.logInCreateAccountContainer}>
-          <Text style = {styles.AverageWhiteText}>Don't have an Account? </Text>
-          <TouchableHighlight>
-            <Text style = {styles.AverageWhiteTextBolded}>Sign Up</Text>
-          </TouchableHighlight>
-      </View>
-    </TopBar>
-  );
-}
-
-/*
-function LogIn({ navigation }) {
   const [textUserName, changeTextUserName] = useState('');//For the Username Field
   const [textPassword, changeTextPassword] = useState('');//For the Password Field
   const [failed, changefailed] = useState(false);//Only sets to true when they failed once on account and sets feedback message
@@ -93,12 +57,10 @@ function LogIn({ navigation }) {
   //  Projects: [""],
   //});
   //This should work as intended, only one press is needed
-  const samePassword = snapshot => {
-    changefailed(true);
-    changeTextPassword("");
-    if(snapshot.val().Password === textPassword){
-      changeTextUserName("");
-      changefailed(false);
+  const samePassword = snapshot => { 
+    if(snapshot.val().Password === textPassword){//Checks if the Password is the same
+      changeTextUserName(""); //Resets Username if goes onto next screen
+      changefailed(false); //Resets failed message
       navigation.navigate("ProjectList", {user: snapshot.val().ID});
       GLOBALUSERID=snapshot.val().ID;
 
@@ -107,50 +69,71 @@ function LogIn({ navigation }) {
   };
 
   const isAccount = () => { //Checks if there is an account
+    changefailed(true); //Outside because the function above does not go, unless there is a username in the database
+    changeTextPassword("");
     database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).on("child_added", samePassword);//Only works with on, not once
+  };  
+  
+  const goToCreateAccount = () => { //Goes to CreateAccount Screen
+    changeTextUserName(""); //Resets all changes made
+    changeTextPassword("");
+    changefailed(false);
+    navigation.navigate("CreateAccount");
   };
-  //TODO: Create better UI
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <TouchableHighlight
-        onPress = {() => navigation.navigate("CreateAccount")}
-      >
-        <View
-          style = {styles.buttonLogIn}
-        >
-          <Text>Create Account</Text>
+  
+  return(
+    <TopBar>
+      <View style = {styles.logInContainer}>
+        <View style = {styles.logInSignInTitleContainer}>
+          <Text style = {styles.logInSignInTitleText}>Sign In</Text>
         </View>
-      </TouchableHighlight>
-      <TextInput
-        style = {styles.textInputLogIn}
-        onChangeText = {text => changeTextUserName(text)}
-        placeholder = "UserName"
-        value = {textUserName}
-      />
-      <TextInput
-        style = {styles.textInputLogIn}
-        onChangeText = {text => changeTextPassword(text)}
-        placeholder = "Password"
-        value = {textPassword}
-      />
-      <TouchableHighlight
-        onPress = {isAccount}
-      >
-        <View
-          style = {styles.buttonLogIn}
-        >
-          <Text>Press to LogIn</Text>
+        <View style = {styles.logInTextAreaContainer}>
+          <Text style = {styles.logInTextAbove}>Username</Text>
+          <View style = {styles.logInTextInputContainer}>
+            <TextInput
+              onChangeText = {text => changeTextUserName(text)}
+              placeholder = "UserName"
+              value = {textUserName}
+            />
+          </View>
         </View>
-      </TouchableHighlight>
-      {failed &&
-        <View>
-          <Text>You Have Failed</Text>
+        <View style = {styles.logInTextAreaContainer}>
+          <Text style = {styles.logInTextAbove}>Password</Text>
+          <View style = {styles.logInTextInputContainer}>
+            <TextInput
+              onChangeText = {text => changeTextPassword(text)}
+              placeholder = "Password"
+              value = {textPassword}
+            />
+          </View>
         </View>
-      }
-    </View>
+        <View style = {styles.logInButtonContainer}>
+          <TouchableHighlight 
+            style = {styles.logInButton}
+            onPress = {isAccount}
+          >
+            <Text style = {styles.logInButtonText}>Log In</Text>
+          </TouchableHighlight>
+        </View>
+        {failed &&
+        <View style = {styles.logInRedFailedContainer}>
+          <Text style = {styles.logInRedFailedText}>Username does not exist or Password is false</Text>
+        </View>
+        }
+      </View>
+      <View style = {styles.logInCreateAccountContainer}>
+          <Text style = {styles.AverageWhiteText}>Don't have an Account? </Text>
+          <TouchableHighlight
+            onPress = {goToCreateAccount}
+          >
+            <Text style = {styles.AverageWhiteTextBolded}>Sign Up</Text>
+          </TouchableHighlight>
+      </View>
+    </TopBar>
   );
 }
-*/
+
+/*
 function CreateAccount({ navigation }) {
   const [textUserName, changeTextUserName] = useState('');//For the Username Field
   const [textPassword, changeTextPassword] = useState('');//For the Password Field
@@ -177,12 +160,10 @@ function CreateAccount({ navigation }) {
   };
   
   const createNewAccount = () => {
-    //TODO: Find out way so Users can not spam and by pass multiple Usernames
-    //Tried: Async and Promises shallowly
-    //TODO: Also for some Reason you have to press the button twice
     database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).on("value", anyPreviousUsernames);
   };
-  //TODO: Create Better UI
+
+
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <TouchableHighlight
@@ -221,6 +202,97 @@ function CreateAccount({ navigation }) {
         </View>
       }
     </View>
+  );
+}
+*/
+function CreateAccount ({navigation}) {
+  const [textUserName, changeTextUserName] = useState('');//For the Username Field
+  const [textPassword, changeTextPassword] = useState('');//For the Password Field
+  const [failed, changefailed] = useState(false);//Only sets to true when they failed once on account and sets feedback message
+
+  const anyPreviousUsernames = snapshot => {
+    if(snapshot.val() !== null){
+      changefailed(true);
+    }
+    else{
+      changefailed(false);
+      const newData = database().ref("/Database/Users").push({
+        Username: textUserName,
+        Password: textPassword,
+        Reference: {
+          theme: "light",
+        },
+      });
+      const newDataKey = newData.key;
+      newData.update({ID: newDataKey});
+      changeTextUserName(""); //Resets all changes made
+      changeTextPassword("");
+      changefailed(false);
+      navigation.navigate("LogIn");
+    }
+    database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).off("value", anyPreviousUsernames); 
+  };
+  
+  const createNewAccount = () => {
+    database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).on("value", anyPreviousUsernames);
+  };
+
+  const goToLogIn = () => { //Goes to CreateAccount Screen
+    changeTextUserName(""); //Resets all changes made
+    changeTextPassword("");
+    changefailed(false);
+    navigation.navigate("LogIn");
+  };
+
+  return (
+    <TopBar>
+    <View style = {styles.logInContainer}>
+      <View style = {styles.logInSignInTitleContainer}>
+        <Text style = {styles.logInSignInTitleText}>Sign Up</Text>
+      </View>
+      {failed &&
+      <View style = {styles.logInRedFailedContainer}>
+        <Text style = {styles.logInRedFailedText}>Username Already Exists</Text>
+      </View>
+      }
+      <View style = {styles.logInTextAreaContainer}>
+        <Text style = {styles.logInTextAbove}>Username</Text>
+        <View style = {styles.logInTextInputContainer}>
+          <TextInput
+            onChangeText = {text => changeTextUserName(text)}
+            placeholder = "UserName"
+            value = {textUserName}
+          />
+        </View>
+      </View>
+      <View style = {styles.logInTextAreaContainer}>
+        <Text style = {styles.logInTextAbove}>Password</Text>
+        <View style = {styles.logInTextInputContainer}>
+          <TextInput
+            onChangeText = {text => changeTextPassword(text)}
+            placeholder = "Password"
+            value = {textPassword}
+          />
+        </View>
+      </View>
+      <View style = {styles.logInButtonContainer}>
+        <TouchableHighlight 
+          style = {styles.logInButton}
+          onPress = {createNewAccount}
+        >
+          <Text style = {styles.logInButtonText}>Sign Up</Text>
+        </TouchableHighlight>
+      </View>
+    </View>
+    <View style = {styles.logInCreateAccountContainer}>
+        <Text style = {styles.AverageWhiteText}>Already have an account? </Text>
+        <TouchableHighlight
+          onPress = {goToLogIn}
+        >
+          <Text style = {styles.AverageWhiteTextBolded}>Sign In</Text>
+        </TouchableHighlight>
+    </View>
+  </TopBar>
   );
 }
 
@@ -531,5 +603,14 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
-  }
+  },
+  logInRedFailedContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logInRedFailedText: {
+    color: 'red',
+    fontSize: 16,
+  },
 });
