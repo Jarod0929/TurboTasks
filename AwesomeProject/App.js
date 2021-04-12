@@ -303,15 +303,12 @@ const ProjectPanel = (props) => {
 /*Project creation Page*/
 function ProjectCreation ({ navigation }) { 
   //Insert the Project Code here
-  
-  /*const {user} = route.params;*/
-  
-  const {user} = GLOBALUSERID;
+    
+  const user = GLOBALUSERID;
   const [projectName, changeProjectName] = useState('');//For the projectName field
   const [invUsers, changeInvUsers] = useState('');//For the inviteUsers field
   const [invUsersList, addUsersList] = useState([user]);//For the inviteUsers button
   const [date, setDate] = useState(new Date())
-
   const addProjectIds = (userId, projectId) => {
     //Gets projects[] from user
     
