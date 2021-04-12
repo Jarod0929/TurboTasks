@@ -451,15 +451,23 @@ function ProjectCreation ({ navigation }) {
   );
 }
 
-let testUser = "-MXwL_44uOouN9v7CXzh";
-let testProject = "-MXyDfORu-Q-DPJflmoE"
+let testUser = "-MXwL_44uOouN9v7CXzh"; //Using minecraft
+let testProject = "-MXyDfORu-Q-DPJflmoE"; //Using testProject second one from above
 let allProjectTasks = []; //We use this because Flat list doesn't allow for good dynamic changes. Maybe should be unique IDs
 function Project ({ navigation, route }) { 
   //Insert the Project Code here
   const [text, changeText] = useState('');
-
-  if(allProjectTasks.length === 0){
-
+  //const Tasks = database().ref("/Database/Tasks").push(); //First Account and is structure of how it should look
+  //Tasks.set({ 
+  //  Text: "",
+  //  ID: "",
+  //  ParentTask: "",
+  //  SubArray: [],
+  //});
+  if(allProjectTasks.length === 0){//Which means every time it exits, you must reset the allProjectTasks back to empty REMEMBER
+    database().ref(`/Database/Projects/${testProject}`).once('value', snapshot => {
+      allProjectTasks = snapshot.val().tasks;
+    });
   }
 
   return (// TopBar is supposed to handle the Drawer and don't forget about it
