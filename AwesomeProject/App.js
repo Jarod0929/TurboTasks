@@ -61,7 +61,7 @@ function LogIn({ navigation }){
     if(snapshot.val().Password === textPassword){//Checks if the Password is the same
       changeTextUserName(""); //Resets Username if goes onto next screen
       changefailed(false); //Resets failed message
-      navigation.navigate("ProjectList", {user: snapshot.val().ID});
+      navigation.navigate("Main",{screen: 'ProjectList', params: {user: snapshot.val().ID }});
       GLOBALUSERID=snapshot.val().ID;
 
     }
@@ -123,7 +123,7 @@ function LogIn({ navigation }){
         <View style = {styles.logInButtonContainer}>
           <TouchableHighlight 
             style = {styles.logInButton}
-            onPress = {() => navigation.navigate("Project")}
+            onPress = {() => navigation.navigate("Main",{screen: 'Project'})}
           >
             <Text style = {styles.logInButtonText}>Goto Test Project</Text>
           </TouchableHighlight>
@@ -453,10 +453,9 @@ function ProjectCreation ({ navigation }) {
 
 let testUser = "-MXwL_44uOouN9v7CXzh"; //Using minecraft
 let testProject = "-MXyDfORu-Q-DPJflmoE"; //Using testProject second one from above
-let allProjectTasks = []; //We use this because Flat list doesn't allow for good dynamic changes. Maybe should be unique IDs
+//let allProjectTasks = []; //We use this because Flat list doesn't allow for good dynamic changes. Maybe should be unique IDs
 function Project ({ navigation, route }) { 
   //Insert the Project Code here
-  const [text, changeText] = useState('');
   //const Tasks = database().ref("/Database/Tasks").push(); //First Account and is structure of how it should look
   //Tasks.set({ 
   //  Text: "",
@@ -464,27 +463,27 @@ function Project ({ navigation, route }) {
   //  ParentTask: "",
   //  SubArray: [],
   //});
+  const [flashlight, changeFlashLight] = useState(false);
+  const [allProjectTasks, changeAllProjectTasks] = useState([]);
+  const newData = [0,1,2,3,4,5,6];
   if(allProjectTasks.length === 0){//Which means every time it exits, you must reset the allProjectTasks back to empty REMEMBER
     database().ref(`/Database/Projects/${testProject}`).once('value', snapshot => {
-      allProjectTasks = snapshot.val().tasks;
+      if(snapshot.val().tasks !== undefined){
+        changeAllProjectTasks(snapshot.val().tasks);
+      }
     });
   }
-
+  console.log(allProjectTasks);
   return (// TopBar is supposed to handle the Drawer and don't forget about it
   <View style = {{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <TouchableHighlight
-
-      >
-        <Text>Add Cell</Text>
-      </TouchableHighlight>
       <FlatList
-        data = {allProjectTasks}
+        data = {newData}
         renderItem = {({item}) => {
-          <TouchableHighlight>
-            {item}
-          </TouchableHighlight>
-        }}
+          <View style = {{height: 10, width: 10, backgroundColor: 'black'}}>
 
+          </View>
+        }}
+        keyExtractor = {(item) => item}
       />
   </View>
   );
