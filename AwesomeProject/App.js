@@ -62,8 +62,8 @@ function LogIn({ navigation }){
     if(snapshot.val().Password === textPassword){//Checks if the Password is the same
       changeTextUserName(""); //Resets Username if goes onto next screen
       changefailed(false); //Resets failed message
-      navigation.navigate("Main",{screen: 'ProjectList', params: {user: snapshot.val().ID }});
       GLOBALUSERID=snapshot.val().ID;
+      navigation.navigate("Main",{screen: 'ProjectList', params: {user: snapshot.val().ID }});
 
     }
     database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).off("child_added", samePassword); 
@@ -233,41 +233,25 @@ function CreateAccount ({navigation}) {
   );
 }
 
-let count = 0;
 function ProjectList ({ route, navigation }) {
   
-  const [user, changeUser] = useState(null);
-  const [projects, changeProjects] = useState([]);
-  const [projectList, changeProjectList] = useState([]); /*List of the projects */
+  const [projects, changeProjects] = useState(null);
 
   /* Takes the users info looking for the users projects */
-  const handleUser = snapshot => {
+
+  const handleProject = snapshot => {
     console.log(snapshot.val());
-    if(snapshot.val().projects.length != 0){
-      
-      changeProjects(snapshot.val().projects);
-    }
-    changeUser(snapshot.val());
+    changeProjects(snapshot.val().projects);
   }
 
   /* if the user is null find the user using route params*/
-  if(user == null){
-    console.log("Hello");
-    database().ref("/Database/Users/" + GLOBALUSERID).once("value", handleUser);
+  if(projects == null){
+    database().ref("/Database/Users/" + GLOBALUSERID).once("value", handleProject);
   }
-   /* handles the projects adds new projects to the list*/
-  const handleProject = snapshot => {
-    let list = projectList.slice()
-    list.push(snapshot.val());
-    changeProjectList(list);
-  }
-  
-  if(projects.length > projectList.length && user != null){
-    database().ref("/Database/Projects/" + projects[projectList.length]).once("value", handleProject);
-  }
-
-/* if no projects are rpesent ouuput this*/
-  if(projectList.length == 0){
+  console.log(GLOBALUSERID);
+  console.log(projects);
+  /* if no projects are present output this*/
+  if(projects != null && projects.length == 0){
     return (// TopBar is supposed to handle the Drawer and don't forget about it
     <TopBar>
       <TouchableHighlight 
@@ -275,7 +259,6 @@ function ProjectList ({ route, navigation }) {
                 backgroundColor: "blue", left: "85%", top: 0}}
         onPress={() => {
          navigation.navigate("ProjectCreation",{user: GLOBALUSERID});
-          
         }}
       >
         <View>
@@ -287,7 +270,6 @@ function ProjectList ({ route, navigation }) {
       </View>
     </TopBar>
     );
-
   } 
   /*If the user has at least one project output this*/
   else {
@@ -299,7 +281,6 @@ function ProjectList ({ route, navigation }) {
                   backgroundColor: "blue", left: "85%", top: 0}}
           
           onPress={() => {
-            console.log(route.params.user);
             navigation.navigate("ProjectCreation", { user: GLOBALUSERID});
         }}
         >
@@ -311,7 +292,7 @@ function ProjectList ({ route, navigation }) {
         <View style={{ top: "0%", height: "85%", backgroundColor: "white", flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <FlatList
             style={{width: "100%"}}
-            data={projectList}
+            data={projects}
             renderItem={({item}) => 
             <React.StrictMode>
               <ProjectPanel
@@ -321,27 +302,49 @@ function ProjectList ({ route, navigation }) {
             </React.StrictMode>
 
             }
-            keyExtractor={item => item}
+            keyExtractor={item => item.ID}
           />
         </View>
-
       </TopBar>
-
     );
   }
 }
+
 /* Each project Box the user has*/
 const ProjectPanel = (props) => {
-  return (
-    <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
+  const [project, changeProject] = useState(null);
+
+  const handleProject = snapshot => {
+    changeProject(snapshot.val());
+  }
+
+  if(project == null) {
+    database().ref("/Database/Projects/" + props.project).once("value", handleProject);
+  }
+
+  if(project != null) {
+    return (
+      <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
         <Text style={{fontSize: 20}}>
-          {props.project.title}
+          {project.title}
         </Text>
-        <Text>{props.project.tasks.length} Task(s)</Text>
-        <Text>Due Date: {props.project.dueDate} </Text>
-        <Text>{props.project.users.length} User(s)</Text>
+        <Text>{project.tasks.length} Task(s)</Text>
+        <Text>Due Date: {project.dueDate} </Text>
+        <Text>{project.users.length} User(s)</Text>
+      </View>
+    );
+  } else {
+    return (
+    <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
+      <Text style={{fontSize: 20}}>
+        Title
+      </Text>
+      <Text>0 Task(s)</Text>
+      <Text>Due Date: due </Text>
+      <Text>0 User(s)</Text>
     </View>
-  );
+    );
+  }
 }
 
 /*Project creation Page*/
@@ -467,11 +470,15 @@ const TaskPanel = (props) => {
   }
   if(task != null){
    return (
+     <TouchableHighlight onPress = {() => {
+       props.navigation.navigate("EditTask", {taskID: props.project});
+     }}>
     <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
         <Text style={{fontSize: 20}}>
            {task.text}
         </Text>
       </View>
+      </TouchableHighlight>
     );
   }
   else{
@@ -533,6 +540,7 @@ function Project ({ navigation, route }) {
               <React.StrictMode>
                 <TaskPanel
                   project = {item}
+                  navigation = {navigation}
                 />
               </React.StrictMode>
               }
@@ -543,26 +551,28 @@ function Project ({ navigation, route }) {
 }
 
 function EditTask ({ navigation, route }){
-  const [newText, changeText] = useState('');
-  
-  if(newText == ''){
+  const [newText, changeText] = useState(null);
+  if(newText == null){
     database().ref(`/Database/Tasks/${route.params.taskID}`).once('value', snapshot => {
       changeText(snapshot.val().text);
     });
   }
+  const handleText = () => {
+    database().ref(`/Database/Tasks/${route.params.taskID}`).update({
+      text: newText
+    });
+  }
+  console.log(newText);
   return (
     <View>
       <TextInput 
-        onChange = {text => changeText(text)}
+        onChangeText = {text => changeText(text)}
         value = {newText}
       />
       <TouchableHighlight
         onPress = {() => {
-          database().ref(`/Database/Tasks/${route.params.taskID}`).update({
-            text: newText
-          });
-          changeText('');
-          navigation.navigate('Project');
+          handleText();
+         navigation.navigate('Project');
         }}
       >
         <Text>Save Changes?</Text>
@@ -571,6 +581,7 @@ function EditTask ({ navigation, route }){
 
   );
 }
+
 
 
 const RootScreen = createDrawerNavigator();
@@ -600,6 +611,7 @@ const SecondDrawer = createDrawerNavigator();
     <SecondDrawer.Screen name="ProjectCreation" component={ProjectCreation}/>
     <SecondDrawer.Screen name = "Settings⚙️" component={Settings}/>
     <SecondDrawer.Screen name = "Project" component={Project}/>
+    <SecondDrawer.Screen name = "EditTask" component={EditTask}/>
   </SecondDrawer.Navigator>
   
 
