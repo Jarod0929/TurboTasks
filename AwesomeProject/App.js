@@ -242,7 +242,6 @@ function ProjectList ({ route, navigation }) {
 
   /* Takes the users info looking for the users projects */
   const handleUser = snapshot => {
-    console.log(snapshot.val());
     if(snapshot.val().projects.length != 0){
       
       changeProjects(snapshot.val().projects);
@@ -299,7 +298,6 @@ function ProjectList ({ route, navigation }) {
                   backgroundColor: "blue", left: "85%", top: 0}}
           
           onPress={() => {
-            console.log(route.params.user);
             navigation.navigate("ProjectCreation", { user: GLOBALUSERID});
         }}
         >
@@ -461,17 +459,20 @@ const TaskPanel = (props) => {
   const handleTask = snapshot => {
     changeTask(snapshot.val());
   }
-  console.log(props);
   if(task == null) {
     database().ref("/Database/Tasks/" + props.project).once("value", handleTask);
   }
   if(task != null){
    return (
+     <TouchableHighlight onPress = {() => {
+       props.navigation.navigate("EditTask", {taskID: props.project});
+     }}>
     <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
         <Text style={{fontSize: 20}}>
            {task.text}
         </Text>
       </View>
+      </TouchableHighlight>
     );
   }
   else{
@@ -504,15 +505,6 @@ function Project ({ navigation, route }) {
     });
   }
 
-  /*const renderTasks = ({ item }) => {
-    database().ref(`/Database/Tasks/${item}`).once('value', snapshot => {
-      return (
-        <View style = {{width: "100%", backgroundColor: 'orange', alignItems: "center"}}>
-          <Text>{props.text}</Text>
-        </View>
-      );
-    });
-  };*/
   return (// TopBar is supposed to handle the Drawer and don't forget about it
   <View style={{ top: "0%", height: "85%", backgroundColor: "white", flex: 1, alignItems: 'center', justifyContent: 'center' }}>
     <TouchableHighlight 
@@ -543,6 +535,7 @@ function Project ({ navigation, route }) {
               <React.StrictMode>
                 <TaskPanel
                   project = {item}
+                  navigation = {navigation}
                 />
               </React.StrictMode>
               }
@@ -553,26 +546,28 @@ function Project ({ navigation, route }) {
 }
 
 function EditTask ({ navigation, route }){
-  const [newText, changeText] = useState('');
-  
-  if(newText == ''){
+  const [newText, changeText] = useState(null);
+  if(newText == null){
     database().ref(`/Database/Tasks/${route.params.taskID}`).once('value', snapshot => {
       changeText(snapshot.val().text);
     });
   }
+  const handleText = () => {
+    database().ref(`/Database/Tasks/${route.params.taskID}`).update({
+      text: newText
+    });
+  }
+  console.log(newText);
   return (
     <View>
       <TextInput 
-        onChange = {text => changeText(text)}
+        onChangeText = {text => changeText(text)}
         value = {newText}
       />
       <TouchableHighlight
         onPress = {() => {
-          database().ref(`/Database/Tasks/${route.params.taskID}`).update({
-            text: newText
-          });
-          changeText('');
-          navigation.navigate('Project');
+          handleText();
+         navigation.navigate('Project');
         }}
       >
         <Text>Save Changes?</Text>
@@ -581,6 +576,7 @@ function EditTask ({ navigation, route }){
 
   );
 }
+
 
 
 const RootScreen = createDrawerNavigator();
@@ -610,6 +606,7 @@ const SecondDrawer = createDrawerNavigator();
     <SecondDrawer.Screen name="ProjectCreation" component={ProjectCreation}/>
     <SecondDrawer.Screen name = "Settings⚙️" component={Settings}/>
     <SecondDrawer.Screen name = "Project" component={Project}/>
+    <SecondDrawer.Screen name = "EditTask" component={EditTask}/>
   </SecondDrawer.Navigator>
   
 
