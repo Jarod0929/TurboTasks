@@ -471,6 +471,7 @@ let testUser = "-MXwL_44uOouN9v7CXzh"; //Using minecraft
 let testProject = "-MXyDfORu-Q-DPJflmoE"; //Using testProject second one from above
 //let allProjectTasks = []; //We use this because Flat list doesn't allow for good dynamic changes. Maybe should be unique IDs
 const TaskPanel = (props) => {
+  
   const [task, changeTask] = useState(null);
 
   const handleTask = snapshot => {
@@ -480,6 +481,7 @@ const TaskPanel = (props) => {
     database().ref("/Database/Tasks/" + props.project).once("value", handleTask);
   }
   if(task != null){
+    
    return (
      <TouchableHighlight onPress = {() => {
        props.navigation.navigate("EditTask", {taskID: props.project});
@@ -490,6 +492,39 @@ const TaskPanel = (props) => {
         </Text>
       </View>
       </TouchableHighlight>
+    );
+  }
+  else{
+    return(
+    <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
+        <Text style={{fontSize: 20}}>
+           No Current Tasks
+        </Text>
+    </View>
+    );
+  }
+}
+
+const SubTaskPanel = (props) => {
+  
+  const [task, changeTask] = useState(null);
+
+  const handleTask = snapshot => {
+    changeTask(snapshot.val());
+  }
+  if(task == null) {
+    database().ref("/Database/Tasks/" + props.project).once("value", handleTask);
+  }
+  if(task != null){
+    
+   return (
+     
+    <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
+        <Text style={{fontSize: 20}}>
+           {task.text}
+        </Text>
+      </View>
+      
     );
   }
   else{
@@ -536,7 +571,7 @@ function Project ({ navigation, route }) {
         newTask.set({
           ID: newTaskID,
           text: "Task",
-          //parentTask: "",
+          parentTask: "none",
           //order: 1,
           //subTaskArray: [],
         });
@@ -562,12 +597,22 @@ function Project ({ navigation, route }) {
 }
 
 function EditTask ({ navigation, route }){
+  
   const [newText, changeText] = useState(null);
+  const [subTask,changeSubTask]=useState([]);
   if(newText == null){
     database().ref(`/Database/Tasks/${route.params.taskID}`).once('value', snapshot => {
       changeText(snapshot.val().text);
     });
   }
+  if(subTask.length==0){
+    database().ref(`/Database/Projects/${route.params.projID}`).once('value', snapshot => {
+      if(snapshot.val().tasks !== undefined){
+      changeSubTask(snapshot.val().tasks);
+    }});
+  }
+
+  
   const handleText = () => {
     database().ref(`/Database/Tasks/${route.params.taskID}`).update({
       text: newText
@@ -587,6 +632,9 @@ function EditTask ({ navigation, route }){
       >
         <Text>Save Changes?</Text>
       </TouchableHighlight>
+      
+     
+      
     </View>
 
   );
