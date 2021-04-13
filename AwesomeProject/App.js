@@ -461,7 +461,6 @@ const TaskPanel = (props) => {
   const handleTask = snapshot => {
     changeTask(snapshot.val());
   }
-  console.log(props);
   if(task == null) {
     database().ref("/Database/Tasks/" + props.project).once("value", handleTask);
   }
@@ -503,16 +502,6 @@ function Project ({ navigation, route }) {
       }
     });
   }
-
-  /*const renderTasks = ({ item }) => {
-    database().ref(`/Database/Tasks/${item}`).once('value', snapshot => {
-      return (
-        <View style = {{width: "100%", backgroundColor: 'orange', alignItems: "center"}}>
-          <Text>{props.text}</Text>
-        </View>
-      );
-    });
-  };*/
   return (// TopBar is supposed to handle the Drawer and don't forget about it
   <View style={{ top: "0%", height: "85%", backgroundColor: "white", flex: 1, alignItems: 'center', justifyContent: 'center' }}>
     <TouchableHighlight 
