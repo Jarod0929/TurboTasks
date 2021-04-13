@@ -515,7 +515,7 @@ function Project ({ navigation, route }) {
   const [allProjectTasks, changeAllProjectTasks] = useState([]);
 
   if(allProjectTasks.length === 0){//Which means every time it exits, you must reset the allProjectTasks back to empty REMEMBER
-    database().ref(`/Database/Projects/${testProject}`).once('value', snapshot => {
+    database().ref(`/Database/Projects/${route.params.project}`).once('value', snapshot => {
       if(snapshot.val().tasks !== undefined){
         changeAllProjectTasks(snapshot.val().tasks);
       }
@@ -530,7 +530,7 @@ function Project ({ navigation, route }) {
         let newArray = allProjectTasks.slice();
         newArray.push(newTaskID);
         changeAllProjectTasks(newArray);
-        database().ref(`/Database/Projects/${testProject}`).update({
+        database().ref(`/Database/Projects/${route.params.project}`).update({
           tasks: newArray
         });
         newTask.set({
