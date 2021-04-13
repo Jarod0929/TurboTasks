@@ -252,6 +252,7 @@ function ProjectList ({ route, navigation }) {
 
   /* if the user is null find the user using route params*/
   if(user == null){
+    console.log("Hello");
     database().ref("/Database/Users/" + GLOBALUSERID).once("value", handleUser);
   }
    /* handles the projects adds new projects to the list*/
@@ -264,7 +265,6 @@ function ProjectList ({ route, navigation }) {
   if(projects.length > projectList.length && user != null){
     database().ref("/Database/Projects/" + projects[projectList.length]).once("value", handleProject);
   }
-  
 
 /* if no projects are rpesent ouuput this*/
   if(projectList.length == 0){
@@ -316,6 +316,7 @@ function ProjectList ({ route, navigation }) {
             <React.StrictMode>
               <ProjectPanel
                 project = {item}
+                navigation ={navigation}
               />
             </React.StrictMode>
 
@@ -333,12 +334,12 @@ function ProjectList ({ route, navigation }) {
 const ProjectPanel = (props) => {
   return (
     <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
-      <Text style={{fontSize: 20}}>
-        {props.project.title}
-      </Text>
-      <Text>{props.project.tasks.length} Task(s)</Text>
-      <Text>Due Date: {props.project.dueDate} </Text>
-      <Text>{props.project.users.length} User(s)</Text>
+        <Text style={{fontSize: 20}}>
+          {props.project.title}
+        </Text>
+        <Text>{props.project.tasks.length} Task(s)</Text>
+        <Text>Due Date: {props.project.dueDate} </Text>
+        <Text>{props.project.users.length} User(s)</Text>
     </View>
   );
 }
