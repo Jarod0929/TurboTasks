@@ -248,8 +248,7 @@ function ProjectList ({ route, navigation }) {
   if(projects == null){
     database().ref("/Database/Users/" + GLOBALUSERID).once("value", handleProject);
   }
-  console.log(GLOBALUSERID);
-  console.log(projects);
+
   /* if no projects are present output this*/
   if(projects != null && projects.length == 0){
     return (// TopBar is supposed to handle the Drawer and don't forget about it
@@ -294,11 +293,13 @@ function ProjectList ({ route, navigation }) {
             style={{width: "100%"}}
             data={projects}
             renderItem={({item}) => 
-              <React.StrictMode>
-                <ProjectPanel
-                  project = {item}
-                />
-              </React.StrictMode>
+            <React.StrictMode>
+              <ProjectPanel
+                project = {item}
+                navigation ={navigation}
+              />
+            </React.StrictMode>
+
             }
             keyExtractor={item => item.ID}
           />
@@ -323,23 +324,35 @@ const ProjectPanel = (props) => {
   if(project != null) {
     return (
       <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
-        <Text style={{fontSize: 20}}>
-          {project.title}
-        </Text>
-        <Text>{project.tasks.length} Task(s)</Text>
-        <Text>Due Date: {project.dueDate} </Text>
-        <Text>{project.users.length} User(s)</Text>
+        <TouchableHighlight
+          onPress = {() => {props.navigation.navigate('Project', {project: props.project.ID});}}
+        >
+          <View>
+            <Text style={{fontSize: 20}}>
+              {project.title}
+            </Text>
+            <Text>{project.tasks.length} Task(s)</Text>
+            <Text>Due Date: {project.dueDate} </Text>
+            <Text>{project.users.length} User(s)</Text>
+          </View>
+        </TouchableHighlight>
       </View>
     );
   } else {
     return (
     <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
-      <Text style={{fontSize: 20}}>
-        Title
-      </Text>
-      <Text>0 Task(s)</Text>
-      <Text>Due Date: due </Text>
-      <Text>0 User(s)</Text>
+      <TouchableHighlight
+        onPress = {() => {props.navigation.navigate('Project', {project: props.project.ID});}}
+      >
+        <View>
+          <Text style={{fontSize: 20}}>
+            Title
+          </Text>
+          <Text>0 Task(s)</Text>
+          <Text>Due Date: due </Text>
+          <Text>0 User(s)</Text>
+        </View>
+      </TouchableHighlight>
     </View>
     );
   }
@@ -502,13 +515,12 @@ function Project ({ navigation, route }) {
   const [allProjectTasks, changeAllProjectTasks] = useState([]);
 
   if(allProjectTasks.length === 0){//Which means every time it exits, you must reset the allProjectTasks back to empty REMEMBER
-    database().ref(`/Database/Projects/${testProject}`).once('value', snapshot => {
+    database().ref(`/Database/Projects/${route.params.project}`).once('value', snapshot => {
       if(snapshot.val().tasks !== undefined){
         changeAllProjectTasks(snapshot.val().tasks);
       }
     });
   }
-
   return (// TopBar is supposed to handle the Drawer and don't forget about it
   <View style={{ top: "0%", height: "85%", backgroundColor: "white", flex: 1, alignItems: 'center', justifyContent: 'center' }}>
     <TouchableHighlight 
@@ -518,7 +530,7 @@ function Project ({ navigation, route }) {
         let newArray = allProjectTasks.slice();
         newArray.push(newTaskID);
         changeAllProjectTasks(newArray);
-        database().ref(`/Database/Projects/${testProject}`).update({
+        database().ref(`/Database/Projects/${route.params.project}`).update({
           tasks: newArray
         });
         newTask.set({
