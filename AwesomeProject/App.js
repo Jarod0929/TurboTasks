@@ -18,6 +18,7 @@ import {
   TouchableHighlight,
   TextInput,
   FlatList,
+  SnapshotViewIOS,
 } from 'react-native';
 
 import {
@@ -474,13 +475,23 @@ function Project ({ navigation, route }) {
     });
   }
 
+  const Tasks = (props) => {
+    database().ref(`/Database/Tasks/${item}`).once('value', snapshot => {
+      return (
+        <View style = {{width: "100%", backgroundColor: 'orange', alignItems: "center"}}>
+          <Text>{props.text}</Text>
+        </View>
+      );
+    });
+  }
+
   const renderTasks = ({ item }) => {
     database().ref(`/Database/Tasks/${item}`).once('value', snapshot => {
       console.log(snapshot.val().text);
       return (
-        <View style = {{width: "100%", backgroundColor: 'orange', alignItems: "center"}}>
-          <Text>{snapshot.val().text}</Text>
-        </View>
+        <Tasks
+          text = {snapshot.val().text}
+        />
       );
     });
   };
@@ -510,7 +521,11 @@ function Project ({ navigation, route }) {
   <FlatList
     style = {{width: "75%"}}
     data={allProjectTasks}
-    renderItem={renderTasks}
+    renderItem={({item}) => {
+      <Tasks
+        text = {item}
+      />
+    }}
     keyExtractor={item => item}
   />
 </View>
