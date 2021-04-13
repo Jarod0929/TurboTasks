@@ -454,6 +454,35 @@ function ProjectCreation ({ navigation }) {
 let testUser = "-MXwL_44uOouN9v7CXzh"; //Using minecraft
 let testProject = "-MXyDfORu-Q-DPJflmoE"; //Using testProject second one from above
 //let allProjectTasks = []; //We use this because Flat list doesn't allow for good dynamic changes. Maybe should be unique IDs
+const TaskPanel = (props) => {
+  const [task, changeTask] = useState(null);
+
+  const handleTask = snapshot => {
+    changeTask(snapshot.val());
+  }
+  console.log(props);
+  if(task == null) {
+    database().ref("/Database/Tasks/" + props.project).once("value", handleTask);
+  }
+  if(task != null){
+   return (
+    <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
+        <Text style={{fontSize: 20}}>
+           {task.text}
+        </Text>
+      </View>
+    );
+  }
+  else{
+    return(
+    <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
+        <Text style={{fontSize: 20}}>
+           N/A
+        </Text>
+    </View>
+    );
+  }
+}
 function Project ({ navigation, route }) { 
   //Insert the Project Code here
   //const Tasks = database().ref("/Database/Tasks").push(); //First Account and is structure of how it should look
@@ -474,7 +503,7 @@ function Project ({ navigation, route }) {
     });
   }
 
-  const renderTasks = ({ item }) => {
+  /*const renderTasks = ({ item }) => {
     database().ref(`/Database/Tasks/${item}`).once('value', snapshot => {
       console.log(snapshot.val().text);
       return (
@@ -483,37 +512,43 @@ function Project ({ navigation, route }) {
         </View>
       );
     });
-  };
+  };*/
   return (// TopBar is supposed to handle the Drawer and don't forget about it
   <View style={{ top: "0%", height: "85%", backgroundColor: "white", flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-  <TouchableHighlight 
-    onPress = {() => {
-      const newTask = database().ref(`/Database/Tasks`).push();
-      const newTaskID = newTask.key;
-      let newArray = allProjectTasks.slice();
-      newArray.push(newTaskID);
-      changeAllProjectTasks(newArray);
-      database().ref(`/Database/Projects/${testProject}`).update({
-        tasks: newArray
-      });
-      newTask.set({
-        ID: newTaskID,
-        text: "Task",
-        //parentTask: "",
-        //order: 1,
-        //subTaskArray: [],
-      });
-    }}
-  >
-    <Text>Add Cell</Text>
-  </TouchableHighlight>
-  <FlatList
-    style = {{width: "75%"}}
-    data={allProjectTasks}
-    renderItem={renderTasks}
-    keyExtractor={item => item}
-  />
-</View>
+    <TouchableHighlight 
+      onPress = {() => {
+        const newTask = database().ref(`/Database/Tasks`).push();
+        const newTaskID = newTask.key;
+        let newArray = allProjectTasks.slice();
+        newArray.push(newTaskID);
+        changeAllProjectTasks(newArray);
+        database().ref(`/Database/Projects/${testProject}`).update({
+          tasks: newArray
+        });
+        newTask.set({
+          ID: newTaskID,
+          text: "Task",
+          //parentTask: "",
+          //order: 1,
+          //subTaskArray: [],
+        });
+      }}
+    >
+      <Text>Add Cell</Text>
+    </TouchableHighlight>
+    <FlatList
+      style = {{width: "75%"}}
+      data={allProjectTasks}
+      renderItem={({item}) => 
+              <React.StrictMode>
+                <TaskPanel
+                  project = {item}
+                />
+              </React.StrictMode>
+              }
+      keyExtractor={item => item}
+    />
+  </View>      
   );
 }
 
