@@ -240,7 +240,6 @@ function ProjectList ({ route, navigation }) {
   /* Takes the users info looking for the users projects */
 
   const handleProject = snapshot => {
-    console.log(snapshot.val());
     changeProjects(snapshot.val().projects);
   }
 
@@ -325,7 +324,8 @@ const ProjectPanel = (props) => {
     return (
       <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
         <TouchableHighlight
-          onPress = {() => {props.navigation.navigate('Project', {project: props.project.ID});}}
+          onPress = {() => {
+            props.navigation.navigate('Project', {project: project.ID});}}
         >
           <View>
             <Text style={{fontSize: 20}}>
@@ -496,7 +496,7 @@ const TaskPanel = (props) => {
     return(
     <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
         <Text style={{fontSize: 20}}>
-           N/A
+           No Current Tasks
         </Text>
     </View>
     );
@@ -542,7 +542,7 @@ function Project ({ navigation, route }) {
         });
       }}
     >
-      <Text>Add Cell</Text>
+      <Text>Add Task</Text>
     </TouchableHighlight>
     <FlatList
       style = {{width: "75%"}}
@@ -573,7 +573,6 @@ function EditTask ({ navigation, route }){
       text: newText
     });
   }
-  console.log(newText);
   return (
     <View>
       <TextInput 
