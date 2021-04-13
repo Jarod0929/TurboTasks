@@ -248,8 +248,7 @@ function ProjectList ({ route, navigation }) {
   if(projects == null){
     database().ref("/Database/Users/" + GLOBALUSERID).once("value", handleProject);
   }
-  console.log(GLOBALUSERID);
-  console.log(projects);
+
   /* if no projects are present output this*/
   if(projects != null && projects.length == 0){
     return (// TopBar is supposed to handle the Drawer and don't forget about it
@@ -325,23 +324,35 @@ const ProjectPanel = (props) => {
   if(project != null) {
     return (
       <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
-        <Text style={{fontSize: 20}}>
-          {project.title}
-        </Text>
-        <Text>{project.tasks.length} Task(s)</Text>
-        <Text>Due Date: {project.dueDate} </Text>
-        <Text>{project.users.length} User(s)</Text>
+        <TouchableHighlight
+          onPress = {() => {props.navigation.navigate('Project', {project: props.project.ID});}}
+        >
+          <View>
+            <Text style={{fontSize: 20}}>
+              {project.title}
+            </Text>
+            <Text>{project.tasks.length} Task(s)</Text>
+            <Text>Due Date: {project.dueDate} </Text>
+            <Text>{project.users.length} User(s)</Text>
+          </View>
+        </TouchableHighlight>
       </View>
     );
   } else {
     return (
     <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
-      <Text style={{fontSize: 20}}>
-        Title
-      </Text>
-      <Text>0 Task(s)</Text>
-      <Text>Due Date: due </Text>
-      <Text>0 User(s)</Text>
+      <TouchableHighlight
+        onPress = {() => {props.navigation.navigate('Project', {project: props.project.ID});}}
+      >
+        <View>
+          <Text style={{fontSize: 20}}>
+            Title
+          </Text>
+          <Text>0 Task(s)</Text>
+          <Text>Due Date: due </Text>
+          <Text>0 User(s)</Text>
+        </View>
+      </TouchableHighlight>
     </View>
     );
   }
