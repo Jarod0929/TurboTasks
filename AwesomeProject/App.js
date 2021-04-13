@@ -443,7 +443,7 @@ function ProjectCreation ({ navigation }) {
         <View
           style = {styles.buttonLogIn}
         >
-          <Text>Creat Project</Text>
+          <Text>Create Project</Text>
         </View>
       </TouchableHighlight>
       </View>
@@ -463,9 +463,9 @@ function Project ({ navigation, route }) {
   //  ParentTask: "",
   //  SubArray: [],
   //});
-  const [flashlight, changeFlashLight] = useState(false);
+  //const [flashlight, changeFlashLight] = useState(false); If needed Flashlight for dark areas
   const [allProjectTasks, changeAllProjectTasks] = useState([]);
-  const newData = ["Hello", "Cool", "Person"];
+
   if(allProjectTasks.length === 0){//Which means every time it exits, you must reset the allProjectTasks back to empty REMEMBER
     database().ref(`/Database/Projects/${testProject}`).once('value', snapshot => {
       if(snapshot.val().tasks !== undefined){
@@ -473,17 +473,44 @@ function Project ({ navigation, route }) {
       }
     });
   }
-  console.log(allProjectTasks);
+
+  const renderTasks = ({ item }) => {
+    database().ref(`/Database/Tasks/${item}`).once('value', snapshot => {
+      console.log(snapshot.val().text);
+      return (
+        <View style = {{width: "100%", backgroundColor: 'orange', alignItems: "center"}}>
+          <Text>{snapshot.val().text}</Text>
+        </View>
+      );
+    });
+  };
   return (// TopBar is supposed to handle the Drawer and don't forget about it
   <View style={{ top: "0%", height: "85%", backgroundColor: "white", flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+  <TouchableHighlight 
+    onPress = {() => {
+      const newTask = database().ref(`/Database/Tasks`).push();
+      const newTaskID = newTask.key;
+      let newArray = allProjectTasks.slice();
+      newArray.push(newTaskID);
+      changeAllProjectTasks(newArray);
+      database().ref(`/Database/Projects/${testProject}`).update({
+        tasks: newArray
+      });
+      newTask.set({
+        ID: newTaskID,
+        text: "Task",
+        //parentTask: "",
+        //order: 1,
+        //subTaskArray: [],
+      });
+    }}
+  >
+    <Text>Add Cell</Text>
+  </TouchableHighlight>
   <FlatList
     style = {{width: "75%"}}
     data={allProjectTasks}
-    renderItem={({item}) => 
-      <View style = {{width: "100%", backgroundColor: 'orange', alignItems: "center"}}>
-        <Text>{item}</Text>
-      </View>
-    }
+    renderItem={renderTasks}
     keyExtractor={item => item}
   />
 </View>
