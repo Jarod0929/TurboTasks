@@ -18,6 +18,7 @@ import {
   TouchableHighlight,
   TextInput,
   FlatList,
+  SnapshotViewIOS,
 } from 'react-native';
 
 import {
@@ -128,14 +129,14 @@ function LogIn({ navigation }){
             <Text style = {styles.logInButtonText}>Goto Test Project</Text>
           </TouchableHighlight>
         </View>
-      </View>
-      <View style = {styles.logInCreateAccountContainer}>
-          <Text style = {styles.AverageWhiteText}>Don't have an Account? </Text>
-          <TouchableHighlight
+        <View style = {styles.logInButtonContainer}>
+          <TouchableHighlight 
+            style = {styles.logInButton}
             onPress = {goToCreateAccount}
           >
-            <Text style = {styles.AverageWhiteTextBolded}>Sign Up</Text>
+            <Text style = {styles.logInButtonText}>Sign Up</Text>
           </TouchableHighlight>
+        </View>
       </View>
     </TopBar>
   );
@@ -219,14 +220,14 @@ function CreateAccount ({navigation}) {
           <Text style = {styles.logInButtonText}>Sign Up</Text>
         </TouchableHighlight>
       </View>
-    </View>
-    <View style = {styles.logInCreateAccountContainer}>
-        <Text style = {styles.AverageWhiteText}>Already have an account? </Text>
-        <TouchableHighlight
+      <View style = {styles.logInButtonContainer}>
+        <TouchableHighlight 
+          style = {styles.logInButton}
           onPress = {goToLogIn}
         >
-          <Text style = {styles.AverageWhiteTextBolded}>Sign In</Text>
+          <Text style = {styles.logInButtonText}>Sign In</Text>
         </TouchableHighlight>
+      </View>
     </View>
   </TopBar>
   );
@@ -505,10 +506,9 @@ function Project ({ navigation, route }) {
 
   /*const renderTasks = ({ item }) => {
     database().ref(`/Database/Tasks/${item}`).once('value', snapshot => {
-      console.log(snapshot.val().text);
       return (
         <View style = {{width: "100%", backgroundColor: 'orange', alignItems: "center"}}>
-          <Text>{snapshot.val().text}</Text>
+          <Text>{props.text}</Text>
         </View>
       );
     });
@@ -553,15 +553,30 @@ function Project ({ navigation, route }) {
 }
 
 function EditTask ({ navigation, route }){
-  const [text, changeText] = useState('');
+  const [newText, changeText] = useState('');
   
-
+  if(newText == ''){
+    database().ref(`/Database/Tasks/${route.params.taskID}`).once('value', snapshot => {
+      changeText(snapshot.val().text);
+    });
+  }
   return (
     <View>
       <TextInput 
-        onChange = {newText => changeText(newText)}
-        value = {text}
+        onChange = {text => changeText(text)}
+        value = {newText}
       />
+      <TouchableHighlight
+        onPress = {() => {
+          database().ref(`/Database/Tasks/${route.params.taskID}`).update({
+            text: newText
+          });
+          changeText('');
+          navigation.navigate('Project');
+        }}
+      >
+        <Text>Save Changes?</Text>
+      </TouchableHighlight>
     </View>
 
   );
@@ -606,7 +621,7 @@ const SecondDrawer = createDrawerNavigator();
 function Settings(){
   const [username, changeUsername] = useState(null);
   const [password,changePassword] = useState(null);
-  const[prefrence,changePrefrence]=useState(null);
+  const [prefrence,changePrefrence]=useState(null);
 
   const handleUser = snapshot => {
     changeUsername(snapshot.val().Username);
