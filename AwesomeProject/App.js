@@ -392,12 +392,21 @@ function ProjectCreation ({ navigation }) {
   const createNewProject = () => {
     //Sets proper month
     let month = date.getMonth() + 1;
+    //Creates Base Task
+    const baseTask = database().ref("/Database/Tasks").push({
+        parentTask: "none",
+        text: "Click Me To Edit!",
+      });
+      //baseTask ID
+      const taskKey = baseTask.key;
+      //Sets base Task ID
+      baseTask.update({ID: taskKey});
     if(projectName != ""){
       //Initializes the new project
       const newData = database().ref("/Database/Projects").push({
         title: projectName,
         users: invUsersList,
-        tasks: ["PlaceHolder"],
+        tasks: [taskKey],
         dueDate: month + " " + date.getDate() + " " + date.getFullYear() 
       });
       //Project ID
@@ -517,6 +526,7 @@ function Project ({ navigation, route }) {
   if(allProjectTasks.length === 0){//Which means every time it exits, you must reset the allProjectTasks back to empty REMEMBER
     database().ref(`/Database/Projects/${route.params.project}`).once('value', snapshot => {
       if(snapshot.val().tasks !== undefined){
+        console.log(snapshot.val().tasks[0]);
         changeAllProjectTasks(snapshot.val().tasks);
       }
     });
