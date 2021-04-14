@@ -33,9 +33,10 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import database from '@react-native-firebase/database';
 import DatePicker from 'react-native-date-picker'
+import { add } from 'react-native-reanimated';
 
 let GLOBALUSERID;
-
+ 
 const TopBar = ({children}) => {
   return (
     <View style = {styles.container}>
@@ -596,22 +597,34 @@ function Project ({ navigation, route }) {
   );
 }
 
+// onPress = {() => {
+//   const newSubTask = database().ref(`/Database/Tasks`).push();
+//   const newSubTaskID = newTask.key;
+//   let newArray = allSubTasks.slice();
+//   newArray.push(newSubTaskID);
+//   changeSubTask(newArray);
+//   database().ref(`/Database/Projects/${route.params.project}`).update({
+//     tasks: newArray
+//   });
+//   newSubTask.set({
+//     ID: newSubTaskID,
+//     text: "Task",
+//     parentTask: route.params.taskID,
+//     //order: 1,
+//     //subTaskArray: [],
+//   });
+// }}
 function EditTask ({ navigation, route }){
   
   const [newText, changeText] = useState(null);
   const [subTask,changeSubTask]=useState([]);
+ 
+
   if(newText == null){
     database().ref(`/Database/Tasks/${route.params.taskID}`).once('value', snapshot => {
       changeText(snapshot.val().text);
     });
   }
-  if(subTask.length==0){
-    database().ref(`/Database/Projects/${route.params.projID}`).once('value', snapshot => {
-      if(snapshot.val().tasks !== undefined){
-      changeSubTask(snapshot.val().tasks);
-    }});
-  }
-
   
   const handleText = () => {
     database().ref(`/Database/Tasks/${route.params.taskID}`).update({
@@ -638,6 +651,26 @@ function EditTask ({ navigation, route }){
     </View>
 
   );
+}
+
+
+function SubTaskPage({route, navigation}){
+  const[text,changeText]=useState(null);
+  
+
+  return(
+    <TopBar>
+      <View>
+        <Text>{text}</Text>
+      </View>
+    </TopBar>
+
+
+  );
+
+
+  
+
 }
 
 
