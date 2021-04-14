@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -550,13 +550,16 @@ function Project ({ navigation, route }) {
   //const [flashlight, changeFlashLight] = useState(false); If needed Flashlight for dark areas
   const [allProjectTasks, changeAllProjectTasks] = useState([]);
 
-  if(allProjectTasks.length === 0){//Which means every time it exits, you must reset the allProjectTasks back to empty REMEMBER
+  useEffect(() => {
     database().ref(`/Database/Projects/${route.params.project}`).once('value', snapshot => {
       if(snapshot.val().tasks !== undefined){
         changeAllProjectTasks(snapshot.val().tasks);
       }
     });
-  }
+  });
+  // if(allProjectTasks.length === 0){//Which means every time it exits, you must reset the allProjectTasks back to empty REMEMBER
+
+  // }
   return (// TopBar is supposed to handle the Drawer and don't forget about it
   <View style={{ top: "0%", height: "85%", backgroundColor: "white", flex: 1, alignItems: 'center', justifyContent: 'center' }}>
     <TouchableHighlight 
@@ -604,10 +607,25 @@ function EditTask ({ navigation, route }){
   
   const [newText, changeText] = useState(null);
   const [subTask,changeSubTask]=useState(null);
- 
+  console.log(route.params.taskID);
+  useEffect(() => {
+    let something = database().ref("/Database/Tasks").orderByChild("parentTask").equalTo(route.params.taskID).on("value", snapshot => {
+      let list = [];
+      
+      for(let key in snapshot.val()){
+  
+        // takes the keyID of the subtask
+        list.push(key);
+      }
+      changeSubTask(list);
+      database().ref("/Database/Tasks").orderByChild("parentTask").equalTo(route.params.taskID).off("value", something);
+    });
+  });
+  /*
   if(subTask==null){
     let something = database().ref("/Database/Tasks").orderByChild("parentTask").equalTo(route.params.taskID).on("value", snapshot => {
       let list = [];
+      
       for(let key in snapshot.val()){
   
         // takes the keyID of the subtask
@@ -617,10 +635,7 @@ function EditTask ({ navigation, route }){
       database().ref("/Database/Tasks").orderByChild("parentTask").equalTo(route.params.taskID).off("value", something);
     });
   }
-  
-  
-  console.log(subTask);
-  
+  */
   
   if(newText == null){
     database().ref(`/Database/Tasks/${route.params.taskID}`).once('value', snapshot => {
@@ -685,9 +700,10 @@ function EditTask ({ navigation, route }){
           <TouchableHighlight
             onPress = {() => {
               handleText();
+              navigation.navigate('Project');
               changeSubTask(null);
               changeText(null);
-              navigation.navigate('Project');
+              
             }}
           >
             <Text>Save Changes?</Text>
