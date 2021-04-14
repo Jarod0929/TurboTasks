@@ -485,7 +485,7 @@ const TaskPanel = (props) => {
     
    return (
      <TouchableHighlight onPress = {() => {
-       props.navigation.navigate("EditTask", {taskID: props.project});
+       props.navigation.navigate("EditTask", {taskID: props.project, projectID: props.projectID});
      }}>
     <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
         <Text style={{fontSize: 20}}>
@@ -588,6 +588,8 @@ function Project ({ navigation, route }) {
                 <TaskPanel
                   project = {item}
                   navigation = {navigation}
+                  projectID ={route.params.project}
+                  
                 />
               </React.StrictMode>
               }
@@ -597,29 +599,29 @@ function Project ({ navigation, route }) {
   );
 }
 
-// onPress = {() => {
-//   const newSubTask = database().ref(`/Database/Tasks`).push();
-//   const newSubTaskID = newTask.key;
-//   let newArray = allSubTasks.slice();
-//   newArray.push(newSubTaskID);
-//   changeSubTask(newArray);
-//   database().ref(`/Database/Projects/${route.params.project}`).update({
-//     tasks: newArray
-//   });
-//   newSubTask.set({
-//     ID: newSubTaskID,
-//     text: "Task",
-//     parentTask: route.params.taskID,
-//     //order: 1,
-//     //subTaskArray: [],
-//   });
-// }}
+
 function EditTask ({ navigation, route }){
   
   const [newText, changeText] = useState(null);
-  const [subTask,changeSubTask]=useState([]);
+  const [subTask,changeSubTask]=useState(null);
  
-
+  if(subTask==null){
+    let something = database().ref("/Database/Tasks").orderByChild("parentTask").equalTo(route.params.taskID).on("value", snapshot => {
+      let list = [];
+      for(let key in snapshot.val()){
+  
+        // takes the keyID of the subtask
+        list.push(key);
+      }
+      changeSubTask(list);
+      database().ref("/Database/Tasks").orderByChild("parentTask").equalTo(route.params.taskID).off("value", something);
+    });
+  }
+  
+  
+  console.log(subTask);
+  
+  
   if(newText == null){
     database().ref(`/Database/Tasks/${route.params.taskID}`).once('value', snapshot => {
       changeText(snapshot.val().text);
@@ -631,7 +633,8 @@ function EditTask ({ navigation, route }){
       text: newText
     });
   }
-  return (
+  if(subTask==null){
+    return(
     <View>
       <TextInput 
         onChangeText = {text => changeText(text)}
@@ -640,17 +643,94 @@ function EditTask ({ navigation, route }){
       <TouchableHighlight
         onPress = {() => {
           handleText();
+          changeSubTask(null);
+          changeText(null);
+
          navigation.navigate('Project');
         }}
       >
         <Text>Save Changes?</Text>
       </TouchableHighlight>
-      
-     
-      
-    </View>
+      <TouchableHighlight  
+      onPress = {() => {
+          const newSubTask = database().ref(`/Database/Tasks`).push();
+          const newSubTaskID = newSubTask.key;
+          let newArray =[];
+          newArray.push(newSubTaskID);
+          changeSubTask(newArray);
 
-  );
+          // database().ref(`/Database/Projects/${route.params.project}`).update({
+          //   tasks: newArray
+          // });
+
+          newSubTask.set({
+            ID: newSubTaskID,
+            text: "SubTask",
+            parentTask: route.params.taskID,
+            projectID: route.params.projectID,
+            //order: 1,
+            //subTaskArray: [],
+          });
+      }}><Text>Add Sub Task</Text>
+      </TouchableHighlight>
+    </View>
+    );
+  }else{  // if flat list and subTask are not null
+      return (
+        <View>
+          <TextInput 
+            onChangeText = {text => changeText(text)}
+            value = {newText}
+          />
+          <TouchableHighlight
+            onPress = {() => {
+              handleText();
+              changeSubTask(null);
+              changeText(null);
+              navigation.navigate('Project');
+            }}
+          >
+            <Text>Save Changes?</Text>
+          </TouchableHighlight>
+          <TouchableHighlight  
+          onPress = {() => {
+              const newSubTask = database().ref(`/Database/Tasks`).push();
+              const newSubTaskID = newSubTask.key;
+              let newArray = subTask.slice();
+              newArray.push(newSubTaskID);
+              changeSubTask(newArray);
+
+              // database().ref(`/Database/Projects/${route.params.project}`).update({
+              //   tasks: newArray
+              // });
+
+              newSubTask.set({
+                ID: newSubTaskID,
+                text: "SubTask",
+                parentTask: route.params.taskID,
+                projectID: route.params.projectID,
+                //order: 1,
+                //subTaskArray: [],
+              });
+          }}><Text>Add Sub Task</Text>
+          </TouchableHighlight>
+          <FlatList
+            data={subTask}
+            renderItem={({item})=>(
+              <SubTaskPanel 
+              project = {item}
+              navigation = {navigation}
+              projectID ={route.params.projectID} />
+
+
+            )}
+            keyExtractor={item=>item}
+          />
+        </View>
+      
+  
+
+  );}
 }
 
 
