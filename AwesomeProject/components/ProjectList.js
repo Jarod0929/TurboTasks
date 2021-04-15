@@ -31,10 +31,15 @@ export function ProjectList ({ route, navigation }) {
     }
   
     /* if the user is null find the user using route params*/
+    /*
     if(projects == null){
       //database().ref("/Database/Users/" + GLOBALUSERID).once("value", handleProject);
       database().ref("/Database/Users/" + route.params.user).once("value", handleProject);
     }
+    */
+   useEffect(() => {
+    database().ref("/Database/Users/" + route.params.user).once("value", handleProject);
+   },[route.params.user]);
     return (
     <TopBar>
       <TouchableHighlight 
