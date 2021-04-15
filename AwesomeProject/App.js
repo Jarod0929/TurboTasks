@@ -607,20 +607,22 @@ function EditTask ({ navigation, route }){
   
   const [newText, changeText] = useState(null);
   const [subTask,changeSubTask]=useState(null);
+  const [flashlight, changeFlashlight] = useState(false);
+
   console.log(route.params.taskID);
   useEffect(() => {
     let something = database().ref("/Database/Tasks").orderByChild("parentTask").equalTo(route.params.taskID).on("value", snapshot => {
       let list = [];
-      
+        
       for(let key in snapshot.val()){
-  
+    
         // takes the keyID of the subtask
         list.push(key);
       }
       changeSubTask(list);
       database().ref("/Database/Tasks").orderByChild("parentTask").equalTo(route.params.taskID).off("value", something);
     });
-  });
+  }, [flashlight]);
   /*
   if(subTask==null){
     let something = database().ref("/Database/Tasks").orderByChild("parentTask").equalTo(route.params.taskID).on("value", snapshot => {
@@ -673,6 +675,7 @@ function EditTask ({ navigation, route }){
           let newArray =[];
           newArray.push(newSubTaskID);
           changeSubTask(newArray);
+          changeFlashlight(!flashlight);
 
           // database().ref(`/Database/Projects/${route.params.project}`).update({
           //   tasks: newArray
