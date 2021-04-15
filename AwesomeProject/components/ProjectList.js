@@ -92,16 +92,52 @@ export function ProjectList ({ route, navigation }) {
   
   /* Each project Box the user has*/
 const ProjectPanel = (props) => {
-    const [project, changeProject] = useState(null);
+  const [project, changeProject] = useState(null);
   
-    const handleProject = snapshot => {
-      changeProject(snapshot.val());
+  const handleProject = snapshot => {
+    changeProject(snapshot.val());
+  }
+  
+  if(project == null) {
+    database().ref("/Database/Projects/" + props.project).once("value", handleProject);
+  }
+  return (
+    <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
+    {project != null &&
+      <TouchableHighlight
+        onPress = {() => {
+          props.navigation.navigate('Project', {project: project.ID});}}
+      >
+       <View>
+          <Text style={{fontSize: 20}}>
+            {project.title}
+          </Text>
+          <Text>{project.tasks.length} Task(s)</Text>
+          <Text>Due Date: {project.dueDate} </Text>
+          <Text>{project.users.length} User(s)</Text>
+        </View>
+      </TouchableHighlight>
     }
-  
-    if(project == null) {
-      database().ref("/Database/Projects/" + props.project).once("value", handleProject);
+    {project == null &&
+      <TouchableHighlight
+      onPress = {() => {props.navigation.navigate('Project', {project: props.project.ID});}}
+      >
+        <View>
+          <Text style={{fontSize: 20}}>
+            Title
+          </Text>
+          <Text>0 Task(s)</Text>
+          <Text>Due Date: due </Text>
+          <Text>0 User(s)</Text>
+        </View>
+      </TouchableHighlight>
     }
-  
+    </View>
+  );
+}
+
+
+/*
     if(project != null) {
       return (
         <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
@@ -138,7 +174,7 @@ const ProjectPanel = (props) => {
       </View>
       );
     }
-}
+*/
 
 /*
 export function ProjectList ({ route, navigation }) {
