@@ -136,8 +136,9 @@ function Project ({ navigation, route }) {
       if(snapshot.val().tasks !== undefined){
         changeAllProjectTasks(snapshot.val().tasks);
       }
-    },[route.params.project]);
-  });
+    });
+  },[route.params.project]);
+  console.log("Hello");
   // if(allProjectTasks.length === 0){//Which means every time it exits, you must reset the allProjectTasks back to empty REMEMBER
 
   // }
@@ -188,7 +189,7 @@ function EditTask ({ navigation, route }){
   
   const [newText, changeText] = useState(null);
   const [subTask,changeSubTask]=useState(null);
-  const [flashlight, changeFlashlight] = useState(false);
+  const [flashlight, changeFlashlight] = useState(false); //not needed
 
   console.log(route.params.taskID);
   useEffect(() => {
@@ -203,7 +204,7 @@ function EditTask ({ navigation, route }){
       changeSubTask(list);
       database().ref("/Database/Tasks").orderByChild("parentTask").equalTo(route.params.taskID).off("value", something);
     });
-  }, [flashlight]);
+  }, [route.params.taskID]);//, [flashlight] is not needed
   /*
   if(subTask==null){
     let something = database().ref("/Database/Tasks").orderByChild("parentTask").equalTo(route.params.taskID).on("value", snapshot => {
@@ -255,8 +256,8 @@ function EditTask ({ navigation, route }){
           const newSubTaskID = newSubTask.key;
           let newArray =[];
           newArray.push(newSubTaskID);
-          changeSubTask(newArray);
-          changeFlashlight(!flashlight);
+          changeSubTask(newArray);//This updates the list
+          //changeFlashlight(!flashlight);
 
           // database().ref(`/Database/Projects/${route.params.project}`).update({
           //   tasks: newArray
