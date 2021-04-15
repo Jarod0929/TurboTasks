@@ -48,7 +48,7 @@ export function ProjectList ({ route, navigation }) {
     }
     changeUser(route.params.user);
     database().ref("/Database/Users/" + route.params.user).on("value", handleProject);
-  }, [route.params.user])
+  }, [route.params.user]);
    
     return (
     <TopBar>
