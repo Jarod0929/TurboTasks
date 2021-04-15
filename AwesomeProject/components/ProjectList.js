@@ -23,7 +23,7 @@ const TopBar = ({children}) => {
 export function ProjectList ({ route, navigation }) {
     
     const [projects, changeProjects] = useState(null);
-  
+    const [user, changeUser] = useState(null);
     /* Takes the users info looking for the users projects */
   
     const handleProject = snapshot => {
@@ -37,9 +37,19 @@ export function ProjectList ({ route, navigation }) {
       database().ref("/Database/Users/" + route.params.user).once("value", handleProject);
     }
     */
+   /*
    useEffect(() => {
     database().ref("/Database/Users/" + route.params.user).once("value", handleProject);
-   },[route.params.user]);
+   },[route.params.user, route.params.changed]);
+   */
+  useEffect(() => {
+    if(user != null){
+      database().ref("/Database/Users/" + user).off("value", handleProject);
+    }
+    changeUser(route.params.user);
+    database().ref("/Database/Users/" + route.params.user).on("value", handleProject);
+  }, [route.params.user])
+   
     return (
     <TopBar>
       <TouchableHighlight 

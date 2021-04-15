@@ -101,10 +101,11 @@ const SubTaskPanel = (props) => {
    return (
      
     <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
-        <Text style={{fontSize: 20}}>
+
+      <Text style={{fontSize: 20}}>
            {task.text}
-        </Text>
-      </View>
+      </Text>
+    </View>
       
     );
   }
@@ -135,7 +136,7 @@ function Project ({ navigation, route }) {
       if(snapshot.val().tasks !== undefined){
         changeAllProjectTasks(snapshot.val().tasks);
       }
-    });
+    },[route.params.project]);
   });
   // if(allProjectTasks.length === 0){//Which means every time it exits, you must reset the allProjectTasks back to empty REMEMBER
 

@@ -31,7 +31,7 @@ export function ProjectCreation ({ route, navigation }) {
     const [projectName, changeProjectName] = useState('');//For the projectName field
     const [invUsers, changeInvUsers] = useState('');//For the inviteUsers field
     const [invUsersList, addUsersList] = useState([user]);//For the inviteUsers button
-    const [date, setDate] = useState(new Date())
+    const [date, setDate] = useState(new Date());
     const addProjectIds = (userId, projectId) => {
       //Gets projects[] from user
       
@@ -73,7 +73,7 @@ export function ProjectCreation ({ route, navigation }) {
         invUsersList.forEach(element => addProjectIds(element, newDataKey));
         changeProjectName("");
         addUsersList([user]);
-        
+        navigation.navigate("ProjectList", {user: route.params.user, changed: newDataKey});
       }
     };
     const addUsersToList = () =>{
