@@ -162,7 +162,7 @@ function Project ({ navigation, route }) {
     >
       <Text>Add Task</Text>
     </TouchableHighlight>
-    {(allProjectTasks.length > 1) 
+    {(allProjectTasks.length >= 1) 
       ?<FlatList
         style = {{width: "75%"}}
         data={allProjectTasks}

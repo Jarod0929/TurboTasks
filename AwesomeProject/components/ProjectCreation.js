@@ -55,14 +55,23 @@ export function ProjectCreation ({ route, navigation }) {
   
     }
     const createNewProject = () => {
-      //Sets proper month
-      let month = date.getMonth() + 1;
+        //Sets proper month
+        let month = date.getMonth() + 1;
+        //Creates Base Task
+        const baseTask = database().ref("/Database/Tasks").push({
+          parentTask: "none",
+          text: "Click Me To Edit!",
+        });
+        //baseTask ID
+        const taskKey = baseTask.key;
+        //Sets base Task ID
+        baseTask.update({ID: taskKey});
       if(projectName != ""){
         //Initializes the new project
         const newData = database().ref("/Database/Projects").push({
           title: projectName,
           users: invUsersList,
-          tasks: ["PlaceHolder"],
+          tasks: [taskKey],
           dueDate: month + " " + date.getDate() + " " + date.getFullYear() 
         });
         //Project ID
