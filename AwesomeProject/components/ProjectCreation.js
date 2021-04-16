@@ -11,6 +11,33 @@ import DatePicker from 'react-native-date-picker'
 import database from '@react-native-firebase/database';
 import * as styles from './styles.js';
 
+const Drawer = (props)=>{
+  const [drawer, changeDrawer] = useState(false);
+  return(
+    <View>
+       <TouchableHighlight style={styles.navigationButtons}
+            onPress = {() => {
+              changeDrawer(!drawer);
+            }}
+          >
+          <Text>Open Navigation Drawer</Text>
+          </TouchableHighlight>
+
+
+    
+
+      {drawer &&
+      <View style= {styles.Drawercont}>
+        <TouchableHighlight onPress={()=> changeDrawer(!drawer)} style={styles.navigationButtons}><Text>Close</Text></TouchableHighlight>
+        <TouchableHighlight onPress={()=>props.navigation.navigate("ProjectList",{user:props.userInfo})} style={styles.navigationButtons}><Text>ProjectList</Text></TouchableHighlight>
+        
+
+      </View>
+      }
+    </View>
+  
+  );
+}
 const TopBar = ({children}) => {
     return (
       <View style = {styles.container}>
@@ -93,7 +120,8 @@ export function ProjectCreation ({ route, navigation }) {
     };
     
     return (// TopBar is supposed to handle the Drawer and don't forget about it
-      <TopBar> 
+      <TopBar>
+        <Drawer userInfo={route.params.user} navigation={navigation}></Drawer>
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <TextInput
           style = {styles.textInputLogIn}
