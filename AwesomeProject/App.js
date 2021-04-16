@@ -62,25 +62,21 @@ const TaskPanel = (props) => {
     database().ref("/Database/Tasks/" + props.project).once("value", handleTask);
   }
   if(task != null){
-    
    return (
      <TouchableHighlight onPress = {() => {
        props.navigation.navigate("EditTask", {taskID: props.project, projectID: props.projectID});
      }}>
-    <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
+      <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
         <Text style={{fontSize: 20}}>
            {task.text}
         </Text>
       </View>
       </TouchableHighlight>
     );
-  }
-  else{
+  }else{
     return(
-    <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
-        <Text style={{fontSize: 20}}>
-           No Current Tasks
-        </Text>
+    <View style={{margin: "5%", width: "90%", height: "0%"}}>
+    <Text>nothing</Text>
     </View>
     );
   }
@@ -143,6 +139,7 @@ function Project ({ navigation, route }) {
 
   // }
   return (// TopBar is supposed to handle the Drawer and don't forget about it
+  <TopBar>
   <View style={{ top: "0%", height: "85%", backgroundColor: "white", flex: 1, alignItems: 'center', justifyContent: 'center' }}>
     <TouchableHighlight 
       onPress = {() => {
@@ -165,22 +162,26 @@ function Project ({ navigation, route }) {
     >
       <Text>Add Task</Text>
     </TouchableHighlight>
-    <FlatList
-      style = {{width: "75%"}}
-      data={allProjectTasks}
-      renderItem={({item}) => 
-              <React.StrictMode>
-                <TaskPanel
-                  project = {item}
-                  navigation = {navigation}
-                  projectID ={route.params.project}
-                  
-                />
-              </React.StrictMode>
-              }
-      keyExtractor={item => item}
-    />
-  </View>      
+    {(allProjectTasks.length > 1) 
+      ?<FlatList
+        style = {{width: "75%"}}
+        data={allProjectTasks}
+        renderItem={({item}) => 
+                <React.StrictMode>
+                  <TaskPanel
+                    project = {item}
+                    navigation = {navigation}
+                    projectID ={route.params.project}
+                    
+                  />
+                </React.StrictMode>
+                }
+        keyExtractor={item => item}
+      />
+      :<Text>No Tasks</Text>
+    }
+  </View>     
+  </TopBar> 
   );
 }
 
@@ -204,22 +205,7 @@ function EditTask ({ navigation, route }){
       changeSubTask(list);
       database().ref("/Database/Tasks").orderByChild("parentTask").equalTo(route.params.taskID).off("value", something);
     });
-  }, [route.params.taskID]);//, [flashlight] is not needed
-  /*
-  if(subTask==null){
-    let something = database().ref("/Database/Tasks").orderByChild("parentTask").equalTo(route.params.taskID).on("value", snapshot => {
-      let list = [];
-      
-      for(let key in snapshot.val()){
-  
-        // takes the keyID of the subtask
-        list.push(key);
-      }
-      changeSubTask(list);
-      database().ref("/Database/Tasks").orderByChild("parentTask").equalTo(route.params.taskID).off("value", something);
-    });
-  }
-  */
+  }, [route.params.taskID]);
   
   if(newText == null){
     database().ref(`/Database/Tasks/${route.params.taskID}`).once('value', snapshot => {
