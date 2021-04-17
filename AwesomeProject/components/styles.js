@@ -104,6 +104,25 @@ const styles = StyleSheet.create({
       right: 0,
       zIndex: 100,
     },
+
+    Drawercont:{
+      width:"100%",
+      height:"100%",
+      top:0,
+      left:0,
+      position: "absolute",
+      backgroundColor: "yellow",
+      flexDirection:"row",
+      borderWidth:1
+
+    },
+    navigationButtons:{
+      padding:1,
+      backgroundColor: 'teal',
+      borderWidth: 1,
+      
+      
+    }
 });
 
 module.exports = styles;

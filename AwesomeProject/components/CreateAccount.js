@@ -8,6 +8,34 @@ import {
 import database from '@react-native-firebase/database';
 import * as styles from './styles.js';
 
+
+const Drawer = (props)=>{
+  const [drawer, changeDrawer] = useState(false);
+  return(
+    <View>
+       <TouchableHighlight style={styles.navigationButtons}
+            onPress = {() => {
+              changeDrawer(!drawer);
+            }}
+          >
+          <Text>Open Navigation Drawer</Text>
+          </TouchableHighlight>
+
+
+    
+
+      {drawer &&
+      <View style= {styles.Drawercont}>
+        <TouchableHighlight onPress={()=> changeDrawer(!drawer)} style={styles.navigationButtons}><Text>Close</Text></TouchableHighlight>
+        <TouchableHighlight onPress={()=>props.navigation.navigate("LogIn")} style={styles.navigationButtons}><Text>LogIn</Text></TouchableHighlight>
+        
+
+      </View>
+      }
+    </View>
+  
+  );
+}
 const TopBar = ({children}) => {
     return (
       <View style = {styles.container}>
@@ -61,6 +89,7 @@ export function CreateAccount ({navigation}) {
   
     return (
       <TopBar>
+        <Drawer navigation={navigation}></Drawer>
       <View style = {styles.logInContainer}>
         <View style = {styles.logInSignInTitleContainer}>
           <Text style = {styles.logInSignInTitleText}>Sign Up</Text>

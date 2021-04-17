@@ -9,10 +9,40 @@ import { useFocusEffect } from '@react-navigation/native';
 import database from '@react-native-firebase/database';
 import * as styles from './styles.js';
 
+const Drawer = (props)=>{
+  const [drawer, changeDrawer] = useState(false);
+  return(
+    <View>
+       <TouchableHighlight style={styles.navigationButtons}
+            onPress = {() => {
+              changeDrawer(!drawer);
+            }}
+          >
+          <Text>Open Navigation Drawer</Text>
+          </TouchableHighlight>
+
+
+    
+
+      {drawer &&
+      <View style= {styles.Drawercont}>
+        <TouchableHighlight onPress={()=> changeDrawer(!drawer)} style={styles.navigationButtons}><Text>Close</Text></TouchableHighlight>
+        <TouchableHighlight onPress={()=>props.navigation.navigate("ProjectCreation",{user:props.userInfo})} style={styles.navigationButtons}><Text>Project Creation</Text></TouchableHighlight>
+        
+
+      </View>
+      }
+    </View>
+  
+  );
+}
+
 const TopBar = ({children}) => {
+  
     return (
       <View style = {styles.container}>
         <View style = {styles.topBarContainer}>
+          
   
         </View>
         {children}
@@ -21,7 +51,7 @@ const TopBar = ({children}) => {
   };
   
 export function ProjectList ({ route, navigation }) {
-    
+     console.log("this is the user"+ route.params.user);
     const [projects, changeProjects] = useState(null);
     const [user, changeUser] = useState(null);
     /* Takes the users info looking for the users projects */
@@ -40,6 +70,7 @@ export function ProjectList ({ route, navigation }) {
    
     return (
     <TopBar>
+      <Drawer userInfo={route.params.user} navigation={navigation}></Drawer>
       <TouchableHighlight 
         style={{width: "15%", left: "88%", top: -10, position: 'absolute'}}
         onPress={() => {
@@ -66,6 +97,7 @@ export function ProjectList ({ route, navigation }) {
             <ProjectPanel
               project = {item}
               navigation ={navigation}
+              user={route.params.user}
             />
           </React.StrictMode>
   
@@ -74,6 +106,7 @@ export function ProjectList ({ route, navigation }) {
         />
       </View>
     </TopBar>
+    
   );
     
 }
@@ -101,7 +134,7 @@ const ProjectPanel = (props) => {
       <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
         <TouchableHighlight
           onPress = {() => {
-            props.navigation.navigate('Project', {project: project.ID});}}
+            props.navigation.navigate('Project', {project: project.ID, user: props.user});}}
         >
           <View>
             <Text style={{fontSize: 20}}>
@@ -118,7 +151,7 @@ const ProjectPanel = (props) => {
     return (
     <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
       <TouchableHighlight
-        onPress = {() => {props.navigation.navigate('Project', {project: props.project.ID});}}
+        onPress = {() => {props.navigation.navigate('Project', {project: props.project.ID, user: props.user});}}
       >
         <View>
           <Text style={{fontSize: 20}}>

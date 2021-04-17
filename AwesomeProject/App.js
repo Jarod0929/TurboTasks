@@ -38,6 +38,35 @@ import * as styles from './components/styles.js';
 
 //let GLOBALUSERID;
  
+
+const Drawer = (props)=>{
+  const [drawer, changeDrawer] = useState(false);
+  return(
+    <View>
+       <TouchableHighlight style={styles.navigationButtons}
+            onPress = {() => {
+              changeDrawer(!drawer);
+            }}
+          >
+          <Text>Open Navigation Drawer</Text>
+          </TouchableHighlight>
+
+
+    
+
+      {drawer &&
+      <View style= {styles.Drawercont}>
+        <TouchableHighlight onPress={()=> changeDrawer(!drawer)} style={styles.navigationButtons}><Text>Close</Text></TouchableHighlight>
+        <TouchableHighlight onPress={()=>props.navigation.navigate("ProjectList",{user:props.userInfo})} style={styles.navigationButtons}><Text>ProjectList</Text></TouchableHighlight>
+        <TouchableHighlight onPress={()=>props.navigation.navigate("ProjectCreation",{user:props.userInfo})} style={styles.navigationButtons}><Text>ProjectCreation</Text></TouchableHighlight>
+        
+
+      </View>
+      }
+    </View>
+  
+  );
+}
 const TopBar = ({children}) => {
   return (
     <View style = {styles.container}>
@@ -63,8 +92,9 @@ const TaskPanel = (props) => {
   }
   if(task != null){
    return (
+     <View>
      <TouchableHighlight onPress = {() => {
-       props.navigation.navigate("EditTask", {taskID: props.project, projectID: props.projectID});
+       props.navigation.navigate("EditTask", {taskID: props.project, projectID: props.projectID,user: props.userId});
      }}>
       <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
         <Text style={{fontSize: 20}}>
@@ -72,12 +102,16 @@ const TaskPanel = (props) => {
         </Text>
       </View>
       </TouchableHighlight>
+     </View>
     );
   }else{
     return(
+      
     <View style={{margin: "5%", width: "90%", height: "0%"}}>
     <Text>nothing</Text>
+    
     </View>
+    
     );
   }
 }
@@ -140,6 +174,7 @@ function Project ({ navigation, route }) {
   // }
   return (// TopBar is supposed to handle the Drawer and don't forget about it
   <TopBar>
+    <Drawer userInfo={route.params.user} navigation={navigation}></Drawer>
   <View style={{ top: "0%", height: "85%", backgroundColor: "white", flex: 1, alignItems: 'center', justifyContent: 'center' }}>
     <TouchableHighlight 
       onPress = {() => {
@@ -172,6 +207,7 @@ function Project ({ navigation, route }) {
                     project = {item}
                     navigation = {navigation}
                     projectID ={route.params.project}
+                    userId={route.params.user}
                     
                   />
                 </React.StrictMode>
@@ -220,7 +256,7 @@ function EditTask ({ navigation, route }){
   }
   if(subTask==null){
     return(
-    <View>
+      <TopBar>
       <TextInput 
         onChangeText = {text => changeText(text)}
         value = {newText}
@@ -259,11 +295,12 @@ function EditTask ({ navigation, route }){
           });
       }}><Text>Add Sub Task</Text>
       </TouchableHighlight>
-    </View>
+      </TopBar>
     );
   }else{  // if flat list and subTask are not null
       return (
-        <View>
+        <TopBar>
+          <Drawer userInfo={route.params.user} navigation={navigation}></Drawer>
           <TextInput 
             onChangeText = {text => changeText(text)}
             value = {newText}
@@ -313,7 +350,7 @@ function EditTask ({ navigation, route }){
             )}
             keyExtractor={item=>item}
           />
-        </View>
+        </TopBar>
       
   
 
