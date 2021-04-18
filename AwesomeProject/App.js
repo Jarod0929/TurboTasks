@@ -273,7 +273,7 @@ function Project ({ navigation, route }) {
   );
 }
 
-
+//TO DO ADD UPDATE FUNCTIONALITY TO THE TASK NAMES
 function EditTask ({ navigation, route }){
   
   const [newText, changeText] = useState(null);
