@@ -389,7 +389,7 @@ const RootScreen = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <RootScreen.Navigator initialRouteName="LogIn" screenOptions = {{ gestureEnabled: false }}>
+      <RootScreen.Navigator initialRouteName="LogIn" screenOptions = {{ headerShown: false }}>
         <RootScreen.Screen name="Main" component={AfterLogin} options={{
                 drawerLabel: () => null,
                 title: null,
@@ -405,7 +405,7 @@ export default function App() {
 const SecondDrawer = createStackNavigator();
  function AfterLogin({route,navigation}){
   return(
-    <SecondDrawer.Navigator screenOptions = {{ gestureEnabled: false }}>
+    <SecondDrawer.Navigator screenOptions = {{ headerShown: false }}>
     <SecondDrawer.Screen name="LogIn" component={LogIn} />
     <SecondDrawer.Screen name="ProjectList" component={ProjectList}/>
     <SecondDrawer.Screen name="ProjectCreation" component={ProjectCreation}/>

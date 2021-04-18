@@ -37,15 +37,22 @@ const Drawer = (props)=>{
   );
 }
 
-const TopBar = ({children}) => {
+const TopBar = (props) => {
   
     return (
       <View style = {styles.container}>
         <View style = {styles.topBarContainer}>
-          
-  
+        <TouchableHighlight
+            onPress = {()=>{
+              props.navigation.goBack();
+            }}
+          >
+            <View>
+              <Text>Go Back</Text>
+            </View>
+          </TouchableHighlight>
         </View>
-        {children}
+        {props.children}
       </View>
     )
   };
@@ -69,7 +76,7 @@ export function ProjectList ({ route, navigation }) {
   }, [route.params.user]);
    
     return (
-    <TopBar>
+    <TopBar navigation = {navigation}>
       <Drawer userInfo={route.params.user} navigation={navigation}></Drawer>
       <TouchableHighlight 
         style={{width: "15%", left: "88%", top: -10, position: 'absolute'}}
