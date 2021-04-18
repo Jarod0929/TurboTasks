@@ -14,6 +14,7 @@ import {
   TouchableHighlight,
   TextInput,
   FlatList,
+  DatePickerIOSBase,
 } from 'react-native';
 
 import {
@@ -68,13 +69,21 @@ const Drawer = (props)=>{
   
   );
 }
-const TopBar = ({children}) => {
+const TopBar = (props) => {
   return (
     <View style = {styles.container}>
       <View style = {styles.topBarContainer}>
-
+        <TouchableHighlight onPress = {()=>{
+          props.navigation.goBack();
+        }}>
+          <View>
+            <Text>
+             GO BACK 
+            </Text>
+          </View>
+        </TouchableHighlight>
       </View>
-      {children}
+      {props.children}
     </View>
   )
 };
@@ -82,24 +91,42 @@ const TopBar = ({children}) => {
 
 //let allProjectTasks = []; //We use this because Flat list doesn't allow for good dynamic changes. Maybe should be unique IDs
 const TaskPanel = (props) => {
-  
   const [task, changeTask] = useState(null);
 
   const handleTask = snapshot => {
     changeTask(snapshot.val());
   }
   if(task == null) {
-    database().ref("/Database/Tasks/" + props.project).once("value", handleTask);
+    //CHANGE PROPS.PROJECT => PROPS.TASKID
+    database().ref("/Database/Tasks/" + props.taskID).once("value", handleTask);
   }
   if(task != null){
    return (
+     //COME BACK
      <View>
      <TouchableHighlight onPress = {() => {
-       props.navigation.navigate("EditTask", {taskID: props.project, projectID: props.projectID,user: props.userId});
+       //CHANGE PROPS.PROJECT => PROPS.TASKID
+       props.navigation.navigate("EditTask", {taskID: props.taskID, projectID: props.projectID,user: props.userId});
      }}>
       <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
         <Text style={{fontSize: 20}}>
            {task.text}
+        </Text>
+        <Text style={{fontSize: 20}}>
+          Go to Edit Task
+        </Text>
+      </View>
+      </TouchableHighlight>
+      <TouchableHighlight onPress = {() => {
+        //CHANGE PROPS.PROJECT => PROPS.TASKID
+       props.navigation.push("Project", {taskID: props.taskID, projectID: props.projectID, user: props.userId});
+     }}>
+      <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "blue", alignItems: 'center'}}>
+        <Text style={{fontSize: 20}}>
+           {task.text}
+        </Text>
+        <Text style={{fontSize: 20}}>
+          Go To Subtasks
         </Text>
       </View>
       </TouchableHighlight>
@@ -110,46 +137,45 @@ const TaskPanel = (props) => {
       
     <View style={{margin: "5%", width: "90%", height: "0%"}}>
     <Text>nothing</Text>
-    
     </View>
     
     );
   }
 }
 
-const SubTaskPanel = (props) => {
+// const SubTaskPanel = (props) => {
   
-  const [task, changeTask] = useState(null);
+//   const [task, changeTask] = useState(null);
 
-  const handleTask = snapshot => {
-    changeTask(snapshot.val());
-  }
-  if(task == null) {
-    database().ref("/Database/Tasks/" + props.project).once("value", handleTask);
-  }
-  if(task != null){
+//   const handleTask = snapshot => {
+//     changeTask(snapshot.val());
+//   }
+//   if(task == null) {
+//     database().ref("/Database/Tasks/" + props.project).once("value", handleTask);
+//   }
+//   if(task != null){
     
-   return (
+//    return (
      
-    <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
+//     <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
 
-      <Text style={{fontSize: 20}}>
-           {task.text}
-      </Text>
-    </View>
+//       <Text style={{fontSize: 20}}>
+//            {task.text}
+//       </Text>
+//     </View>
       
-    );
-  }
-  else{
-    return(
-    <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
-        <Text style={{fontSize: 20}}>
-           No Current Tasks
-        </Text>
-    </View>
-    );
-  }
-}
+//     );
+//   }
+//   else{
+//     return(
+//     <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
+//         <Text style={{fontSize: 20}}>
+//            No Current Tasks
+//         </Text>
+//     </View>
+//     );
+//   }
+// }
 function Project ({ navigation, route }) { 
   //Insert the Project Code here
   //const Tasks = database().ref("/Database/Tasks").push(); //First Account and is structure of how it should look
@@ -161,53 +187,77 @@ function Project ({ navigation, route }) {
   //});
   //const [flashlight, changeFlashLight] = useState(false); If needed Flashlight for dark areas
   const [allProjectTasks, changeAllProjectTasks] = useState([]);
-
   useEffect(() => {
-    database().ref(`/Database/Projects/${route.params.project}`).once('value', snapshot => {
-      if(snapshot.val().tasks !== undefined){
-        changeAllProjectTasks(snapshot.val().tasks);
-      }
-    });
-  },[route.params.project]);
-  console.log("Hello");
+    if(route.params.taskID == null){
+      database().ref(`/Database/Projects/${route.params.projectID}`).once('value', snapshot => {
+        if(snapshot.val().tasks !== undefined){
+          changeAllProjectTasks(snapshot.val().tasks);
+        }
+      });
+    }
+    else{
+      database().ref(`/Database/Tasks/${route.params.taskID}`).once('value', snapshot => {
+        if(snapshot.val().subTasks !== undefined){
+          changeAllProjectTasks(snapshot.val().subTasks);
+        }
+      });
+    }
+  },[route.params.taskID, route.params.projectID]);
   // if(allProjectTasks.length === 0){//Which means every time it exits, you must reset the allProjectTasks back to empty REMEMBER
 
   // }
   return (// TopBar is supposed to handle the Drawer and don't forget about it
-  <TopBar>
+  <TopBar  userInfo={route.params.user} navigation={navigation}>
     <Drawer userInfo={route.params.user} navigation={navigation}></Drawer>
   <View style={{ top: "0%", height: "85%", backgroundColor: "white", flex: 1, alignItems: 'center', justifyContent: 'center' }}>
     <TouchableHighlight 
       onPress = {() => {
         const newTask = database().ref(`/Database/Tasks`).push();
         const newTaskID = newTask.key;
-        let newArray = allProjectTasks.slice();
+        let newArray = [];
+        if(allProjectTasks != null){
+          newArray = allProjectTasks.slice();
+        }
         newArray.push(newTaskID);
         changeAllProjectTasks(newArray);
-        database().ref(`/Database/Projects/${route.params.project}`).update({
-          tasks: newArray
-        });
-        newTask.set({
-          ID: newTaskID,
-          text: "Task",
-          parentTask: "none",
-          //order: 1,
-          //subTaskArray: [],
-        });
-      }}
+        if(route.params.taskID == null){
+          database().ref(`/Database/Projects/${route.params.projectID}`).update({
+            tasks: newArray
+          });
+          newTask.set({
+            ID: newTaskID,
+            text: "Task",
+            parentTask: "none",
+            //order: 1,
+            //subTasks: [],
+          });
+        }
+        else{
+          database().ref(`/Database/Tasks/${route.params.taskID}`).update({
+            subTasks: newArray,
+          });
+          newTask.set({
+            ID: newTaskID,
+            text: "Task",
+            parentTask: "none",
+            //order: 1,
+            //subTasks: [],
+          });
+        }
+      }}  
     >
       <Text>Add Task</Text>
     </TouchableHighlight>
-    {(allProjectTasks.length >= 1) 
-      ?<FlatList
+    
+      <FlatList
         style = {{width: "75%"}}
         data={allProjectTasks}
         renderItem={({item}) => 
                 <React.StrictMode>
                   <TaskPanel
-                    project = {item}
+                    taskID = {item}
                     navigation = {navigation}
-                    projectID ={route.params.project}
+                    projectID ={route.params.projectID}
                     userId={route.params.user}
                     
                   />
@@ -215,7 +265,8 @@ function Project ({ navigation, route }) {
                 }
         keyExtractor={item => item}
       />
-      :<Text>No Tasks</Text>
+    {(allProjectTasks == null) &&
+      <Text>No Tasks</Text>
     }
   </View>     
   </TopBar> 
@@ -229,7 +280,6 @@ function EditTask ({ navigation, route }){
   const [subTask,changeSubTask]=useState(null);
   const [flashlight, changeFlashlight] = useState(false); //not needed
 
-  console.log(route.params.taskID);
   useEffect(() => {
     database().ref(`/Database/Tasks/${route.params.taskID}`).once('value', snapshot => {
       changeText(snapshot.val().text);
@@ -304,7 +354,7 @@ function EditTask ({ navigation, route }){
     );
   }else{  // if flat list and subTask are not null
       return (
-        <TopBar>
+        <TopBar userInfo={route.params.user} navigation={navigation}>
           <Drawer userInfo={route.params.user} navigation={navigation}></Drawer>
           <TextInput 
             onChangeText = {text => changeText(text)}
@@ -389,7 +439,7 @@ const RootScreen = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <RootScreen.Navigator initialRouteName="LogIn" screenOptions = {{ gestureEnabled: false }}>
+      <RootScreen.Navigator initialRouteName="LogIn" screenOptions = {{ headerShown: false}}>
         <RootScreen.Screen name="Main" component={AfterLogin} options={{
                 drawerLabel: () => null,
                 title: null,
@@ -405,7 +455,7 @@ export default function App() {
 const SecondDrawer = createStackNavigator();
  function AfterLogin({route,navigation}){
   return(
-    <SecondDrawer.Navigator screenOptions = {{ gestureEnabled: false }}>
+    <SecondDrawer.Navigator screenOptions = {{ headerShown: false}}>
     <SecondDrawer.Screen name="LogIn" component={LogIn} />
     <SecondDrawer.Screen name="ProjectList" component={ProjectList}/>
     <SecondDrawer.Screen name="ProjectCreation" component={ProjectCreation}/>

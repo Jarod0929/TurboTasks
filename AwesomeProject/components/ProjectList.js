@@ -51,7 +51,6 @@ const TopBar = ({children}) => {
   };
   
 export function ProjectList ({ route, navigation }) {
-     console.log("this is the user"+ route.params.user);
     const [projects, changeProjects] = useState(null);
     const [user, changeUser] = useState(null);
     /* Takes the users info looking for the users projects */
@@ -134,13 +133,19 @@ const ProjectPanel = (props) => {
       <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
         <TouchableHighlight
           onPress = {() => {
-            props.navigation.navigate('Project', {project: project.ID, user: props.user});}}
+            //Maybe put task ID to null
+            props.navigation.navigate('Project', {taskID: null, projectID: project.ID, user: props.user});}}
         >
           <View>
             <Text style={{fontSize: 20}}>
               {project.title}
             </Text>
-            <Text>{project.tasks.length - 1} Task(s)</Text>
+            {project.tasks != null&&
+              <Text>{project.tasks.length} Task(s)</Text>
+            }
+            {project.tasks == null&&
+              <Text>0 Task(s)</Text>
+            }
             <Text>Due Date: {project.dueDate} </Text>
             <Text>{project.users.length} User(s)</Text>
           </View>
@@ -151,7 +156,8 @@ const ProjectPanel = (props) => {
     return (
     <View style={{margin: "5%", width: "90%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}>
       <TouchableHighlight
-        onPress = {() => {props.navigation.navigate('Project', {project: props.project.ID, user: props.user});}}
+      //Maybe put TaskID to null
+        onPress = {() => {props.navigation.navigate('Project', {taskID: null, projectID: props.project.ID, user: props.user});}}
       >
         <View>
           <Text style={{fontSize: 20}}>
