@@ -24,7 +24,8 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import { createDrawerNavigator } from '@react-navigation/drawer';
+//import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import database from '@react-native-firebase/database';
 import DatePicker from 'react-native-date-picker'
@@ -194,6 +195,9 @@ function EditTask ({ navigation, route }){
 
   console.log(route.params.taskID);
   useEffect(() => {
+    database().ref(`/Database/Tasks/${route.params.taskID}`).once('value', snapshot => {
+      changeText(snapshot.val().text);
+    });
     let something = database().ref("/Database/Tasks").orderByChild("parentTask").equalTo(route.params.taskID).on("value", snapshot => {
       let list = [];
         
@@ -206,12 +210,13 @@ function EditTask ({ navigation, route }){
       database().ref("/Database/Tasks").orderByChild("parentTask").equalTo(route.params.taskID).off("value", something);
     });
   }, [route.params.taskID]);
-  
+  /*
   if(newText == null){
     database().ref(`/Database/Tasks/${route.params.taskID}`).once('value', snapshot => {
       changeText(snapshot.val().text);
     });
   }
+  */
   
   const handleText = () => {
     database().ref(`/Database/Tasks/${route.params.taskID}`).update({
@@ -231,7 +236,7 @@ function EditTask ({ navigation, route }){
           changeSubTask(null);
           changeText(null);
 
-         navigation.navigate('Project');
+          navigation.navigate('Project');
         }}
       >
         <Text>Save Changes?</Text>
@@ -342,7 +347,7 @@ function SubTaskPage({route, navigation}){
 
 
 
-const RootScreen = createDrawerNavigator();
+const RootScreen = createStackNavigator();
 
 export default function App() {
   return (
@@ -360,7 +365,7 @@ export default function App() {
   );
 }
 
-const SecondDrawer = createDrawerNavigator();
+const SecondDrawer = createStackNavigator();
  function AfterLogin({route,navigation}){
   return(
     <SecondDrawer.Navigator screenOptions = {{ gestureEnabled: false }}>
