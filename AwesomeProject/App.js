@@ -455,7 +455,7 @@ export default function App() {
 const SecondDrawer = createStackNavigator();
  function AfterLogin({route,navigation}){
   return(
-    <SecondDrawer.Navigator screenOptions = {{ headerShown: false}}>
+    <SecondDrawer.Navigator screenOptions = {{ headerShown: false }}>
     <SecondDrawer.Screen name="LogIn" component={LogIn} />
     <SecondDrawer.Screen name="ProjectList" component={ProjectList}/>
     <SecondDrawer.Screen name="ProjectCreation" component={ProjectCreation}/>

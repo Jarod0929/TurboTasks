@@ -38,13 +38,22 @@ const Drawer = (props)=>{
   
   );
 }
-const TopBar = ({children}) => {
+const TopBar = (props) => {
     return (
       <View style = {styles.container}>
         <View style = {styles.topBarContainer}>
-  
+          <TouchableHighlight
+            onPress = {()=>{
+              props.reset();
+              props.navigation.goBack();
+            }}
+          >
+            <View>
+              <Text>Go Back</Text>
+            </View>
+          </TouchableHighlight>
         </View>
-        {children}
+        {props.children}
       </View>
     )
   };
@@ -81,6 +90,12 @@ export function ProjectCreation ({ route, navigation }) {
       });
   
     }
+    const resetEverything = () => {
+      changeProjectName("");
+      changeInvUsers("");
+      addUsersList([user]);
+    };
+
     const createNewProject = () => {
         //Sets proper month
         let month = date.getMonth() + 1;
@@ -129,7 +144,7 @@ export function ProjectCreation ({ route, navigation }) {
     };
     
     return (// TopBar is supposed to handle the Drawer and don't forget about it
-      <TopBar>
+      <TopBar navigation = {navigation} reset = {resetEverything}>
         <Drawer userInfo={route.params.user} navigation={navigation}></Drawer>
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <TextInput
