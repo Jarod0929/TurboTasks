@@ -15,6 +15,7 @@
     "@react-native-firebase/database": "^11.2.0",
     "@react-navigation/drawer": "^5.12.5",
     "@react-navigation/native": "^5.9.4",
+    "@react-navigation/stack": "^5.14.4",
     "react": "17.0.1",
     "react-native": "0.64.0",
     "react-native-date-picker": "^3.2.10",
