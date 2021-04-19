@@ -88,7 +88,6 @@ const TopBar = (props) => {
   )
 };
 
-
 //let allProjectTasks = []; //We use this because Flat list doesn't allow for good dynamic changes. Maybe should be unique IDs
 const TaskPanel = (props) => {
   const [task, changeTask] = useState(null);
@@ -203,9 +202,8 @@ function Project ({ navigation, route }) {
       });
     }
   },[route.params.taskID, route.params.projectID]);
-  // if(allProjectTasks.length === 0){//Which means every time it exits, you must reset the allProjectTasks back to empty REMEMBER
 
-  // }
+
   return (// TopBar is supposed to handle the Drawer and don't forget about it
   <TopBar  userInfo={route.params.user} navigation={navigation}>
     <Drawer userInfo={route.params.user} navigation={navigation}></Drawer>
