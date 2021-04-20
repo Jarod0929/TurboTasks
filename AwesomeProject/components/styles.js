@@ -122,6 +122,18 @@ const styles = StyleSheet.create({
       borderWidth: 1,
       
       
+    },
+    textInputFPCh:{
+      backgroundColor:"white",
+      borderWidth:1,
+      width: "50%"
+
+    },
+    enterBt:{
+      backgroundColor:"yellow",
+      borderWidth:1,
+      width:"50%",
+
     }
 });
 

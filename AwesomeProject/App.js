@@ -36,6 +36,7 @@ import {LogIn} from './components/LogIn.js';
 import {CreateAccount} from './components/CreateAccount.js';
 import {ProjectList} from './components/ProjectList.js';
 import {ProjectCreation} from './components/ProjectCreation.js';
+import {Settings} from './components/Settings.js';
 import * as styles from './components/styles.js';
 
 //let GLOBALUSERID;
@@ -61,7 +62,7 @@ const Drawer = (props)=>{
         <TouchableHighlight onPress={()=> changeDrawer(!drawer)} style={styles.navigationButtons}><Text>Close</Text></TouchableHighlight>
         <TouchableHighlight onPress={()=>props.navigation.navigate("ProjectList",{user:props.userInfo})} style={styles.navigationButtons}><Text>ProjectList</Text></TouchableHighlight>
         <TouchableHighlight onPress={()=>props.navigation.navigate("ProjectCreation",{user:props.userInfo})} style={styles.navigationButtons}><Text>ProjectCreation</Text></TouchableHighlight>
-        
+        <TouchableHighlight onPress={()=>props.navigation.navigate("Settings",{user:props.userInfo})} style={styles.navigationButtons}><Text>Settings⚙️</Text></TouchableHighlight>
 
       </View>
       }
@@ -457,9 +458,9 @@ const SecondDrawer = createStackNavigator();
     <SecondDrawer.Screen name="LogIn" component={LogIn} />
     <SecondDrawer.Screen name="ProjectList" component={ProjectList}/>
     <SecondDrawer.Screen name="ProjectCreation" component={ProjectCreation}/>
-    <SecondDrawer.Screen name = "Settings⚙️" component={Settings}/>
     <SecondDrawer.Screen name = "Project" component={Project}/>
     <SecondDrawer.Screen name = "EditTask" component={EditTask}/>
+    <SecondDrawer.Screen name = "Settings" component={Settings}/>
   </SecondDrawer.Navigator>
   
 
@@ -469,29 +470,3 @@ const SecondDrawer = createStackNavigator();
 
 //Hmmmmmmmmmmmmmmmmmm TODO: Will be button click 
 
-function Settings({route, navigation}){
-  const [username, changeUsername] = useState(null);
-  const [password,changePassword] = useState(null);
-  const [prefrence,changePrefrence]=useState(null);
-
-  const handleUser = snapshot => {
-    changeUsername(snapshot.val().Username);
-    
-    changePassword(snapshot.val().Password);
-    
-    
-  }
-
-  if(username == null){
-    //database().ref("/Database/Users/" + GLOBALUSERID).once("value", handleUser);
-    database().ref("/Database/Users/" + route.params.user).once("value", handleUser);
-  }
-  return(
-  <TopBar>
-  <View>
-    <Text>Hello {username}</Text>
-    <Text>Your Password is: {password}</Text>
-  </View>
-  </TopBar>
-  );
-}
