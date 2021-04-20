@@ -186,6 +186,7 @@ function Project ({ navigation, route }) {
   //});
   //const [flashlight, changeFlashLight] = useState(false); If needed Flashlight for dark areas
   const [allProjectTasks, changeAllProjectTasks] = useState([]);
+  const isFocused = navigation.isFocused();//Is true whenever the user is on the screen, but it isn't as efficient as it can be
   useEffect(() => {
     if(route.params.taskID == null){
       database().ref(`/Database/Projects/${route.params.projectID}`).once('value', snapshot => {
@@ -272,6 +273,8 @@ function Project ({ navigation, route }) {
 }
 
 //TO DO ADD UPDATE FUNCTIONALITY TO THE TASK NAMES
+//Option 1: Line 189 shows the "isFocused()" can be combined with useEffect to rerender the component whenever the user enters the screen
+//          Is not very efficient, but if all else fails, this should work
 function EditTask ({ navigation, route }){
   
   const [newText, changeText] = useState(null);
