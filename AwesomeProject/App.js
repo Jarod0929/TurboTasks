@@ -28,9 +28,7 @@ import {
 //import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer, useFocusEffect, useIsFocused } from '@react-navigation/native';
-import database from '@react-native-firebase/database';
-import DatePicker from 'react-native-date-picker'
-import { add } from 'react-native-reanimated';
+
 
 import {LogIn} from './components/LogIn.js';
 import {CreateAccount} from './components/CreateAccount.js';

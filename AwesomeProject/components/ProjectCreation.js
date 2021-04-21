@@ -7,7 +7,7 @@ import {
   TextInput,
   FlatList,
 } from 'react-native';
-import DatePicker from 'react-native-date-picker'
+import DatePicker from 'react-native-datepicker'
 import database from '@react-native-firebase/database';
 import * as styles from './styles.js';
 
@@ -98,7 +98,6 @@ export function ProjectCreation ({ route, navigation }) {
 
     const createNewProject = () => {
         //Sets proper month
-        let month = date.getMonth() + 1;
         //Creates Base Task
         const baseTask = database().ref("/Database/Tasks").push({
           parentTask: "none",
@@ -114,7 +113,7 @@ export function ProjectCreation ({ route, navigation }) {
           title: projectName,
           users: invUsersList,
           tasks: [taskKey],
-          dueDate: month + " " + date.getDate() + " " + date.getFullYear() 
+          dueDate: date 
         });
         //Project ID
         const newDataKey = newData.key;
@@ -154,10 +153,16 @@ export function ProjectCreation ({ route, navigation }) {
           value={projectName}
         />
         <DatePicker
-        date={date}
-        mode = "date"
-        onDateChange={setDate}
-      />
+          date={date}
+          mode = "date"
+          onDateChange={setDate}
+          customStyles={{
+          dateInput: {
+            backgroundColor: "white",
+          }
+          // ... You can check the source to find the other keys.
+        }}
+        />
         <Text>Invite Users</Text>
         <TextInput
           style = {styles.textInputLogIn}
