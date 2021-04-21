@@ -202,7 +202,8 @@ function Project ({ navigation, route }) {
         }
       });
     }
-  },[route.params.taskID, route.params.projectID]);
+  },[isFocused]);
+  //},[route.params.taskID, route.params.projectID]);
 
 
   return (// TopBar is supposed to handle the Drawer and don't forget about it
