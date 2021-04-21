@@ -4,10 +4,12 @@ import {
   View,
   TouchableHighlight,
   FlatList,
+  Modal,
 } from 'react-native';
 import * as styles from './styles.js';
 
 import database from '@react-native-firebase/database';
+import { NavigationContainer, useFocusEffect, useIsFocused } from '@react-navigation/native';
 
 const Drawer = (props)=>{
     const [drawer, changeDrawer] = useState(false);
@@ -59,7 +61,7 @@ const Drawer = (props)=>{
   //let allProjectTasks = []; //We use this because Flat list doesn't allow for good dynamic changes. Maybe should be unique IDs
   const TaskPanel = (props) => {
     const [task, changeTask] = useState(null);
-  
+
     const handleTask = snapshot => {
       changeTask(snapshot.val());
     }
@@ -72,10 +74,13 @@ const Drawer = (props)=>{
      return (
        //COME BACK
       <View style={{width: '100%', flexDirection: "row", marginBottom: "2%"}}>
-        <Text style={{fontSize: 20, padding: '5%', width: "50%", backgroundColor: 'cyan', color: 'black'}}>
-          {task.title}
-          
-        </Text>
+        <TouchableHighlight style={{ padding: '5%', width: "50%", backgroundColor: 'cyan', color: 'black'}}onPress = {() =>{
+          props.changeTaskDescriptor(task.ID);
+        }}>
+          <Text style={{color: 'black', fontSize: 20}}>
+            {task.title}   
+          </Text>
+        </TouchableHighlight>
         <View style={{width: '50%'}}>
           <TouchableHighlight 
             style={{width: "100%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}
@@ -116,7 +121,24 @@ const Drawer = (props)=>{
       );
     }
   }
+  const TaskDescriptor = (props) => {
+    const [task, changeTask] = useState(null);
+
+    const handleTask = snapshot => {
+      changeTask(snapshot.val());
+    }
   
+    useFocusEffect(() => {
+      database().ref("/Database/Tasks/" + props.taskID + "/").once("value", handleTask);
+    });
+    return(
+      <View style={{backgroundColor: "green", width:"100%", height: "100%"}}>
+        <Text>Title: {task?.title}</Text>
+        <Text>Description: {task?.text}</Text>
+      </View>
+      
+    );
+  }
 export function Project ({ navigation, route }) { 
     //Insert the Project Code here
     //const Tasks = database().ref("/Database/Tasks").push(); //First Account and is structure of how it should look
@@ -132,6 +154,8 @@ export function Project ({ navigation, route }) {
     //});
     //const [flashlight, changeFlashLight] = useState(false); If needed Flashlight for dark areas
     const [allProjectTasks, changeAllProjectTasks] = useState([]);
+    const [visibility, changeVisibility] = useState(false);
+    const [currentTask, changeCurrentTask] = useState(null);
     const isFocused = navigation.isFocused();//Is true whenever the user is on the screen, but it isn't as efficient as it can be
     useEffect(() => {
       if(route.params.taskID == null){
@@ -150,11 +174,32 @@ export function Project ({ navigation, route }) {
       }
      }, [isFocused]); //[route.params.taskID, route.params.projectID]);
   
-  
+     function changeTaskDescriptor(taskID){
+      changeVisibility(true);
+      changeCurrentTask(taskID);
+      
+     }
     return (// TopBar is supposed to handle the Drawer and don't forget about it
     <TopBar  userInfo={route.params.user} navigation={navigation}>
       <Drawer userInfo={route.params.user} navigation={navigation}></Drawer>
-    <View style={{ top: "0%", height: "85%", backgroundColor: "white", flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+
+    <View style={{ top: 0, height: "100%", width: "100%", backgroundColor: "white"}}>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={visibility}
+              >
+              <TouchableHighlight onPress = {() => {
+                changeVisibility(false);
+              }}>
+                <View style={{height: "80%", width: "80%", margin:"10%"}}>
+                  <TaskDescriptor taskID = {currentTask}>
+                  </TaskDescriptor>
+                </View>
+              </TouchableHighlight>
+            </Modal>
+      
+      <View style = {{flex: 1, alignItems: "center", justifyContent: "center"}}>
       <TouchableHighlight 
         onPress = {() => {
           const newTask = database().ref(`/Database/Tasks`).push();
@@ -210,7 +255,7 @@ export function Project ({ navigation, route }) {
                       navigation = {navigation}
                       projectID ={route.params.projectID}
                       userId={route.params.user}
-                      
+                      changeTaskDescriptor = {changeTaskDescriptor}
                     />
                   </React.StrictMode>
                   }
@@ -219,7 +264,18 @@ export function Project ({ navigation, route }) {
       {(allProjectTasks == null) &&
         <Text>No Tasks</Text>
       }
-    </View>     
+      {/* {visibility&&
+        <TouchableHighlight onPress = {() => {
+          changeVisibility(false);
+        }}>
+          <View style={{backgroundColor: "yellow", height: "100%", width: "100%"}}>
+            <TaskDescriptor taskID = {currentTask}>
+            </TaskDescriptor>
+          </View>
+        </TouchableHighlight>
+      } */}
+      </View>
+    </View>       
     </TopBar> 
     );
   }

@@ -101,7 +101,8 @@ export function ProjectCreation ({ route, navigation }) {
         //Creates Base Task
         const baseTask = database().ref("/Database/Tasks").push({
           parentTask: "none",
-          text: "Click Me To Edit!",
+          title: "Click Me to Edit!",
+          text: "Add a description..."
         });
         //baseTask ID
         const taskKey = baseTask.key;
