@@ -4,10 +4,18 @@ import {
   View,
   TouchableHighlight,
   TextInput,
+  LayoutAnimation,
+  Platform,
+  UIManager,
 } from 'react-native';
 import database from '@react-native-firebase/database';
 import * as styles from './styles.js';
 
+if (Platform.OS === 'android') {
+  if (UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+}
 
 const Drawer = (props)=>{
   const [drawer, changeDrawer] = useState(false);
@@ -39,35 +47,24 @@ const Drawer = (props)=>{
 
 const TopBar = ({children}) => {
   const [drawer, changeDrawer] = useState(false);
+
   return (
     <View style = {styles.container}>
       <View style = {styles.topBarContainer}>
-        <View>
+        <View style = {styles.openContainer}>
           <TouchableHighlight
             onPress = {() => {
               changeDrawer(!drawer);
+              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             }}
           >
-            <Text style = {styles.logInTextAbove}>Open</Text>
+            <Text style = {styles.textAbove}>Open</Text>
           </TouchableHighlight>
         </View>
       </View>
-      {drawer &&
-      <View style = {{width: '100%', height: '100%'}}>
-        <View style = {styles.drawerContainer}>
+      <View style = {[styles.drawerContainer, drawer? undefined: {width: 1}]}>
 
-        </View>
-        <View style = {styles.drawerContainerOther}>
-          <TouchableHighlight
-            onPress = {() => {
-              changeDrawer(false);
-            }}
-          >
-            <View></View>
-          </TouchableHighlight>
-        </View>
       </View>
-      }
       {children}
     </View>
   )
@@ -113,13 +110,13 @@ export function LogIn({ navigation }){
     return(
       <TopBar>
         <Drawer navigation={navigation}></Drawer>
-        <View style = {styles.logInContainer}>
-          <View style = {styles.logInSignInTitleContainer}>
-            <Text style = {styles.logInSignInTitleText}>Sign In</Text>
+        <View style = {styles.flexAlignContainer}>
+          <View style = {styles.titleContainer}>
+            <Text style = {styles.titleText}>Sign In</Text>
           </View>
-          <View style = {styles.logInTextAreaContainer}>
-            <Text style = {styles.logInTextAbove}>Username</Text>
-            <View style = {styles.logInTextInputContainer}>
+          <View style = {styles.textAreaContainer}>
+            <Text style = {styles.textAbove}>Username</Text>
+            <View style = {styles.textInputContainer}>
               <TextInput
                 onChangeText = {text => changeTextUserName(text)}
                 placeholder = "UserName"
@@ -127,9 +124,9 @@ export function LogIn({ navigation }){
               />
             </View>
           </View>
-          <View style = {styles.logInTextAreaContainer}>
-            <Text style = {styles.logInTextAbove}>Password</Text>
-            <View style = {styles.logInTextInputContainer}>
+          <View style = {styles.textAreaContainer}>
+            <Text style = {styles.textAbove}>Password</Text>
+            <View style = {styles.textInputContainer}>
               <TextInput
                 onChangeText = {text => changeTextPassword(text)}
                 placeholder = "Password"
@@ -137,25 +134,25 @@ export function LogIn({ navigation }){
               />
             </View>
           </View>
-          <View style = {styles.logInButtonContainer}>
+          <View style = {styles.buttonContainer}>
             <TouchableHighlight 
-              style = {styles.logInButton}
+              style = {styles.button}
               onPress = {isAccount}
             >
-              <Text style = {styles.logInButtonText}>Log In</Text>
+              <Text style = {styles.buttonText}>Log In</Text>
             </TouchableHighlight>
           </View>
           {failed &&
-          <View style = {styles.logInRedFailedContainer}>
-            <Text style = {styles.logInRedFailedText}>Username does not exist or Password is false</Text>
+          <View style = {styles.failedContainer}>
+            <Text style = {styles.failedText}>Username does not exist or Password is false</Text>
           </View>
           }
-          <View style = {styles.logInButtonContainer}>
+          <View style = {styles.buttonContainer}>
             <TouchableHighlight 
-              style = {styles.logInButton}
+              style = {styles.button}
               onPress = {goToCreateAccount}
             >
-              <Text style = {styles.logInButtonText}>Sign Up</Text>
+              <Text style = {styles.buttonText}>Sign Up</Text>
             </TouchableHighlight>
           </View>
         </View>

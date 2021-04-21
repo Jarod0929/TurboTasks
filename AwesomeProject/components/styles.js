@@ -7,100 +7,102 @@ const styles = StyleSheet.create({
       width: "100%",
       height: "100%",
       backgroundColor: "darkblue",
-      
+      zIndex: 0,
     },
-    topBarContainer: {
-      backgroundColor: "cyan",
-      borderBottomRightRadius: 20,
-      borderWidth: 5,
-      height: '10%',
-      width: '100%',
-    },
-    logInContainer: {
+    flexAlignContainer: {
       flex: 1,
-      //justifyContent: 'center',
       alignItems: "center",
+      zIndex: 30,
     }, 
-    logInSignInTitleContainer: {
+    titleContainer: {
       position: 'relative',
       top: 10,
       paddingBottom: 30,
+      zIndex: 30,
     },
-    logInSignInTitleText: {
+    titleText: {
       color: 'white',
       fontSize: 28,
+      zIndex: 30,
     },
-    logInTextInputContainer: {
+    textInputContainer: {
       borderWidth: 5,
       height: 50,
       width: 150,
       backgroundColor:'white',
+      zIndex: 30,
     },
-    logInTextAreaContainer: {
+    textAreaContainer: {
       paddingBottom: 30,
+      zIndex: 30,
     },
-    logInTextAbove: {
+    textAbove: {
       color: 'white',
       fontSize: 16,
+      zIndex: 30,
     },
-    logInButtonContainer: {
+    buttonContainer: {
       backgroundColor: 'cyan',
       borderWidth: 5,
       borderRadius: 10,
       width: 175,
       height: 60,
-      
+      marginBottom: 15,
+      marginTop: 15,
+      zIndex: 30,
     },
-    logInButton: {
+    button: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+      zIndex: 30,
     },
-    logInButtonText: {
+    buttonText: {
       color: 'black',
       fontSize: 18,
       fontWeight: 'bold',
+      zIndex: 30,
     },
-    logInCreateAccountContainer: {
-      position: 'relative',
-      bottom: 10,
-      left: 10,
-      flexDirection:'row', 
-      flexWrap:'wrap',
+    failedContainer: {
+      //flex: 1,
+      //justifyContent: 'center',
+      //alignItems: 'center',
+      zIndex: 30,
     },
-    AverageWhiteText: {
-      color: 'white',
-      fontSize: 16,
-    },
-    AverageWhiteTextBolded: {
-      color: 'white',
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-    logInRedFailedContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    logInRedFailedText: {
+    failedText: {
       color: 'red',
       fontSize: 16,
+      zIndex: 30,
     },
+    topBarContainer: {
+      backgroundColor: "cyan",
+      borderBottomRightRadius: 20,
+      borderWidth: 5,
+      height: 60,
+      width: '100%',
+      zIndex: 200,
+    },
+    openContainer: {
+      position: 'absolute',
+      top: 5,
+      left: 5,
+      height: '80%',
+      width: 40,
+    },  
     drawerContainer: {
       width: '30%',
-      height: '100%',
+      height: '90%',
       backgroundColor: 'green',
       position: 'absolute',
-      top: 0,
+      bottom: 0,
       left: 0,
       zIndex: 100,
     },
     drawerContainerOther: {
       width: '70%',
-      height: '100%',
-      backgroundColor: 'green',
+      height: '90%',
       position: 'absolute',
-      top: 0,
+      bottom: 0,
       right: 0,
       zIndex: 100,
     },
