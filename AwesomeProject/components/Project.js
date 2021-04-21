@@ -117,7 +117,7 @@ const Drawer = (props)=>{
     }
   }
   
-  function Project ({ navigation, route }) { 
+export function Project ({ navigation, route }) { 
     //Insert the Project Code here
     //const Tasks = database().ref("/Database/Tasks").push(); //First Account and is structure of how it should look
     //Tasks.set({ 
