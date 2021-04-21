@@ -264,16 +264,6 @@ export function Project ({ navigation, route }) {
       {(allProjectTasks == null) &&
         <Text>No Tasks</Text>
       }
-      {/* {visibility&&
-        <TouchableHighlight onPress = {() => {
-          changeVisibility(false);
-        }}>
-          <View style={{backgroundColor: "yellow", height: "100%", width: "100%"}}>
-            <TaskDescriptor taskID = {currentTask}>
-            </TaskDescriptor>
-          </View>
-        </TouchableHighlight>
-      } */}
       </View>
     </View>       
     </TopBar> 
