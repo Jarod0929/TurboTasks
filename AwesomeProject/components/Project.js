@@ -133,6 +133,7 @@ export function Project ({ navigation, route }) {
     //const [flashlight, changeFlashLight] = useState(false); If needed Flashlight for dark areas
     const [allProjectTasks, changeAllProjectTasks] = useState([]);
     const isFocused = navigation.isFocused();//Is true whenever the user is on the screen, but it isn't as efficient as it can be
+    const [visibility, changeVisibility] = useState(false);
     useEffect(() => {
       if(route.params.taskID == null){
         database().ref(`/Database/Projects/${route.params.projectID}`).once('value', snapshot => {
@@ -149,8 +150,11 @@ export function Project ({ navigation, route }) {
         });
       }
      }, [isFocused]); //[route.params.taskID, route.params.projectID]);
-  
-  
+     let text = '';
+     let descrip= '';
+    function coolFunc(taskID) {
+
+    }
     return (// TopBar is supposed to handle the Drawer and don't forget about it
     <TopBar  userInfo={route.params.user} navigation={navigation}>
       <Drawer userInfo={route.params.user} navigation={navigation}></Drawer>
@@ -219,6 +223,7 @@ export function Project ({ navigation, route }) {
       {(allProjectTasks == null) &&
         <Text>No Tasks</Text>
       }
+
     </View>     
     </TopBar> 
     );

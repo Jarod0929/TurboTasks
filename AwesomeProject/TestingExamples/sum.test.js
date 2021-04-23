@@ -1,34 +1,27 @@
-const Article = require('./sum');
-const fetch = require('node-fetch');
+import React from 'react';
+import {render, fireEvent} from '@testing-library/react-native';
+import App from './sum';
 
-jest.mock('node-fetch');
+describe('Testing Button', () => {
+  test('Zero Test', () => {
+    const {getByA11yLabel} = render(<App />);
+    const number = getByA11yLabel('Press Count');
 
-test('Testing Articles',() => {
-  const artObj = new Article("JavaScript");
-  const data = {
-    json: () => ({
-      batchcomplete: '',
-      query: {
-        pages: {
-          '9845': {
-            pageid: 9845,
-            ns: 0,
-            title: 'JavaScript',
-            contentmodel: 'wikitext',
-            pagelanguage: 'en',
-            pagelanguagehtmlcode: 'en',
-            pagelanguagedir: 'ltr',
-            touched: '2021-04-16T15:06:33Z',
-            lastrevid: 1017870878,
-            length: 72024
-          }
-        }
-      }
-    })
-  };
-  fetch.mockResolvedValue(data);
+    expect(number.children[0]).toBe("0");
+  });
+  test('First Test', () => {
+    const {getByA11yLabel} = render(<App />);
+    fireEvent.press(getByA11yLabel('Press Me!'));
+    const number = getByA11yLabel('Press Count');
 
-  const result = artObj.getLanguage();
-  expect(result).toBe('en');
+    expect(number.children[0]).toBe("1");
+  });
+  test('Second Test', () => {
+    const {getByA11yLabel} = render(<App />);
+    fireEvent.press(getByA11yLabel('Press Me!'));
+    fireEvent.press(getByA11yLabel('Press Me!'));
+    const number = getByA11yLabel('Press Count');
 
+    expect(number.children[0]).toBe("2");
+  });
 });

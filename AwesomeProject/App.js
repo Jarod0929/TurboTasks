@@ -43,18 +43,30 @@ import * as styles from './components/styles.js';
 import Moment from 'moment';
 
 
+function Test(){
+  return(
+    <View style = {{height: "100%", width: "100%", backgroundColor:"blue"}}>
+      <View style = {{height: "90%", width: "90%", backgroundColor: "white", position: "absolute", top: "5%", left: "5%"}}>
+        <View style = {{position: "absolute", height:"80%", width: "80%", backgroundColor: "black", top: "10%", left: "10%"}}>
+
+        </View>
+      </View>
+    </View> 
+  );
+}
 
 const RootScreen = createStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <RootScreen.Navigator initialRouteName="LogIn" screenOptions = {{ headerShown: false}}>
+      <RootScreen.Navigator initialRouteName="Test" screenOptions = {{ headerShown: false}}>
         <RootScreen.Screen name="Main" component={AfterLogin} options={{
                 drawerLabel: () => null,
                 title: null,
                 drawerIcon: () => null }} />
         <RootScreen.Screen name="LogIn" component={LogIn}/>
+        <RootScreen.Screen name="Test" component={Test}/>
         <RootScreen.Screen name="CreateAccount" component={CreateAccount}/>
         </RootScreen.Navigator>
       </NavigationContainer>
