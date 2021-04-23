@@ -34,12 +34,12 @@ const TopBar = (props) => {
 //TO DO ADD UPDATE FUNCTIONALITY TO THE TASK NAMES
 //Option 1: Line 189 shows the "isFocused()" can be combined with useEffect to rerender the component whenever the user enters the screen
 //          Is not very efficient, but if all else fails, this should work
+//          route.params.taskID, route.params.projectID, route.params.user
 export function EditTask ({ navigation, route }){
   
     const [title, changeTitle] = useState(null);
     const [text, changeText] = useState(null);
     const [date, changeDate] = useState(Moment.locale('en'));
-    console.log(date);
     useEffect(() => {
       database().ref(`/Database/Tasks/${route.params.taskID}`).once('value', snapshot => {
         changeTitle(snapshot.val().title);
@@ -53,6 +53,35 @@ export function EditTask ({ navigation, route }){
       });
     }, [route.params.taskID]);
   
+    const deleteTasks = (delTaskID, projectID) => {
+      database().ref("/Database/Tasks/" + delTaskID).once("value", snapshot => {
+        if(snapshot.val().subTasks != undefined){
+          for(let i = 0; i < snapshot.val().subTasks.length; i++){
+            deleteTasks(snapshot.val().subTasks[i], projectID);
+          }
+        }
+        if(snapshot.val().parentTask != 'none'){
+          database().ref("/Database/Tasks/" + snapshot.val().parentTask).once("value", snap => {
+            const array = snap.val().subTasks.filter(ID => ID != delTaskID);
+            database().ref("/Database/Tasks/" + snapshot.val().parentTask).update({
+              subTasks: array,
+            });
+          });
+          database().ref("/Database/Tasks/" + delTaskID).remove();
+        }
+        else{
+          database().ref("/Database/Projects/" + projectID).once("value", snap => {
+            console.log(snap.val());
+            const array = snap.val().tasks.filter(ID => ID != delTaskID);
+            database().ref("/Database/Projects/" + projectID).update({
+              tasks: array,
+            });
+            database().ref("/Database/Tasks/" + delTaskID).remove();
+          });
+        }
+      });
+      
+    };
     
     const handleText = () => {
       //Sets proper month
@@ -100,11 +129,23 @@ export function EditTask ({ navigation, route }){
                 changeTitle(null);
                 changeText(null);
                 changeDate(new Date());
-                navigation.navigate('Project');
+                //navigation.navigate('Project');
+                navigation.goBack();
               }}
             >
               <Text style={{fontSize: 30}}>Save Changes</Text>
             </TouchableHighlight>
+            {/* <TouchableHighlight
+            style={{width: '100%', height: '10%', backgroundColor: 'cyan',
+                    position: 'absolute', bottom: 0, alignItems: 'center'}}
+              onPress = {() => {
+                deleteTasks(route.params.taskID, route.params.projectID);
+                navigation.navigate('Project');
+                //navigation.goBack();
+              }}
+            >
+              <Text style={{fontSize: 30}}>Delete Task</Text>
+            </TouchableHighlight> */}
         </TopBar>
     );
 }

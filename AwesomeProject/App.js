@@ -60,7 +60,7 @@ const RootScreen = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <RootScreen.Navigator initialRouteName="Test" screenOptions = {{ headerShown: false}}>
+      <RootScreen.Navigator initialRouteName="LogIn" screenOptions = {{ headerShown: false}}>
         <RootScreen.Screen name="Main" component={AfterLogin} options={{
                 drawerLabel: () => null,
                 title: null,

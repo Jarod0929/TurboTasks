@@ -1,10 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useFocusEffect} from 'react';
 import {
   Text,
   View,
   TouchableHighlight,
   FlatList,
 } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 import * as styles from './styles.js';
 
 import database from '@react-native-firebase/database';
@@ -59,15 +60,19 @@ const Drawer = (props)=>{
   //let allProjectTasks = []; //We use this because Flat list doesn't allow for good dynamic changes. Maybe should be unique IDs
   const TaskPanel = (props) => {
     const [task, changeTask] = useState(null);
-  
+    const isFocused = props.navigation.isFocused();//Is true whenever the user is on the screen, but it isn't as efficient as it can be
+
     const handleTask = snapshot => {
       changeTask(snapshot.val());
     }
   
-    useFocusEffect(() => {
+    // useFocusEffect(() => {
+    //   database().ref("/Database/Tasks/" + props.taskID).once("value", handleTask);
+    // });
+    useEffect(() => {
       database().ref("/Database/Tasks/" + props.taskID).once("value", handleTask);
-    });
-  
+    }, [isFocused]);
+
     if(task != null){
      return (
        //COME BACK
@@ -134,6 +139,7 @@ export function Project ({ navigation, route }) {
     const [allProjectTasks, changeAllProjectTasks] = useState([]);
     const isFocused = navigation.isFocused();//Is true whenever the user is on the screen, but it isn't as efficient as it can be
     const [visibility, changeVisibility] = useState(false);
+    const [flashLight, changeFlashLight] = useState(false);
     useEffect(() => {
       if(route.params.taskID == null){
         database().ref(`/Database/Projects/${route.params.projectID}`).once('value', snapshot => {
@@ -149,12 +155,8 @@ export function Project ({ navigation, route }) {
           }
         });
       }
-     }, [isFocused]); //[route.params.taskID, route.params.projectID]);
-     let text = '';
-     let descrip= '';
-    function coolFunc(taskID) {
+    }, [isFocused]); //[route.params.taskID, route.params.projectID]);
 
-    }
     return (// TopBar is supposed to handle the Drawer and don't forget about it
     <TopBar  userInfo={route.params.user} navigation={navigation}>
       <Drawer userInfo={route.params.user} navigation={navigation}></Drawer>
@@ -214,7 +216,6 @@ export function Project ({ navigation, route }) {
                       navigation = {navigation}
                       projectID ={route.params.projectID}
                       userId={route.params.user}
-                      
                     />
                   </React.StrictMode>
                   }
