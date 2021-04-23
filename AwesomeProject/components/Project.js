@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useFocusEffect} from 'react';
 import {
   Text,
   View,
@@ -6,6 +6,7 @@ import {
   FlatList,
   Modal,
 } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 import * as styles from './styles.js';
 
 import database from '@react-native-firebase/database';
@@ -62,14 +63,20 @@ const Drawer = (props)=>{
   const TaskPanel = (props) => {
     const [task, changeTask] = useState(null);
 
+    const isFocused = props.navigation.isFocused();//Is true whenever the user is on the screen, but it isn't as efficient as it can be
+
+
     const handleTask = snapshot => {
       changeTask(snapshot.val());
     }
   
-    useFocusEffect(() => {
+    // useFocusEffect(() => {
+    //   database().ref("/Database/Tasks/" + props.taskID).once("value", handleTask);
+    // });
+    useEffect(() => {
       database().ref("/Database/Tasks/" + props.taskID).once("value", handleTask);
-    });
-  
+    }, [isFocused]);
+
     if(task != null){
      return (
        //COME BACK
@@ -157,6 +164,8 @@ export function Project ({ navigation, route }) {
     const [visibility, changeVisibility] = useState(false);
     const [currentTask, changeCurrentTask] = useState(null);
     const isFocused = navigation.isFocused();//Is true whenever the user is on the screen, but it isn't as efficient as it can be
+    const [visibility, changeVisibility] = useState(false);
+    const [flashLight, changeFlashLight] = useState(false);
     useEffect(() => {
       if(route.params.taskID == null){
         database().ref(`/Database/Projects/${route.params.projectID}`).once('value', snapshot => {
@@ -172,6 +181,10 @@ export function Project ({ navigation, route }) {
           }
         });
       }
+
+   
+
+
      }, [isFocused]); //[route.params.taskID, route.params.projectID]);
   
      function changeTaskDescriptor(taskID){
@@ -179,6 +192,7 @@ export function Project ({ navigation, route }) {
       changeCurrentTask(taskID);
       
      }
+
     return (// TopBar is supposed to handle the Drawer and don't forget about it
     <TopBar  userInfo={route.params.user} navigation={navigation}>
       <Drawer userInfo={route.params.user} navigation={navigation}></Drawer>
@@ -255,7 +269,9 @@ export function Project ({ navigation, route }) {
                       navigation = {navigation}
                       projectID ={route.params.projectID}
                       userId={route.params.user}
+
                       changeTaskDescriptor = {changeTaskDescriptor}
+
                     />
                   </React.StrictMode>
                   }
@@ -264,6 +280,7 @@ export function Project ({ navigation, route }) {
       {(allProjectTasks == null) &&
         <Text>No Tasks</Text>
       }
+
       </View>
     </View>       
     </TopBar> 

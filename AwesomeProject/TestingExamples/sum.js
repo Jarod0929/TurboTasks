@@ -1,30 +1,22 @@
-const fetch = require('node-fetch');
+import React, { useState } from 'react';
+import { Text, View, Button, TouchableHighlight } from 'react-native';
 
-class Article {
-  constructor(title) {
-    this._title = title.replace(' ', '_');
-  }
-
-  async _fetchJson() {
-    if (!this._json) {
-      const response = await fetch(`http://en.wikipedia.org/w/api.php?action=query&prop=info&format=json&titles=${this._title}`);
-      const data = await response.json();
-      this._json = data;
-    }
-    return this._json;
-  }
-
-  async getLanguage() {
-    const json = await this._fetchJson();
-    if (!json) {
-      throw new Error(`Error fetching ${this._title}`);
-    }
-    const pages = Object.keys(json.query.pages);
-    if (!pages || pages.length === 0) {
-      throw new Error(`Error fetching ${this._title}`);
-    }
-    return json.query.pages[pages[0]].pagelanguage;
-  }
+export default function App() {
+  const [cnt, setCnt] = useState(0);
+  return (
+    <View>
+      <TouchableHighlight
+        title = 'default'
+        accessibilityLabel="Press Me!"
+        onPress={() => {
+          setCnt(cnt + 1);
+        }}>
+        <Text>Press Me!</Text>
+      </TouchableHighlight>
+      <Text
+        accessibilityLabel="Press Count">
+        {`${cnt}`}
+      </Text>
+    </View>
+  );
 }
-
-module.exports = Article;
