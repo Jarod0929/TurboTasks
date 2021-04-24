@@ -122,22 +122,22 @@ export function EditTask ({ navigation, route }){
             /> */}
           </View>
           <TouchableHighlight
-            style={{width: '100%', height: '10%', backgroundColor: 'cyan',
-                    position: 'absolute', bottom: 0, alignItems: 'center'}}
+            style={{width: '50%', height: '10%', backgroundColor: 'cyan',
+                    position: 'absolute', bottom: 0, right: 0, alignItems: 'center',borderWidth:1}}
               onPress = {() => {
                 handleText();
                 changeTitle(null);
                 changeText(null);
                 changeDate(new Date());
-                //navigation.navigate('Project');
-                navigation.goBack();
+                navigation.navigate('Project');
+               // navigation.goBack();
               }}
             >
               <Text style={{fontSize: 30}}>Save Changes</Text>
             </TouchableHighlight>
-            {/* <TouchableHighlight
-            style={{width: '100%', height: '10%', backgroundColor: 'cyan',
-                    position: 'absolute', bottom: 0, alignItems: 'center'}}
+             <TouchableHighlight
+            style={{width: '50%', height: '10%', backgroundColor: 'cyan',
+                    position: 'absolute', bottom: 0, alignItems: 'center',borderWidth:1}}
               onPress = {() => {
                 deleteTasks(route.params.taskID, route.params.projectID);
                 navigation.navigate('Project');
@@ -145,7 +145,7 @@ export function EditTask ({ navigation, route }){
               }}
             >
               <Text style={{fontSize: 30}}>Delete Task</Text>
-            </TouchableHighlight> */}
+            </TouchableHighlight> 
         </TopBar>
     );
 }

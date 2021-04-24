@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useFocusEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -6,11 +6,11 @@ import {
   FlatList,
   Modal,
 } from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
+
 import * as styles from './styles.js';
 
 import database from '@react-native-firebase/database';
-import { NavigationContainer, useFocusEffect, useIsFocused } from '@react-navigation/native';
+import {  useFocusEffect, useIsFocused } from '@react-navigation/native';
 
 const Drawer = (props)=>{
     const [drawer, changeDrawer] = useState(false);
@@ -63,19 +63,20 @@ const Drawer = (props)=>{
   const TaskPanel = (props) => {
     const [task, changeTask] = useState(null);
 
-    const isFocused = props.navigation.isFocused();//Is true whenever the user is on the screen, but it isn't as efficient as it can be
+    //const isFocused = props.navigation.isFocused();//Is true whenever the user is on the screen, but it isn't as efficient as it can be
 
 
     const handleTask = snapshot => {
       changeTask(snapshot.val());
     }
   
-    // useFocusEffect(() => {
-    //   database().ref("/Database/Tasks/" + props.taskID).once("value", handleTask);
-    // });
-    useEffect(() => {
+    useFocusEffect(() => {
       database().ref("/Database/Tasks/" + props.taskID).once("value", handleTask);
-    }, [isFocused]);
+    });
+
+    // useEffect(() => {
+    //   database().ref("/Database/Tasks/" + props.taskID).once("value", handleTask);
+    // }, [isFocused]);
 
     if(task != null){
      return (
@@ -161,7 +162,7 @@ export function Project ({ navigation, route }) {
     //});
     //const [flashlight, changeFlashLight] = useState(false); If needed Flashlight for dark areas
     const [allProjectTasks, changeAllProjectTasks] = useState([]);
-    const [visibility, changeVisibility] = useState(false);
+    
     const [currentTask, changeCurrentTask] = useState(null);
     const isFocused = navigation.isFocused();//Is true whenever the user is on the screen, but it isn't as efficient as it can be
     const [visibility, changeVisibility] = useState(false);
