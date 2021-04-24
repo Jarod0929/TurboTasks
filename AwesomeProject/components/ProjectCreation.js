@@ -174,30 +174,34 @@ export function ProjectCreation ({ route, navigation }) {
               date={date}
               mode = "date"
               onDateChange={setDate}
+              style = {{marginBottom: 20}}
               customStyles={{
               dateInput: {
                 backgroundColor: "white",
+                
               }
               // ... You can check the source to find the other keys.
             }}
             />
-            <Text>Invite Users</Text>
+            <Text style = {{marginBottom: 10, }}>Invite Users</Text>
+            <View style = {{flexDirection: "row",  marginBottom: 30}}>
             <TextInput
-              style = {styles.textInputLogIn}
+              style = {{borderBottomColor: 'gray', borderBottomWidth: 1, width: "75%", padding: 0}}
               placeholder = "Username"
               onChangeText = {text => changeInvUsers(text)}
               value={invUsers}
             />
             <TouchableHighlight onPress = {addUsersToList}>
               <View
-                style = {styles.buttonLogIn}
+                style = {{backgroundColor: "blue", width: "100%", alignContent: "center"}}
               >
-                <Text>Invite User</Text>
+                <Text>Add</Text>
               </View>
             </TouchableHighlight>
+            </View>
             <TouchableHighlight onPress = {createNewProject}>
               <View
-                style = {styles.buttonLogIn}
+                style = {{backgroundColor: "blue"}}
               >
                 <Text>Create Project</Text>
               </View>
