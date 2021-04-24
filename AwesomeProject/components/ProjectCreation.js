@@ -6,6 +6,7 @@ import {
   TouchableHighlight,
   TextInput,
   FlatList,
+  Image,
 } from 'react-native';
 import DatePicker from 'react-native-datepicker'
 import database from '@react-native-firebase/database';
@@ -146,46 +147,63 @@ export function ProjectCreation ({ route, navigation }) {
     return (// TopBar is supposed to handle the Drawer and don't forget about it
       <TopBar navigation = {navigation} reset = {resetEverything}>
         <Drawer userInfo={route.params.user} navigation={navigation}></Drawer>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <TextInput
-          style = {styles.textInputLogIn}
-          placeholder = "Project Name"
-          onChangeText = {text => changeProjectName(text)}
-          value={projectName}
-        />
-        <DatePicker
-          date={date}
-          mode = "date"
-          onDateChange={setDate}
-          customStyles={{
-          dateInput: {
-            backgroundColor: "white",
-          }
-          // ... You can check the source to find the other keys.
-        }}
-        />
-        <Text>Invite Users</Text>
-        <TextInput
-          style = {styles.textInputLogIn}
-          placeholder = "Username"
-          onChangeText = {text => changeInvUsers(text)}
-          value={invUsers}
-        />
-        <TouchableHighlight onPress = {addUsersToList}>
-          <View
-            style = {styles.buttonLogIn}
-          >
-            <Text>Invite User</Text>
+        <View style={{flex: 1, alightItems: "center", backgroundColor: "white", width: "100%", height: "100%", padding: 15}}>
+          <View style = {{width: "100%", height: "30%"}}>
+              <Image
+                style = {{width: "70%", height:"70%", alignSelf: "center"}}
+                shadowColor = "gray"
+                resizeMode = "contain"
+                source = {require("../assets/add-logo.webp")}
+              >
+              </Image>
+              <Text
+                style = {{alignSelf: "center", fontSize: 30, fontFamily: "Courier New", color: "darkorange"}}
+              >
+                Create A Project
+              </Text>
           </View>
-        </TouchableHighlight>
-        <TouchableHighlight onPress = {createNewProject}>
-          <View
-            style = {styles.buttonLogIn}
-          >
-            <Text>Create Project</Text>
+          <View style={{paddingLeft: 20, top: 10}}>
+            <Text  style = {{marginBottom: 10}} >Project Name</Text>
+            <TextInput
+              style = {{borderBottomColor: 'gray', borderBottomWidth: 1, width: "90%", padding: 0, marginBottom: 30}}
+              placeholder = "Office Function"
+              onChangeText = {text => changeProjectName(text)}
+              value={projectName}
+            />
+            <DatePicker
+              date={date}
+              mode = "date"
+              onDateChange={setDate}
+              customStyles={{
+              dateInput: {
+                backgroundColor: "white",
+              }
+              // ... You can check the source to find the other keys.
+            }}
+            />
+            <Text>Invite Users</Text>
+            <TextInput
+              style = {styles.textInputLogIn}
+              placeholder = "Username"
+              onChangeText = {text => changeInvUsers(text)}
+              value={invUsers}
+            />
+            <TouchableHighlight onPress = {addUsersToList}>
+              <View
+                style = {styles.buttonLogIn}
+              >
+                <Text>Invite User</Text>
+              </View>
+            </TouchableHighlight>
+            <TouchableHighlight onPress = {createNewProject}>
+              <View
+                style = {styles.buttonLogIn}
+              >
+                <Text>Create Project</Text>
+              </View>
+            </TouchableHighlight>
+            </View>
           </View>
-        </TouchableHighlight>
-        </View>
       </TopBar>
     );
   }
