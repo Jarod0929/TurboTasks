@@ -219,6 +219,7 @@ export function Project ({ navigation, route }) {
         <View style = {styles.projectListMainView}>
           {/* Add task button */}
           <TouchableHighlight 
+            style={styles.addTaskButton}
             onPress = {() => {
             const newTask = database().ref(`/Database/Tasks`).push();
             const newTaskID = newTask.key;
@@ -254,7 +255,7 @@ export function Project ({ navigation, route }) {
             }
           }}  
         >
-          <Text>Add Task</Text>
+          <Text style={{fontSize: 20}}>Add Task</Text>
         </TouchableHighlight>
 
         {/* Lists out tasks for this form */}

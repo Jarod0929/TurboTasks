@@ -38,9 +38,11 @@ import {Settings} from './components/Settings.js';
 import {EditTask} from './components/EditTask.js';
 import {Project} from './components/Project.js';
 import * as styles from './components/styles.js';
-import Moment from 'moment';
 
-
+/**
+ * For Testing Purposes
+ * @returns Test Page
+ */
 function Test(){
   return(
     <View style = {{height: "100%", width: "100%", backgroundColor:"blue"}}>
@@ -55,6 +57,9 @@ function Test(){
 
 const RootScreen = createStackNavigator();
 
+/**
+ * Group of screens before LogIn
+ */
 export default function App() {
   return (
     <NavigationContainer>
@@ -66,28 +71,25 @@ export default function App() {
         <RootScreen.Screen name="LogIn" component={LogIn}/>
         <RootScreen.Screen name="Test" component={Test}/>
         <RootScreen.Screen name="CreateAccount" component={CreateAccount}/>
-        </RootScreen.Navigator>
-      </NavigationContainer>
-      
+      </RootScreen.Navigator>
+    </NavigationContainer>  
   );
 }
 
+/**
+ * The group of Screens after LogIn
+ */
 const SecondDrawer = createStackNavigator();
  function AfterLogin({route,navigation}){
   return(
     <SecondDrawer.Navigator screenOptions = {{ headerShown: false }}>
-    <SecondDrawer.Screen name="LogIn" component={LogIn} />
-    <SecondDrawer.Screen name="ProjectList" component={ProjectList}/>
-    <SecondDrawer.Screen name="ProjectCreation" component={ProjectCreation}/>
-    <SecondDrawer.Screen name = "Project" component={Project}/>
-    <SecondDrawer.Screen name = "EditTask" component={EditTask}/>
-    <SecondDrawer.Screen name = "Settings" component={Settings}/>
-  </SecondDrawer.Navigator>
-  
-
+      <SecondDrawer.Screen name="LogIn" component={LogIn} />
+      <SecondDrawer.Screen name="ProjectList" component={ProjectList}/>
+      <SecondDrawer.Screen name="ProjectCreation" component={ProjectCreation}/>
+      <SecondDrawer.Screen name = "Project" component={Project}/>
+      <SecondDrawer.Screen name = "EditTask" component={EditTask}/>
+      <SecondDrawer.Screen name = "Settings" component={Settings}/>
+    </SecondDrawer.Navigator>
   );
-
 }
-
-//Hmmmmmmmmmmmmmmmmmm TODO: Will be button click 
 

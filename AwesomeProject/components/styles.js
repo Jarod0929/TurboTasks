@@ -2,6 +2,9 @@ import {
     StyleSheet
   } from 'react-native';
   
+
+let spiroDiscoBall = '#19d9ff';
+
 const styles = StyleSheet.create({
     container: {
       width: "100%",
@@ -21,7 +24,7 @@ const styles = StyleSheet.create({
       zIndex: 30,
     },
     titleText: {
-      color: 'white',
+      color: 'black',
       fontSize: 28,
       zIndex: 30,
     },
@@ -37,7 +40,7 @@ const styles = StyleSheet.create({
       zIndex: 30,
     },
     defaultText: {
-      color: 'white',
+      color: 'black',
       fontSize: 16,
       zIndex: 30,
     },
@@ -64,9 +67,6 @@ const styles = StyleSheet.create({
       zIndex: 30,
     },
     failedContainer: {
-      //flex: 1,
-      //justifyContent: 'center',
-      //alignItems: 'center',
       zIndex: 30,
     },
     failedText: {
@@ -203,6 +203,39 @@ const styles = StyleSheet.create({
       height: "100%", 
       width: "100%", 
       backgroundColor: "white"
+    },
+    editTaskMainView:{
+      padding: 5, 
+      backgroundColor: 'white', 
+      height: '90%', 
+      alignItems: 'center'
+    },
+    editTaskInputs:{
+      width: '75%', 
+      borderWidth: 2, 
+      borderColor: 'blue', 
+      borderRadius: 4
+    },
+    editTaskBottomBar:{
+      width: '50%', 
+      height: '10%', 
+      backgroundColor: 'cyan',
+      position: 'absolute', 
+      bottom: 0, 
+      alignItems: 'center',
+      borderWidth:1,
+      fontSize: 18
+    },
+    editTaskBottomBarButtons:{
+      padding: "7%", 
+      fontSize: 20
+    },
+    addTaskButton:{
+      backgroundColor: spiroDiscoBall,
+      padding: 5,
+      margin: "2%",
+      width: "45%",
+      alignItems: 'center'
     }
 
 });
