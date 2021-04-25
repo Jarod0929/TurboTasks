@@ -152,7 +152,7 @@ export function ProjectCreation ({ route, navigation }) {
     return (// TopBar is supposed to handle the Drawer and don't forget about it
       <TopBar navigation = {navigation} reset = {resetEverything}>
         <Drawer userInfo={route.params.user} navigation={navigation}></Drawer>
-        <View style={{flex: 1, alightItems: "center", backgroundColor: "black", width: "100%", height: "100%", padding: 15}}>
+        <View style={{flex: 1, alightItems: "center", backgroundColor: "white", width: "100%", height: "100%", padding: 15}}>
           <View style = {{width: "100%", height: "30%"}}>
               <Image
                 style = {{width: "70%", height:"70%", alignSelf: "center"}}
@@ -164,13 +164,13 @@ export function ProjectCreation ({ route, navigation }) {
               <Text
                 style = {{alignSelf: "center", fontSize: 30, fontFamily: "Courier New", color: "darkorange"}}
               >
-                Create A Project
+                Create a Project
               </Text>
           </View>
           <View style={{paddingLeft: 20, top: 10}}>
             <Text>Project Name</Text>
             <TextInput
-              style = {{borderBottomColor: 'gray', borderBottomWidth: 1, width: "90%", height: 50, padding: 0, marginBottom: 20}}
+              style = {{borderBottomColor: 'gray', color: 'black', borderBottomWidth: 1, width: "90%", height: 50, padding: 0, marginBottom: 20}}
               placeholder = "Office Function"
               onChangeText = {text => changeProjectName(text)}
               value={projectName}

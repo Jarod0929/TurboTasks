@@ -8,134 +8,125 @@ import {
 import database from '@react-native-firebase/database';
 import * as styles from './styles.js';
 
-
 const Drawer = (props)=>{
   const [drawer, changeDrawer] = useState(false);
   return(
     <View>
-       <TouchableHighlight style={styles.navigationButtons}
-            onPress = {() => {
-              changeDrawer(!drawer);
-            }}
-          >
-          <Text>Open Navigation Drawer</Text>
-          </TouchableHighlight>
-
-
-    
-
+      <TouchableHighlight style={styles.navigationButtons}
+        onPress = {() => {
+          changeDrawer(!drawer);
+        }}
+      >
+        <Text>Open Navigation Drawer</Text>
+      </TouchableHighlight>
       {drawer &&
-      <View style= {styles.Drawercont}>
-        <TouchableHighlight onPress={()=> changeDrawer(!drawer)} style={styles.navigationButtons}><Text>Close</Text></TouchableHighlight>
-        <TouchableHighlight onPress={()=>props.navigation.navigate("LogIn")} style={styles.navigationButtons}><Text>LogIn</Text></TouchableHighlight>
-        
-
-      </View>
+        <View style= {styles.Drawercont}>
+          <TouchableHighlight onPress={()=> changeDrawer(!drawer)} style={styles.navigationButtons}><Text>Close</Text></TouchableHighlight>
+          <TouchableHighlight onPress={()=>props.navigation.navigate("LogIn")} style={styles.navigationButtons}><Text>LogIn</Text></TouchableHighlight>
+        </View>
       }
-    </View>
-  
+    </View>  
   );
 }
+
 const TopBar = ({children}) => {
-    return (
-      <View style = {styles.container}>
-        <View style = {styles.topBarContainer}>
-  
-        </View>
-        {children}
+  return (
+    <View style = {styles.container}>
+      <View style = {styles.topBarContainer}>  
       </View>
-    )
+      {children}
+    </View>
+  )
 };
 
 
 export function CreateAccount ({navigation}) {
-    const [textUserName, changeTextUserName] = useState('');//For the Username Field
-    const [textPassword, changeTextPassword] = useState('');//For the Password Field
-    const [failed, changefailed] = useState(false);//Only sets to true when they failed once on account and sets feedback message
+  const [username, changeUsername] = useState('');//For the Username Field
+  const [password, changePassword] = useState('');//For the Password Field
+  const [failed, changeFailed] = useState(false);//Only sets to true when they failed once on account and sets feedback message
   
-    const anyPreviousUsernames = snapshot => {
-      if(snapshot.val() !== null || textUserName === '' || textPassword === ''){
-        changefailed(true);
-      }
-      else{
-        changefailed(false);
-        const newData = database().ref("/Database/Users").push({
-          Username: textUserName,
-          Password: textPassword,
-          Reference: {
-            theme: "light",
-          },
-        });
-        const newDataKey = newData.key;
-        newData.update({ID: newDataKey});
-        changeTextUserName(""); //Resets all changes made
-        changeTextPassword("");
-        changefailed(false);
-        navigation.navigate("LogIn");
-      }
-      database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).off("value", anyPreviousUsernames); 
-    };
-    
-    const createNewAccount = () => {
-      database().ref("/Database/Users").orderByChild("Username").equalTo(textUserName).on("value", anyPreviousUsernames);
-    };
-  
-    const goToLogIn = () => { //Goes to CreateAccount Screen
-      changeTextUserName(""); //Resets all changes made
-      changeTextPassword("");
-      changefailed(false);
+  const anyPreviousUsernames = snapshot => {
+    if(snapshot.val() !== null || username === '' || password === ''){
+      changeFailed(true);
+    } else {
+      changeFailed(false);
+      const newData = database().ref("/Database/Users").push({
+        Username: username,
+        Password: password,
+        Reference: {
+          theme: "light",
+        },
+      });
+      const newDataKey = newData.key;
+      newData.update({ID: newDataKey});
+      changeUsername(""); //Resets all changes made
+      changePassword("");
+      changeFailed(false);
       navigation.navigate("LogIn");
-    };
+    }
+    database().ref("/Database/Users").orderByChild("Username").equalTo(username).off("value", anyPreviousUsernames); 
+  };
+    
+  const createNewAccount = () => {
+    database().ref("/Database/Users").orderByChild("Username").equalTo(username).on("value", anyPreviousUsernames);
+  };
   
-    return (
-      <TopBar>
-        <Drawer navigation={navigation}></Drawer>
-      <View style = {styles.logInContainer}>
-        <View style = {styles.logInSignInTitleContainer}>
-          <Text style = {styles.logInSignInTitleText}>Sign Up</Text>
+  const goToLogIn = () => { //Goes to CreateAccount Screen
+    changeUsername(""); //Resets all changes made
+    changePassword("");
+    changeFailed(false);
+    navigation.navigate("LogIn");
+  };
+  
+  return (
+    <TopBar>
+      <Drawer navigation={navigation}></Drawer>
+      <View style = {styles.container}>
+        <View style = {styles.signInTitleContainer}>
+          <Text style = {styles.signInTitleText}>Sign Up</Text>
         </View>
         {failed &&
-        <View style = {styles.logInRedFailedContainer}>
-          <Text style = {styles.logInRedFailedText}>Username Already Exists</Text>
-        </View>
+          <View style = {styles.redFailedContainer}>
+            <Text style = {styles.redFailedText}>Username Already Exists</Text>
+          </View>
         }
-        <View style = {styles.logInTextAreaContainer}>
-          <Text style = {styles.logInTextAbove}>Username</Text>
-          <View style = {styles.logInTextInputContainer}>
+        <View style = {styles.textAreaContainer}>
+          <Text style = {styles.textAbove}>Username</Text>
+          <View style = {styles.textInputContainer}>
             <TextInput
-              onChangeText = {text => changeTextUserName(text)}
+              onChangeText = {text => changeUsername(text)}
               placeholder = "UserName"
-              value = {textUserName}
+                alue = {username}
             />
           </View>
         </View>
-        <View style = {styles.logInTextAreaContainer}>
-          <Text style = {styles.logInTextAbove}>Password</Text>
-          <View style = {styles.logInTextInputContainer}>
+        <View style = {styles.textAreaContainer}>
+          <Text style = {styles.textAbove}>Password</Text>
+          <View style = {styles.textInputContainer}>
             <TextInput
-              onChangeText = {text => changeTextPassword(text)}
+              onChangeText = {text => changePassword(text)}
               placeholder = "Password"
-              value = {textPassword}
+              value = {password}
             />
           </View>
         </View>
-        <View style = {styles.logInButtonContainer}>
+        <View style = {styles.buttonContainer}>
           <TouchableHighlight 
-            style = {styles.logInButton}
+            style = {styles.button}
             onPress = {createNewAccount}
           >
-            <Text style = {styles.logInButtonText}>Sign Up</Text>
+            <Text style = {styles.buttonText}>Sign Up</Text>
           </TouchableHighlight>
         </View>
-        <View style = {styles.logInButtonContainer}>
+        <View style = {styles.buttonContainer}>
           <TouchableHighlight 
-            style = {styles.logInButton}
+            style = {styles.button}
             onPress = {goToLogIn}
           >
-            <Text style = {styles.logInButtonText}>Sign In</Text>
+            <Text style = {styles.buttonText}>Sign In</Text>
           </TouchableHighlight>
         </View>
       </View>
     </TopBar>
-    );
-  }
+  );
+}
