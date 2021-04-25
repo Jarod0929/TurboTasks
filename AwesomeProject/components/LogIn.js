@@ -27,6 +27,7 @@ const Drawer = (props)=>{
   const [drawer, changeDrawer] = useState(false);
   return(
     <View>
+    {/* Open Drawer */}
        <TouchableHighlight style={styles.navigationButtons}
           onPress = {() => {
             changeDrawer(!drawer);
@@ -34,8 +35,10 @@ const Drawer = (props)=>{
         >
       <Text>Open Navigation Drawer</Text>
     </TouchableHighlight>
+    {/* Drawer Navigation */}
     {drawer &&
       <View style= {styles.Drawercont}>
+    {/* Closes Drawer */}
         <TouchableHighlight onPress={()=> changeDrawer(!drawer)} style={styles.navigationButtons}><Text>Close</Text></TouchableHighlight>
         <TouchableHighlight onPress={()=>props.navigation.navigate("CreateAccount")} style={styles.navigationButtons}><Text>Create an Account</Text></TouchableHighlight>
       </View>
@@ -138,9 +141,11 @@ export function LogIn({ navigation }){
     <TopBar>
       <Drawer navigation={navigation}></Drawer>
       <View style = {styles.flexAlignContainer}>
+      {/* Title */}
         <View style = {styles.titleContainer}>
           <Text style = {styles.titleText}>Sign In</Text>
         </View>
+      {/* Username Input Box */}
         <View style = {styles.textAreaContainer}>
           <Text style = {styles.defaultText}>Username</Text>
           <View style = {styles.textInputContainer}>
@@ -151,6 +156,7 @@ export function LogIn({ navigation }){
             />
           </View>
         </View>
+      {/* Password Input Box */}
         <View style = {styles.textAreaContainer}>
           <Text style = {styles.defaultText}>Password</Text>
           <View style = {styles.textInputContainer}>
@@ -161,6 +167,7 @@ export function LogIn({ navigation }){
             />
           </View>
         </View>
+      {/* Log In Button */}
         <View style = {styles.buttonContainer}>
           <TouchableHighlight 
             style = {styles.button}
@@ -169,11 +176,13 @@ export function LogIn({ navigation }){
             <Text style = {styles.buttonText}>Log In</Text>
           </TouchableHighlight>
         </View>
+      {/* Feedback Message */}
         {failed &&
           <View style = {styles.failedContainer}>
             <Text style = {styles.failedText}>Username does not exist or Password is false</Text>
           </View>
         }
+      {/* Goto CreateAccount */}
         <View style = {styles.buttonContainer}>
           <TouchableHighlight 
             style = {styles.button}

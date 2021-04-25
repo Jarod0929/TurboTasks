@@ -18,6 +18,7 @@ const Drawer = (props)=>{
   const [drawer, changeDrawer] = useState(false);
   return(
     <View>
+    {/* Opens Drawer */}
       <TouchableHighlight style={styles.navigationButtons}
         onPress = {() => {
           changeDrawer(!drawer);
@@ -25,8 +26,10 @@ const Drawer = (props)=>{
       >
         <Text>Open Navigation Drawer</Text>
       </TouchableHighlight>
+    {/* Navigation to different screens */}
       {drawer &&
         <View style= {styles.Drawercont}>
+    {/* Closes Drawer */}
           <TouchableHighlight onPress={()=> changeDrawer(!drawer)} style={styles.navigationButtons}><Text>Close</Text></TouchableHighlight>
           <TouchableHighlight onPress={()=>props.navigation.navigate("LogIn")} style={styles.navigationButtons}><Text>LogIn</Text></TouchableHighlight>
         </View>
@@ -117,14 +120,17 @@ export function CreateAccount ({navigation}) {
     <TopBar>
       <Drawer navigation={navigation}></Drawer>
       <View style = {styles.flexAlignContainer}>
+      {/* Title Box */}
         <View style = {styles.titleContainer}>
           <Text style = {styles.titleText}>Sign Up</Text>
         </View>
+      {/* Feedback Failed Box */}
         {failed &&
           <View style = {styles.redFailedContainer}>
             <Text style = {styles.redFailedText}>Username Already Exists</Text>
           </View>
         }
+      {/* Username Input Box */}
         <View style = {styles.textAreaContainer}>
           <Text style = {styles.defaultText}>Username</Text>
           <View style = {styles.textInputContainer}>
@@ -135,6 +141,7 @@ export function CreateAccount ({navigation}) {
             />
           </View>
         </View>
+      {/* Password Input Box */}
         <View style = {styles.textAreaContainer}>
           <Text style = {styles.defaultText}>Password</Text>
           <View style = {styles.textInputContainer}>
@@ -145,6 +152,7 @@ export function CreateAccount ({navigation}) {
             />
           </View>
         </View>
+      {/* Create new account Button */}
         <View style = {styles.buttonContainer}>
           <TouchableHighlight 
             style = {styles.button}
@@ -153,6 +161,7 @@ export function CreateAccount ({navigation}) {
             <Text style = {styles.buttonText}>Sign Up</Text>
           </TouchableHighlight>
         </View>
+      {/* Goto Login Button */}
         <View style = {styles.buttonContainer}>
           <TouchableHighlight 
             style = {styles.button}
