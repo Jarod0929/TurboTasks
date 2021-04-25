@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     container: {
       width: "100%",
       height: "100%",
-      backgroundColor: "black",
+      backgroundColor: "white",
       zIndex: 0,
     },
     flexAlignContainer: {
@@ -139,7 +139,38 @@ const styles = StyleSheet.create({
       backgroundColor:'white',
       width: "100%",
       height: "100%",
+    },
+    projectListModal:{
+      height: "80%", 
+      width: "80%", 
+      margin:"10%", 
+      backgroundColor:'green'
+    },
+    projectCreationPlusPosition:{
+      width: "15%",
+      left: "88%", 
+      top: "-1%", 
+      position: 'absolute', 
+      zIndex: 200
+    },
+    projectCreationPlusDesign:{
+      color: "blue",
+      fontSize: 50
+    },
+    projectListMainView:{
+      backgroundColor: "white",
+      flex: 1, 
+      alignItems: 'center', 
+      justifyContent: 'center' 
+    },
+    projectListPanel:{
+      margin: "5%",
+      width: "90%", 
+      padding: "5%", 
+      backgroundColor: "#1167b1", 
+      alignItems: 'center'
     }
+
 });
 
 module.exports = styles;
