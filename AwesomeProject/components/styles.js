@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
       zIndex: 30,
     },
     titleText: {
-      color: 'white',
+      color: 'black',
       fontSize: 28,
       zIndex: 30,
     },
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
       zIndex: 30,
     },
     defaultText: {
-      color: 'white',
+      color: 'black',
       fontSize: 16,
       zIndex: 30,
     },
