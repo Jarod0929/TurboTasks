@@ -38,9 +38,11 @@ import {Settings} from './components/Settings.js';
 import {EditTask} from './components/EditTask.js';
 import {Project} from './components/Project.js';
 import * as styles from './components/styles.js';
-import Moment from 'moment';
 
-
+/**
+ * For Testing Purposes
+ * @returns Test Page
+ */
 function Test(){
   return(
     <View style = {{height: "100%", width: "100%", backgroundColor:"blue"}}>
@@ -55,6 +57,9 @@ function Test(){
 
 const RootScreen = createStackNavigator();
 
+/**
+ * Group of screens before LogIn
+ */
 export default function App() {
   return (
     <NavigationContainer>
@@ -72,6 +77,9 @@ export default function App() {
   );
 }
 
+/**
+ * The group of Screens after LogIn
+ */
 const SecondDrawer = createStackNavigator();
  function AfterLogin({route,navigation}){
   return(
@@ -83,11 +91,6 @@ const SecondDrawer = createStackNavigator();
     <SecondDrawer.Screen name = "EditTask" component={EditTask}/>
     <SecondDrawer.Screen name = "Settings" component={Settings}/>
   </SecondDrawer.Navigator>
-  
-
   );
-
 }
-
-//Hmmmmmmmmmmmmmmmmmm TODO: Will be button click 
 
