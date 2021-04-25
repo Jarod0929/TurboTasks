@@ -113,17 +113,15 @@ const styles = StyleSheet.create({
       top:0,
       left:0,
       position: "absolute",
-      backgroundColor: "yellow",
+      backgroundColor: "#FFF7D9",
       flexDirection:"row",
       borderWidth:1
 
     },
     navigationButtons:{
       padding:1,
-      backgroundColor: 'teal',
+      backgroundColor: '#1974D3',
       borderWidth: 1,
-      
-      
     },
     textInputFPCh:{
       backgroundColor:"white",
@@ -136,6 +134,11 @@ const styles = StyleSheet.create({
       borderWidth:1,
       width:"50%",
 
+    },
+    settingsPage:{
+      backgroundColor:'white',
+      width: "100%",
+      height: "100%",
     }
 });
 
