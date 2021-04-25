@@ -4,47 +4,47 @@ The main navigation should be in **App.js**
 
 All the components should be in the **components** file
 Including...
-    CreateAccount.js
-    EditTask.js
-    LogIn.js
-    Project.js
-    ProjectCreation.js
-    ProjectList.js
-    Settings.js
-    styles.js
+- CreateAccount.js
+- EditTask.js
+- LogIn.js
+- Project.js
+- ProjectCreation.js
+- ProjectList.js
+- Settings.js
+- styles.js
 
 Navigation defaults to LogIn
 
 LogIn
-    Logs in the User
+- Logs in the User
 
 CreateAccount
-    Creates new user Accounts
+- Creates new user Accounts
 
 ProjectList
-    List of user Projects
+- List of user Projects
 
 ProjectCreation
-    Creation of new Projects
+- Creation of new Projects
 
 Project
-    All the Tasks
+- All the Tasks
 
 Settings (Not in Use)
-    Personal Settings 
+- Personal Settings 
 
 EditTask
-    Edits the individual tasks
+- Edits the individual tasks
 
 Note 
-    **ScreensPictures** folder has the rough idea, not the final product.
-    **TestingExamples** folder has the activities that we done
-    **assets** folder has the image assets we are using
+- **ScreensPictures** folder has the rough idea, not the final product.
+- **TestingExamples** folder has the activities that we done
+- **assets** folder has the image assets we are using
 
 Packages Used
-    Navigation Stack
-    Firebase
-    datapicker
+- Navigation Stack
+- Firebase
+- datapicker
 
 
 Description of App Idea
