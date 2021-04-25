@@ -67,7 +67,7 @@ const TopBar = ({children}) => {
           </TouchableHighlight>
         </View>
       </View>
-      <View style = {[styles.drawerContainer, drawer? undefined: {width: 1}]}>
+      <View style = {[styles.drawerContainer, drawer? undefined: {width: 0}]}>
 
       </View>
       {children}
@@ -142,7 +142,7 @@ export function LogIn({ navigation }){
           <Text style = {styles.titleText}>Sign In</Text>
         </View>
         <View style = {styles.textAreaContainer}>
-          <Text style = {styles.textAbove}>Username</Text>
+          <Text style = {styles.defaultText}>Username</Text>
           <View style = {styles.textInputContainer}>
             <TextInput
               onChangeText = {text => changeUsername(text)}
@@ -152,7 +152,7 @@ export function LogIn({ navigation }){
           </View>
         </View>
         <View style = {styles.textAreaContainer}>
-          <Text style = {styles.textAbove}>Password</Text>
+          <Text style = {styles.defaultText}>Password</Text>
           <View style = {styles.textInputContainer}>
             <TextInput
               onChangeText = {text => changePassword(text)}

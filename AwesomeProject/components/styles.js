@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
       paddingBottom: 30,
       zIndex: 30,
     },
-    textAbove: {
+    defaultText: {
       color: 'white',
       fontSize: 16,
       zIndex: 30,

@@ -76,15 +76,15 @@ export function CreateAccount ({navigation}) {
       changeFailed(true);
     } else {
       changeFailed(false);
-      const newData = database().ref("/Database/Users").push({
+      const newUser = database().ref("/Database/Users").push({
         Username: username,
         Password: password,
         Reference: {
           theme: "light",
         },
       });
-      const newDataKey = newData.key;
-      newData.update({ID: newDataKey});
+      const newUserKey = newUser.key;
+      newUser.update({ID: newUserKey});
       changeUsername(""); //Resets all changes made
       changePassword("");
       changeFailed(false);
@@ -116,9 +116,9 @@ export function CreateAccount ({navigation}) {
   return (
     <TopBar>
       <Drawer navigation={navigation}></Drawer>
-      <View style = {styles.container}>
-        <View style = {styles.signInTitleContainer}>
-          <Text style = {styles.signInTitleText}>Sign Up</Text>
+      <View style = {styles.flexAlignContainer}>
+        <View style = {styles.titleContainer}>
+          <Text style = {styles.titleText}>Sign Up</Text>
         </View>
         {failed &&
           <View style = {styles.redFailedContainer}>
@@ -126,17 +126,17 @@ export function CreateAccount ({navigation}) {
           </View>
         }
         <View style = {styles.textAreaContainer}>
-          <Text style = {styles.textAbove}>Username</Text>
+          <Text style = {styles.defaultText}>Username</Text>
           <View style = {styles.textInputContainer}>
             <TextInput
               onChangeText = {text => changeUsername(text)}
               placeholder = "UserName"
-                alue = {username}
+              value = {username}
             />
           </View>
         </View>
         <View style = {styles.textAreaContainer}>
-          <Text style = {styles.textAbove}>Password</Text>
+          <Text style = {styles.defaultText}>Password</Text>
           <View style = {styles.textInputContainer}>
             <TextInput
               onChangeText = {text => changePassword(text)}
@@ -161,7 +161,7 @@ export function CreateAccount ({navigation}) {
             <Text style = {styles.buttonText}>Sign In</Text>
           </TouchableHighlight>
         </View>
-      </View>
-    </TopBar>
+    </View>
+  </TopBar>
   );
 }
