@@ -16,30 +16,25 @@ const Drawer = (props)=>{
     const [drawer, changeDrawer] = useState(false);
     return(
       <View>
-         <TouchableHighlight style={styles.navigationButtons}
-              onPress = {() => {
-                changeDrawer(!drawer);
-              }}
-            >
-            <Text>Open Navigation Drawer</Text>
-            </TouchableHighlight>
-  
-  
-      
-  
+        <TouchableHighlight style={styles.navigationButtons}
+          onPress = {() => {
+            changeDrawer(!drawer);
+          }}
+        >
+          <Text>Open Navigation Drawer</Text>
+        </TouchableHighlight>
         {drawer &&
         <View style= {styles.Drawercont}>
           <TouchableHighlight onPress={()=> changeDrawer(!drawer)} style={styles.navigationButtons}><Text>Close</Text></TouchableHighlight>
           <TouchableHighlight onPress={()=>props.navigation.navigate("ProjectList",{user:props.userInfo})} style={styles.navigationButtons}><Text>ProjectList</Text></TouchableHighlight>
           <TouchableHighlight onPress={()=>props.navigation.navigate("ProjectCreation",{user:props.userInfo})} style={styles.navigationButtons}><Text>ProjectCreation</Text></TouchableHighlight>
           <TouchableHighlight onPress={()=>props.navigation.navigate("Settings",{user:props.userInfo})} style={styles.navigationButtons}><Text>Settings⚙️</Text></TouchableHighlight>
-  
         </View>
         }
       </View>
-    
     );
   }
+
   const TopBar = (props) => {
     return (
       <View style = {styles.container}>
@@ -47,11 +42,9 @@ const Drawer = (props)=>{
           <TouchableHighlight onPress = {()=>{
             props.navigation.goBack();
           }}>
-            <View>
-              <Text>
-               GO BACK 
-              </Text>
-            </View>
+          <View>
+            <Text>GO BACK</Text>
+          </View>
           </TouchableHighlight>
         </View>
         {props.children}
@@ -62,22 +55,16 @@ const Drawer = (props)=>{
   //let allProjectTasks = []; //We use this because Flat list doesn't allow for good dynamic changes. Maybe should be unique IDs
   const TaskPanel = (props) => {
     const [task, changeTask] = useState(null);
-
     //const isFocused = props.navigation.isFocused();//Is true whenever the user is on the screen, but it isn't as efficient as it can be
-
-
     const handleTask = snapshot => {
       changeTask(snapshot.val());
     }
-  
     useFocusEffect(() => {
       database().ref("/Database/Tasks/" + props.taskID).once("value", handleTask);
     });
-
     // useEffect(() => {
     //   database().ref("/Database/Tasks/" + props.taskID).once("value", handleTask);
     // }, [isFocused]);
-
     if(task != null){
      return (
        //COME BACK
@@ -93,15 +80,13 @@ const Drawer = (props)=>{
           <TouchableHighlight 
             style={{width: "100%", padding: "5%", backgroundColor: "orange", alignItems: 'center'}}
             onPress = {() => {
-              //CHANGE PROPS.PROJECT => PROPS.TASKID
-              props.navigation.navigate("EditTask", {taskID: props.taskID, projectID: props.projectID,user: props.userId});
+            //CHANGE PROPS.PROJECT => PROPS.TASKID
+            props.navigation.navigate("EditTask", {taskID: props.taskID, projectID: props.projectID,user: props.userId});
             }}
           >
-            <View style={{alignItems: 'center'}}>
-              <Text style={{fontSize: 20}}>
-                Edit
-              </Text>
-            </View>
+          <View style={{alignItems: 'center'}}>
+            <Text style={{fontSize: 20}}>Edit</Text>
+          </View>
           </TouchableHighlight>
           <TouchableHighlight 
             style={{width: "100%", padding: "5%", backgroundColor: "orange", alignItems: 'center',}}
@@ -111,9 +96,7 @@ const Drawer = (props)=>{
             }}
           >
             <View style={{alignItems: 'center'}}>
-              <Text style={{fontSize: 20}}>
-                Subtasks
-              </Text>
+              <Text style={{fontSize: 20}}>Subtasks</Text>
             </View>
           </TouchableHighlight>
         </View>
@@ -121,21 +104,18 @@ const Drawer = (props)=>{
       );
     }else{
       return(
-        
       <View style={{margin: "5%", width: "90%", height: "0%"}}>
-      <Text>nothing</Text>
+        <Text>nothing</Text>
       </View>
-      
       );
     }
   }
   const TaskDescriptor = (props) => {
-    const [task, changeTask] = useState(null);
+    const[task, changeTask] = useState(null);
 
     const handleTask = snapshot => {
       changeTask(snapshot.val());
     }
-  
     useFocusEffect(() => {
       database().ref("/Database/Tasks/" + props.taskID + "/").once("value", handleTask);
     });
@@ -144,7 +124,6 @@ const Drawer = (props)=>{
         <Text>Title: {task?.title}</Text>
         <Text>Description: {task?.text}</Text>
       </View>
-      
     );
   }
 export function Project ({ navigation, route }) { 
@@ -162,11 +141,10 @@ export function Project ({ navigation, route }) {
     //});
     //const [flashlight, changeFlashLight] = useState(false); If needed Flashlight for dark areas
     const [allProjectTasks, changeAllProjectTasks] = useState([]);
-    
     const [currentTask, changeCurrentTask] = useState(null);
     const isFocused = navigation.isFocused();//Is true whenever the user is on the screen, but it isn't as efficient as it can be
     const [visibility, changeVisibility] = useState(false);
-    const [flashLight, changeFlashLight] = useState(false);
+    //const [flashLight, changeFlashLight] = useState(false);
     useEffect(() => {
       if(route.params.taskID == null){
         database().ref(`/Database/Projects/${route.params.projectID}`).once('value', snapshot => {
@@ -182,108 +160,98 @@ export function Project ({ navigation, route }) {
           }
         });
       }
-
-   
-
-
      }, [isFocused]); //[route.params.taskID, route.params.projectID]);
-  
+
      function changeTaskDescriptor(taskID){
       changeVisibility(true);
       changeCurrentTask(taskID);
-      
-     }
+    }
 
     return (// TopBar is supposed to handle the Drawer and don't forget about it
-    <TopBar  userInfo={route.params.user} navigation={navigation}>
+    <TopBar userInfo={route.params.user} navigation={navigation}>
       <Drawer userInfo={route.params.user} navigation={navigation}></Drawer>
-
-    <View style={{ top: 0, height: "100%", width: "100%", backgroundColor: "white"}}>
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={visibility}
-              >
-              <TouchableHighlight onPress = {() => {
-                changeVisibility(false);
-              }}>
-                <View style={{height: "80%", width: "80%", margin:"10%"}}>
-                  <TaskDescriptor taskID = {currentTask}>
-                  </TaskDescriptor>
-                </View>
-              </TouchableHighlight>
-            </Modal>
-      
-      <View style = {{flex: 1, alignItems: "center", justifyContent: "center"}}>
-      <TouchableHighlight 
-        onPress = {() => {
-          const newTask = database().ref(`/Database/Tasks`).push();
-          const newTaskID = newTask.key;
-          let newArray = [];
-          if(allProjectTasks != null){
-            newArray = allProjectTasks.slice();
-          }
-          newArray.push(newTaskID);
-          changeAllProjectTasks(newArray);
-          if(route.params.taskID == null){
-            database().ref(`/Database/Projects/${route.params.projectID}`).update({
-              tasks: newArray
-            });
-            newTask.set({
-              ID: newTaskID,
-              title: "Task",
-              text: "Description",
-              
-              status: "INCOMPLETE",
-              parentTask: "none",
-              //order: 1,
-              //subTasks: [],
-            });
-          }
-          else{
-            database().ref(`/Database/Tasks/${route.params.taskID}`).update({
-              subTasks: newArray,
-            });
-            newTask.set({
-              ID: newTaskID,
-              title: "Task",
-              text: "Description",
-  
-              status: "INCOMPLETE",
-              parentTask: route.params.taskID,
-              //order: 1,
-              //subTasks: [],
-            });
-          }
-        }}  
-      >
-        <Text>Add Task</Text>
-      </TouchableHighlight>
-      
+      <View style={{ top: 0, height: "100%", width: "100%", backgroundColor: "white"}}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={visibility}
+        >
+          <TouchableHighlight onPress = {() => {
+            changeVisibility(false);
+          }}
+          >
+            <View style={{height: "80%", width: "80%", margin:"10%"}}>
+              <TaskDescriptor taskID = {currentTask} />
+            </View>
+          </TouchableHighlight>
+        </Modal>
+        <View style = {{flex: 1, alignItems: "center", justifyContent: "center"}}>
+          <TouchableHighlight 
+            onPress = {() => {
+            const newTask = database().ref(`/Database/Tasks`).push();
+            const newTaskID = newTask.key;
+            let newArray = [];
+            if(allProjectTasks != null){
+              newArray = allProjectTasks.slice();
+            }
+            newArray.push(newTaskID);
+            changeAllProjectTasks(newArray);
+            if(route.params.taskID == null){
+              database().ref(`/Database/Projects/${route.params.projectID}`).update({
+                tasks: newArray
+              });
+              newTask.set({
+                ID: newTaskID,
+                title: "Task",
+                text: "Description",
+                
+                status: "INCOMPLETE",
+                parentTask: "none",
+                //order: 1,
+                //subTasks: [],
+              });
+            }
+            else{
+              database().ref(`/Database/Tasks/${route.params.taskID}`).update({
+                subTasks: newArray,
+              });
+              newTask.set({
+                ID: newTaskID,
+                title: "Task",
+                text: "Description",
+    
+                status: "INCOMPLETE",
+                parentTask: route.params.taskID,
+                //order: 1,
+                //subTasks: [],
+              });
+            }
+          }}  
+        >
+          <Text>Add Task</Text>
+        </TouchableHighlight>
         <FlatList
           style = {{width: "75%"}}
           data={allProjectTasks}
           renderItem={({item}) => 
-                  <React.StrictMode>
-                    <TaskPanel
-                      taskID = {item}
-                      navigation = {navigation}
-                      projectID ={route.params.projectID}
-                      userId={route.params.user}
+          <React.StrictMode>
+            <TaskPanel
+              taskID = {item}
+              navigation = {navigation}
+              projectID ={route.params.projectID}
+              userId={route.params.user}
+              changeTaskDescriptor = {changeTaskDescriptor}
 
-                      changeTaskDescriptor = {changeTaskDescriptor}
-
-                    />
-                  </React.StrictMode>
-                  }
+          />
+          </React.StrictMode>
+          }
           keyExtractor={item => item}
         />
-      {(allProjectTasks == null) &&
-        <Text>No Tasks</Text>
-      }
-
-      </View>
-    </View>       
+          {(allProjectTasks == null) &&
+            <Text>No Tasks</Text>
+          }
+        </View>
+      </View>       
     </TopBar> 
-    );
-  }
+  );
+}
