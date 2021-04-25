@@ -11,7 +11,12 @@ import {
 import DatePicker from 'react-native-datepicker'
 import database from '@react-native-firebase/database';
 import * as styles from './styles.js';
-
+/**
+ * Creates the drawer with all the navigation
+ * 
+ * @param {object} props including navigation and children
+ * @returns the bar under the topbar with navigation to CreateAccount
+ */
 const Drawer = (props)=>{
   const [drawer, changeDrawer] = useState(false);
   return(
@@ -32,6 +37,12 @@ const Drawer = (props)=>{
     </View>
   );
 }
+/**
+ * Establishes the entire container with all the children under the bar
+ * 
+ * @param {tag} {children} The rest of the tags of LogIn
+ * @returns Top blue bar with all its children below it
+ */
 const TopBar = (props) => {
   return (
     <View style = {styles.container}>
@@ -54,18 +65,14 @@ const TopBar = (props) => {
 
 /*Project creation Page*/
 export function ProjectCreation ({ route, navigation }) { 
-  //Insert the Project Code here
-    
-  //const user = GLOBALUSERID;
-  const user = route.params.user;
+  const user = route.params.user;//Current User
   const [projectName, changeProjectName] = useState('');//For the projectName field
   const [invUsers, changeInvUsers] = useState('');//For the inviteUsers field
   const [invUsersList, addUsersList] = useState([user]);//For the inviteUsers button
-  const [date, setDate] = useState(new Date());
-  const [checkUser, changeCheckUser] = useState(null);
+  const [date, setDate] = useState(new Date());//Date selector
+  const [checkUser, changeCheckUser] = useState(null);//Used to check if user exists
   const addProjectIds = (userId, projectId) => {
-    //Gets projects[] from user
-    
+    //Gets projects[] from user  
   let add = database().ref(`/Database/Users/${userId}/projects`).on('value', snap => {
       if(snap.val() != null){
         let temp = snap.val();
@@ -84,14 +91,16 @@ export function ProjectCreation ({ route, navigation }) {
       }
     });
   }
+
+  //Resets all relevant states
   const resetEverything = () => {
     changeProjectName("");
     changeInvUsers("");
     addUsersList([user]);
   };
 
+  //Creates the new Project using the previous states
   const createNewProject = () => {
-    //Sets proper month
     //Creates Base Task
     const baseTask = database().ref("/Database/Tasks").push({
       parentTask: "none",
@@ -121,30 +130,37 @@ export function ProjectCreation ({ route, navigation }) {
       navigation.navigate("ProjectList", {user: route.params.user, changed: newDataKey});
     }
   };
+  //Adds users to list state to be used in createNewProject()
   const addUsersToList = () =>{
     let userID = "";
+    //Checks if users exist
     let something = database().ref("/Database/Users").orderByChild("Username").equalTo(invUsers).on("value", snapshot => {
       for(let key in snapshot.val()){
         userID = key;
       }
+      //IFF user exists adds them to list
       if(invUsers != "" && userID != ""){
         let list = invUsersList.slice();
         list.push(userID);
         addUsersList(list);
         changeCheckUser(true)
       }
+      //Displays user does not exist
       else{
         changeCheckUser(false);
       }
       database().ref("/Database/Users").orderByChild("Username").equalTo(invUsers).off("value", something);
     });
+    //Resets field for invUsers
     changeInvUsers("");
   };
     
   return (// TopBar is supposed to handle the Drawer and don't forget about it
     <TopBar navigation = {navigation} reset = {resetEverything}>
       <Drawer userInfo={route.params.user} navigation={navigation}></Drawer>
+      {/*PARENT VIEW*/ }
       <View style={{flex: 1, alightItems: "center", backgroundColor: "white", width: "100%", height: "100%", padding: 15}}>
+        {/*LOGO AND TEXT VIEW*/ }
         <View style = {{width: "100%", height: "30%"}}>
           <Image
             style = {{width: "70%", height:"70%", alignSelf: "center"}}
@@ -159,6 +175,8 @@ export function ProjectCreation ({ route, navigation }) {
             Create a Project
           </Text>
         </View>
+
+        {/* INPUT VIEW */ }
         <View style={{paddingLeft: 20, top: 10}}>
           <Text>Project Name</Text>
           <TextInput
@@ -182,6 +200,7 @@ export function ProjectCreation ({ route, navigation }) {
             }}
           />
           <Text>Invite Users</Text>
+          {/*INVITE USER VIEW (USED TO PUT BUTTON AND INPUT ON ONE LINE)*/ }
           <View style = {{display: "flex", flexWrap: "wrap", flexDirection: "row",  marginBottom: 30, height: "20%"}}>
             <TextInput
               style = {{borderBottomColor: 'gray', borderBottomWidth: 1, width: "75%",height: 50, marginRight: "5%"}}
@@ -207,6 +226,7 @@ export function ProjectCreation ({ route, navigation }) {
               <Text>User Not Found</Text>
             }
           </View>
+          {/*CREATE PROJECT BUTTON*/ }
           <View style = {{height: "20%"}}>
             <View style = {{backgroundColor: "#AEFFFF", width: "60%", height: 60, borderWidth: 1, borderColor:"#82D1D1", borderRadius: 10, alignSelf: "center"}}>
               <TouchableHighlight onPress = {createNewProject}
