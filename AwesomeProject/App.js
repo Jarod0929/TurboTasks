@@ -71,9 +71,8 @@ export default function App() {
         <RootScreen.Screen name="LogIn" component={LogIn}/>
         <RootScreen.Screen name="Test" component={Test}/>
         <RootScreen.Screen name="CreateAccount" component={CreateAccount}/>
-        </RootScreen.Navigator>
-      </NavigationContainer>
-      
+      </RootScreen.Navigator>
+    </NavigationContainer>  
   );
 }
 
@@ -84,13 +83,13 @@ const SecondDrawer = createStackNavigator();
  function AfterLogin({route,navigation}){
   return(
     <SecondDrawer.Navigator screenOptions = {{ headerShown: false }}>
-    <SecondDrawer.Screen name="LogIn" component={LogIn} />
-    <SecondDrawer.Screen name="ProjectList" component={ProjectList}/>
-    <SecondDrawer.Screen name="ProjectCreation" component={ProjectCreation}/>
-    <SecondDrawer.Screen name = "Project" component={Project}/>
-    <SecondDrawer.Screen name = "EditTask" component={EditTask}/>
-    <SecondDrawer.Screen name = "Settings" component={Settings}/>
-  </SecondDrawer.Navigator>
+      <SecondDrawer.Screen name="LogIn" component={LogIn} />
+      <SecondDrawer.Screen name="ProjectList" component={ProjectList}/>
+      <SecondDrawer.Screen name="ProjectCreation" component={ProjectCreation}/>
+      <SecondDrawer.Screen name = "Project" component={Project}/>
+      <SecondDrawer.Screen name = "EditTask" component={EditTask}/>
+      <SecondDrawer.Screen name = "Settings" component={Settings}/>
+    </SecondDrawer.Navigator>
   );
 }
 
