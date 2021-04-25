@@ -23,18 +23,24 @@ CreateAccount
 
 ProjectList
 - List of user Projects
+- Multiple ProjectList
 
 ProjectCreation
 - Creation of new Projects
+- Duedate, title, and users
 
 Project
 - All the Tasks
+- Can add task and subtask
 
-Settings (Not in Use)
+Settings 
 - Personal Settings 
+- Change Password
 
 EditTask
 - Edits the individual tasks
+- Change title and description
+- Can delete task and sub task of task
 
 Note 
 - **ScreensPictures** folder has the rough idea, not the final product.
