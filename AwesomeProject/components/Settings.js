@@ -22,9 +22,6 @@ const Drawer = (props)=>{
             <Text>Open Navigation Drawer</Text>
             </TouchableHighlight>
   
-  
-      
-  
         {drawer &&
         <View style={styles.Drawercont}>
           <TouchableHighlight onPress={()=> changeDrawer(!drawer)} style={styles.navigationButtons}><Text>Close</Text></TouchableHighlight>
@@ -58,39 +55,46 @@ const Drawer = (props)=>{
       )
     };
 
+    //Settings Page for the current logged in User takes in
+    //route, user- this is the usersID
 
     export function Settings({ route, navigation }) {
-        const [textPassword,changeTextPassword]=useState(''); // user entered password
+        const [userEnteredPassword,changeUserEnteredPassword]=useState(''); // user entered password
         const [password,changePassword]=useState(''); // pulled database password
         const [username,changeUser]=useState(''); // username
         const[inputText,changeinputText]=useState('Password'); // input text for background of box
         const[Accepted,changeAccepted]=useState("False"); // password is true or false 
 
-        
+        //finds the username of the current logged in user
         const handleUsername = snapshot => {
             changeUser(snapshot.val().Username);
         }
+        //finds the password of the current logged in user
         const handlePassword = snapshot => {
             changePassword(snapshot.val());
         }
+        //test to see if the typed in password is the correct one
         const isPassword = () =>{
+          //If the user entered the correct password and they have typed in a new password and hit enter
+          // then their password will be changed
             if(Accepted=='True'){
-                if(textPassword != ''){
-                    database().ref("/Database/Users/" + route.params.user).update({Password: textPassword});
-                    changeTextPassword('');
+                if(userEnteredPassword != ''){
+                    database().ref("/Database/Users/" + route.params.user).update({Password: userEnteredPassword});
+                    changeUserEnteredPassword('');
                     changeAccepted('False');
                     changeinputText('Enter your password');
                     database().ref("/Database/Users/" + route.params.user+"/Password").once("value", handlePassword);
                 }
                 else{
-                    changeTextPassword('');
+                    changeUserEnteredPassword('');
                     changeinputText("Something Went Wrong");
                 }
                 
             }
-            else if(textPassword==password){
+            // If it its the correct password the user will enter in their new desired password
+            else if(userEnteredPassword==password){
                 console.log("right");
-                changeTextPassword('');
+                changeUserEnteredPassword('');
                 changeAccepted('True');
                 changeinputText("Enter New Password");
             }
@@ -98,10 +102,11 @@ const Drawer = (props)=>{
                 console.log("wrong Password Try again");
             }
         }
-
+        // finds username of current logged in user
         if(username==''){
             database().ref("/Database/Users/" + route.params.user).once("value", handleUsername);
         }
+        //finds password of current logged in user
         if(password==''){
             database().ref("/Database/Users/" + route.params.user+"/Password").once("value", handlePassword);
         }
@@ -111,19 +116,21 @@ const Drawer = (props)=>{
 
         return(
         <TopBar navigation = {navigation}>
-            <Drawer userInfo={route.params.user} navigation={navigation}></Drawer>
-           <Text>Hello {username} Welcome to your Settings</Text> 
-           <Text>Enter your password to Change Your password</Text>
-           <View style={styles.textInputFPCh}>
-           <TextInput 
-           onChangeText = {text => changeTextPassword(text)}
-           placeholder = {inputText}
-           value = {textPassword}></TextInput>
-           </View>
-           <TouchableHighlight style={styles.enterBt} onPress={()=>isPassword()}><Text>Enter</Text></TouchableHighlight>
-
-            </TopBar>
-
+          <Drawer userInfo={route.params.user} navigation={navigation}></Drawer>
+            <View style={styles.settingsPage}>
+              <View style = {styles.flexAlignContainer}>
+                <Text>Hello {username} Welcome to your Settings</Text> 
+                <Text>Enter your password to Change Your password</Text>
+                <View style={styles.textInputContainer}>
+                  <TextInput 
+                    onChangeText = {text => changeUserEnteredPassword(text)}
+                    placeholder = {inputText}
+                    value = {userEnteredPassword}></TextInput>
+                </View>
+                <TouchableHighlight style={styles.buttonContainer} onPress={()=>isPassword()}><Text style={styles.buttonText}>Enter</Text></TouchableHighlight>
+              </View>
+            </View>
+        </TopBar>
         );
     }
     

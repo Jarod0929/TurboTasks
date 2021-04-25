@@ -152,7 +152,7 @@ export function ProjectCreation ({ route, navigation }) {
     return (// TopBar is supposed to handle the Drawer and don't forget about it
       <TopBar navigation = {navigation} reset = {resetEverything}>
         <Drawer userInfo={route.params.user} navigation={navigation}></Drawer>
-        <View style={{flex: 1, alightItems: "center", backgroundColor: "white", width: "100%", height: "100%", padding: 15}}>
+        <View style={{flex: 1, alightItems: "center", backgroundColor: "black", width: "100%", height: "100%", padding: 15}}>
           <View style = {{width: "100%", height: "30%"}}>
               <Image
                 style = {{width: "70%", height:"70%", alignSelf: "center"}}
