@@ -169,6 +169,39 @@ const styles = StyleSheet.create({
       padding: "5%", 
       backgroundColor: "#1167b1", 
       alignItems: 'center'
+    },
+    taskPanel: {
+      width: '100%',
+      flexDirection: "row",
+      marginBottom: "2%"
+    },
+    taskPanelLeft: {
+      padding: '5%',
+      width: "50%", 
+      backgroundColor: '#1167b1'
+    },
+    taskPanelEdit: {
+      width: "100%", 
+      padding: "5%", 
+      backgroundColor: "#187bcd", 
+      alignItems: 'center'
+    },
+    taskPanelSubtasks: {
+      width: "100%", 
+      padding: "5%", 
+      backgroundColor: "#2a9df4", 
+      alignItems: 'center'
+    },
+    taskPanelEmpty: {
+      margin: "5%", 
+      width: "90%", 
+      height: "0%"
+    },
+    projectTaskListConatiner: {
+      top: 0, 
+      height: "100%", 
+      width: "100%", 
+      backgroundColor: "white"
     }
 
 });
