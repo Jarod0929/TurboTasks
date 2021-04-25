@@ -69,6 +69,7 @@ export function ProjectCreation ({ route, navigation }) {
     const [invUsers, changeInvUsers] = useState('');//For the inviteUsers field
     const [invUsersList, addUsersList] = useState([user]);//For the inviteUsers button
     const [date, setDate] = useState(new Date());
+    const [checkUser, changeCheckUser] = useState(null);
     const addProjectIds = (userId, projectId) => {
       //Gets projects[] from user
       
@@ -138,6 +139,10 @@ export function ProjectCreation ({ route, navigation }) {
           let list = invUsersList.slice();
           list.push(userID);
           addUsersList(list);
+          changeCheckUser(true)
+        }
+        else{
+          changeCheckUser(false);
         }
         database().ref("/Database/Users").orderByChild("Username").equalTo(invUsers).off("value", something);
       });
@@ -163,13 +168,14 @@ export function ProjectCreation ({ route, navigation }) {
               </Text>
           </View>
           <View style={{paddingLeft: 20, top: 10}}>
-            <Text  style = {{marginBottom: 10}} >Project Name</Text>
+            <Text>Project Name</Text>
             <TextInput
-              style = {{borderBottomColor: 'gray', borderBottomWidth: 1, width: "90%", padding: 0, marginBottom: 30}}
+              style = {{borderBottomColor: 'gray', borderBottomWidth: 1, width: "90%", height: 50, padding: 0, marginBottom: 20}}
               placeholder = "Office Function"
               onChangeText = {text => changeProjectName(text)}
               value={projectName}
             />
+            <Text  style = {{marginBottom: 10}} >Due Date</Text>
             <DatePicker
               date={date}
               mode = "date"
@@ -183,29 +189,43 @@ export function ProjectCreation ({ route, navigation }) {
               // ... You can check the source to find the other keys.
             }}
             />
-            <Text style = {{marginBottom: 10, }}>Invite Users</Text>
-            <View style = {{flexDirection: "row",  marginBottom: 30}}>
-            <TextInput
-              style = {{borderBottomColor: 'gray', borderBottomWidth: 1, width: "75%", padding: 0}}
-              placeholder = "Username"
-              onChangeText = {text => changeInvUsers(text)}
-              value={invUsers}
-            />
-            <TouchableHighlight onPress = {addUsersToList}>
+            <Text>Invite Users</Text>
+            <View style = {{display: "flex", flexWrap: "wrap", flexDirection: "row",  marginBottom: 30, height: "20%"}}>
+              <TextInput
+                style = {{borderBottomColor: 'gray', borderBottomWidth: 1, width: "75%",height: 50, marginRight: "5%"}}
+                placeholder = "Username"
+                onChangeText = {text => changeInvUsers(text)}
+                value={invUsers}
+              />
               <View
-                style = {{backgroundColor: "blue", width: "100%", alignContent: "center"}}
+                  style = {{backgroundColor: "#1974d3", width: "20%", height: 40, marginTop: 10, alignContent: "center", borderWidth: 1, borderRadius: 10, borderColor: "#197FFF"}}
               >
-                <Text>Add</Text>
+                <TouchableHighlight onPress = {addUsersToList}
+                  style = {{borderWidth: 1, borderRadius: 10, borderColor: "#197FFF"}}
+                  activeOpacity={0.6}
+                  underlayColor="#00181"
+                >
+                    <Text style = {{alignSelf:"center", color: "#E4FFFF", height: "100%", paddingTop: 10}}>Invite</Text>
+                </TouchableHighlight>
+                </View>
+                {checkUser == true &&
+                <Text>User Successfully Added!</Text>
+                }
+                {checkUser == false &&
+                  <Text>User Not Found</Text>
+                }
               </View>
-            </TouchableHighlight>
-            </View>
-            <TouchableHighlight onPress = {createNewProject}>
-              <View
-                style = {{backgroundColor: "blue"}}
-              >
-                <Text>Create Project</Text>
+              <View style = {{height: "20%"}}>
+                <View style = {{backgroundColor: "#AEFFFF", width: "60%", height: 60, borderWidth: 1, borderColor:"#82D1D1", borderRadius: 10, alignSelf: "center"}}>
+                  <TouchableHighlight onPress = {createNewProject}
+                    style = {{borderRadius: 10, height: "100%"}}
+                    activeOpacity={0.1}
+                    underlayColor="#00181"
+                  >
+                      <Text style = {{alignSelf: "center", paddingTop: 15, color: "#000181", fontSize: 20}}>Create Project</Text>
+                  </TouchableHighlight>
+                </View>
               </View>
-            </TouchableHighlight>
             </View>
           </View>
       </TopBar>
