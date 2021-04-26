@@ -51,6 +51,7 @@ Packages Used
 - Navigation Stack
 - Firebase
 - datapicker
+- Modal
 
 
 Description of App Idea
