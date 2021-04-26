@@ -270,7 +270,6 @@ export function Project ({ navigation, route }) {
               projectID ={route.params.projectID}
               userId={route.params.user}
               changeTaskDescriptor = {changeTaskDescriptor}
-
           />
           </React.StrictMode>
           }
