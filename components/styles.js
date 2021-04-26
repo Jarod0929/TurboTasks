@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
       top:0,
       left:0,
       position: "absolute",
-      backgroundColor: "#FFF7D9",
+      backgroundColor: "white",
       flexDirection:"row",
       borderWidth:1
 
@@ -168,6 +168,7 @@ const styles = StyleSheet.create({
       width: "90%", 
       padding: "5%", 
       backgroundColor: "#1167b1", 
+      borderRadius: 15,
       alignItems: 'center'
     },
     taskPanel: {
