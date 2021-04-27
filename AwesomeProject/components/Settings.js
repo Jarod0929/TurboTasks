@@ -104,11 +104,12 @@ export function Settings({ route, navigation }) {
     if(Accepted=='True'){
       if(userEnteredPassword != ''){
         database().ref("/Database/Users/" + route.params.user).update({Password: userEnteredPassword});
+      
+        changePassword(userEnteredPassword);
         changeUserEnteredPassword('');
         changeAccepted('False');
         changeinputTextForPassword('Enter your password');
-        database().ref("/Database/Users/" + route.params.user+"/Password").on("value", handlePassword);
-      
+        
       } else {
         changeAccepted('False');
         changeinputTextForPassword("Something Went Wrong");
@@ -133,12 +134,13 @@ export function Settings({ route, navigation }) {
       changeinputTextForUsername("Enter New Username");
     }
     else if(usernameChangeValid=='True'){
-      if(userEnteredPassword != ''){
+      if(userEnteredPasswordForUsername != ''){
         database().ref("/Database/Users/" + route.params.user).update({Username: userEnteredPasswordForUsername});
-        changeUserEnteredPassword('');
+        changeUser(userEnteredPasswordForUsername);
+        changeUserEnteredPasswordForUsername('');
         changeUsernameValidity('False');
         changeinputTextForUsername('Enter your password');
-        database().ref("/Database/Users/" + route.params.user+"/Username").once("value", handleUsername);
+       
       } else {
         changeUserEnteredPassword('');
         changeinputTextForUsername("Something Went Wrong");
