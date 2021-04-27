@@ -2,105 +2,107 @@ import {
     StyleSheet
   } from 'react-native';
   
+
+let spiroDiscoBall = '#19d9ff';
+
 const styles = StyleSheet.create({
     container: {
       width: "100%",
       height: "100%",
-      backgroundColor: "darkblue",
-      
+      backgroundColor: "white",
+      zIndex: 0,
     },
-    topBarContainer: {
-      backgroundColor: "cyan",
-      borderBottomRightRadius: 20,
-      borderWidth: 5,
-      height: '10%',
-      width: '100%',
-    },
-    logInContainer: {
+    flexAlignContainer: {
       flex: 1,
-      //justifyContent: 'center',
       alignItems: "center",
+      zIndex: 30,
     }, 
-    logInSignInTitleContainer: {
+    titleContainer: {
       position: 'relative',
       top: 10,
       paddingBottom: 30,
+      zIndex: 30,
     },
-    logInSignInTitleText: {
-      color: 'white',
+    titleText: {
+      color: 'black',
       fontSize: 28,
+      zIndex: 30,
     },
-    logInTextInputContainer: {
+    textInputContainer: {
       borderWidth: 5,
       height: 50,
       width: 150,
       backgroundColor:'white',
+      zIndex: 30,
     },
-    logInTextAreaContainer: {
+    textAreaContainer: {
       paddingBottom: 30,
+      zIndex: 30,
     },
-    logInTextAbove: {
-      color: 'white',
+    defaultText: {
+      color: 'black',
       fontSize: 16,
+      zIndex: 30,
     },
-    logInButtonContainer: {
+    buttonContainer: {
       backgroundColor: 'cyan',
       borderWidth: 5,
       borderRadius: 10,
       width: 175,
       height: 60,
-      
+      marginBottom: 15,
+      marginTop: 15,
+      zIndex: 30,
     },
-    logInButton: {
+    button: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+      zIndex: 30,
     },
-    logInButtonText: {
+    buttonText: {
       color: 'black',
       fontSize: 18,
       fontWeight: 'bold',
+      zIndex: 30,
     },
-    logInCreateAccountContainer: {
-      position: 'relative',
-      bottom: 10,
-      left: 10,
-      flexDirection:'row', 
-      flexWrap:'wrap',
+    failedContainer: {
+      zIndex: 30,
     },
-    AverageWhiteText: {
-      color: 'white',
-      fontSize: 16,
-    },
-    AverageWhiteTextBolded: {
-      color: 'white',
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-    logInRedFailedContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    logInRedFailedText: {
+    failedText: {
       color: 'red',
       fontSize: 16,
+      zIndex: 30,
     },
+    topBarContainer: {
+      backgroundColor: "cyan",
+      borderBottomRightRadius: 20,
+      borderWidth: 5,
+      height: 60,
+      width: '100%',
+      zIndex: 200,
+    },
+    openContainer: {
+      position: 'absolute',
+      top: 5,
+      left: 5,
+      height: '80%',
+      width: 40,
+    },  
     drawerContainer: {
       width: '30%',
-      height: '100%',
+      height: '90%',
       backgroundColor: 'green',
       position: 'absolute',
-      top: 0,
+      bottom: 0,
       left: 0,
       zIndex: 100,
     },
     drawerContainerOther: {
       width: '70%',
-      height: '100%',
-      backgroundColor: 'green',
+      height: '90%',
       position: 'absolute',
-      top: 0,
+      bottom: 0,
       right: 0,
       zIndex: 100,
     },
@@ -111,17 +113,15 @@ const styles = StyleSheet.create({
       top:0,
       left:0,
       position: "absolute",
-      backgroundColor: "yellow",
+      backgroundColor: "white",
       flexDirection:"row",
       borderWidth:1
 
     },
     navigationButtons:{
       padding:1,
-      backgroundColor: 'teal',
+      backgroundColor: '#1974D3',
       borderWidth: 1,
-      
-      
     },
     textInputFPCh:{
       backgroundColor:"white",
@@ -134,7 +134,110 @@ const styles = StyleSheet.create({
       borderWidth:1,
       width:"50%",
 
+    },
+    settingsPage:{
+      backgroundColor:'white',
+      width: "100%",
+      height: "100%",
+    },
+    projectListModal:{
+      height: "80%", 
+      width: "80%", 
+      margin:"10%", 
+      backgroundColor:'green'
+    },
+    projectCreationPlusPosition:{
+      width: "15%",
+      left: "88%", 
+      top: "-1%", 
+      position: 'absolute', 
+      zIndex: 200
+    },
+    projectCreationPlusDesign:{
+      color: "blue",
+      fontSize: 50
+    },
+    projectListMainView:{
+      backgroundColor: "white",
+      flex: 1, 
+      alignItems: 'center', 
+      justifyContent: 'center' 
+    },
+    projectListPanel:{
+      margin: "5%",
+      width: "90%", 
+      padding: "5%", 
+      backgroundColor: "#1167b1", 
+      borderRadius: 15,
+      alignItems: 'center'
+    },
+    taskPanel: {
+      width: '100%',
+      flexDirection: "row",
+      marginBottom: "2%"
+    },
+    taskPanelLeft: {
+      padding: '5%',
+      width: "50%", 
+      backgroundColor: '#1167b1'
+    },
+    taskPanelEdit: {
+      width: "100%", 
+      padding: "5%", 
+      backgroundColor: "#187bcd", 
+      alignItems: 'center'
+    },
+    taskPanelSubtasks: {
+      width: "100%", 
+      padding: "5%", 
+      backgroundColor: "#2a9df4", 
+      alignItems: 'center'
+    },
+    taskPanelEmpty: {
+      margin: "5%", 
+      width: "90%", 
+      height: "0%"
+    },
+    projectTaskListConatiner: {
+      top: 0, 
+      height: "100%", 
+      width: "100%", 
+      backgroundColor: "white"
+    },
+    editTaskMainView:{
+      padding: 5, 
+      backgroundColor: 'white', 
+      height: '90%', 
+      alignItems: 'center'
+    },
+    editTaskInputs:{
+      width: '75%', 
+      borderWidth: 2, 
+      borderColor: 'blue', 
+      borderRadius: 4
+    },
+    editTaskBottomBar:{
+      width: '50%', 
+      height: '10%', 
+      backgroundColor: 'cyan',
+      position: 'absolute', 
+      bottom: 0, 
+      alignItems: 'center',
+      borderWidth:1,
+      fontSize: 18
+    },
+    editTaskBottomBarButtons:{
+      padding: "7%", 
+      fontSize: 20
+    },
+    addTaskButton:{
+      backgroundColor: spiroDiscoBall,
+      padding: 5,
+      margin: "2%",
+      width: "45%",
+      alignItems: 'center'
     }
+
 });
 
 module.exports = styles;

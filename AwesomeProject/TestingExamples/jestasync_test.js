@@ -1,4 +1,4 @@
-const Users=require( "../jestasync.js");
+const Users=require( "./jestasync.js");
 
 
 beforeAll(() => {
