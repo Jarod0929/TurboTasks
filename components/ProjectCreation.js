@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import DatePicker from 'react-native-datepicker'
 import database from '@react-native-firebase/database';
+import Icon from "react-native-vector-icons/AntDesign";
+import LinearGradient from 'react-native-linear-gradient'
 import * as styles from './styles.js';
 /**
  * Creates the drawer with all the navigation
@@ -157,27 +159,33 @@ export function ProjectCreation ({ route, navigation }) {
     
   return (// TopBar is supposed to handle the Drawer and don't forget about it
     <TopBar navigation = {navigation} reset = {resetEverything}>
-      <Drawer userInfo={route.params.user} navigation={navigation}></Drawer>
+      {/* {<Drawer userInfo={route.params.user} navigation={navigation}></Drawer>} */}
       {/*PARENT VIEW*/ }
-      <View style={{flex: 1, alightItems: "center", backgroundColor: "white", width: "100%", height: "100%", padding: 15}}>
+      <View style={{flex: 1, backgroundColor: "white", width: "100%", height: "100%"}}>
         {/*LOGO AND TEXT VIEW*/ }
-        <View style = {{width: "100%", height: "30%"}}>
-          <Image
-            style = {{width: "70%", height:"70%", alignSelf: "center"}}
-            shadowColor = "gray"
-            resizeMode = "contain"
-            source = {require("../assets/add-logo.webp")}
-          >
-          </Image>
-          <Text
-            style = {{alignSelf: "center", fontSize: 30, fontFamily: "Courier New", color: "darkorange"}}
+        <LinearGradient
+              style = {{width: "100%", height: "30%", padding: 10}}
+              colors={['#1167C0', '#2a9df4']}
+              start={{ x: 1, y: 1 }}
+              end={{ x: 0, y: 0 }}
+            >
+            <Text
+            style = {{alignSelf: "center", fontSize: 35, fontFamily: "Courier New", color: "white"}}
           >
             Create a Project
           </Text>
-        </View>
+          <Icon name="addfolder" size={100} color="blue"  style={{alignSelf: "center", top: 10}} ></Icon>
+
+          </LinearGradient>
 
         {/* INPUT VIEW */ }
-        <View style={{paddingLeft: 20, top: 10}}>
+        <LinearGradient
+              style = {{width: "100%", height: "70%",  paddingTop: 20}}
+              colors={['white', '#F0EAD6']}
+              start={{ x: 1, y: 1 }}
+              end={{ x: 0, y: 0 }}
+        >
+        <View style={{paddingLeft: 20}}>
           <Text>Project Name</Text>
           <TextInput
             style = {{borderBottomColor: 'gray', color: 'black', borderBottomWidth: 1, width: "90%", height: 50, padding: 0, marginBottom: 20}}
@@ -239,6 +247,7 @@ export function ProjectCreation ({ route, navigation }) {
             </View>
           </View>
         </View>
+        </LinearGradient>
       </View>
     </TopBar>
   );
