@@ -156,6 +156,10 @@ export function ProjectList ({ route, navigation }) {
       }
     });
   }
+
+  const editProj = () =>{
+    console.log('here');
+  }
  
   return (
     <TopBar navigation = {navigation}>
@@ -175,17 +179,37 @@ export function ProjectList ({ route, navigation }) {
           onPress = {() => {
             changeVisibility(false);
           }}
+          style={{height: '100%'}}
         >
           <View style={styles.projectListModal}>
-            <TouchableHighlight onPress={()=>{deleteProj()}}>
-              <Text>
-                Delete
-              </Text>
-            </TouchableHighlight>
             <Text>
               {currentProj}
             </Text>
-          </View>
+            <TouchableHighlight
+              onPress={()=>{
+                deleteProj()
+              }}
+              style={styles.projectModalDeleteButton}
+            >
+              <Text
+                style={styles.modalButtonText}
+              >
+                Delete
+              </Text>
+            </TouchableHighlight>
+            <TouchableHighlight
+              onPress={()=>{
+                editProj()
+              }}
+              style={styles.projectModalEditButton}
+            >
+              <Text
+                style={styles.modalButtonText}
+              >
+                Edit
+              </Text>
+            </TouchableHighlight>
+          </View>    
         </TouchableHighlight>
       </Modal>
 
