@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import DatePicker from 'react-native-datepicker'
 import database from '@react-native-firebase/database';
+import Icon from "react-native-vector-icons/AntDesign";
+import LinearGradient from 'react-native-linear-gradient'
 import * as styles from './styles.js';
 /**
  * Creates the drawer with all the navigation
@@ -157,88 +159,109 @@ export function ProjectCreation ({ route, navigation }) {
     
   return (// TopBar is supposed to handle the Drawer and don't forget about it
     <TopBar navigation = {navigation} reset = {resetEverything}>
-      <Drawer userInfo={route.params.user} navigation={navigation}></Drawer>
+      {/* {<Drawer userInfo={route.params.user} navigation={navigation}></Drawer>} */}
       {/*PARENT VIEW*/ }
-      <View style={{flex: 1, alightItems: "center", backgroundColor: "white", width: "100%", height: "100%", padding: 15}}>
+      <View style={{flex: 1, backgroundColor: "white", width: "100%", height: "100%"}}>
         {/*LOGO AND TEXT VIEW*/ }
-        <View style = {{width: "100%", height: "30%"}}>
-          <Image
-            style = {{width: "70%", height:"70%", alignSelf: "center"}}
-            shadowColor = "gray"
-            resizeMode = "contain"
-            source = {require("../assets/add-logo.webp")}
-          >
-          </Image>
-          <Text
-            style = {{alignSelf: "center", fontSize: 30, fontFamily: "Courier New", color: "darkorange"}}
+        <LinearGradient
+              style = {{width: "100%", height: "30%", padding: 10}}
+              colors={["#187bcd", '#2a9df4', '#1167b1']}
+              start={{ x: 1, y: 1 }}
+              end={{ x: 0, y: 0 }}
+            >
+            <Text
+            style = {{alignSelf: "center", fontSize: 35, fontFamily: "Courier New", color: "white"}}
           >
             Create a Project
           </Text>
-        </View>
+          <Icon name="addfolder" size={100} color="blue"  style={{alignSelf: "center", top: 10}} ></Icon>
 
+          </LinearGradient>
         {/* INPUT VIEW */ }
-        <View style={{paddingLeft: 20, top: 10}}>
-          <Text>Project Name</Text>
-          <TextInput
-            style = {{borderBottomColor: 'gray', color: 'black', borderBottomWidth: 1, width: "90%", height: 50, padding: 0, marginBottom: 20}}
-            placeholder = "Office Function"
-            onChangeText = {text => changeProjectName(text)}
-            value={projectName}
-          />
-          <Text  style = {{marginBottom: 10}} >Due Date</Text>
-          <DatePicker
-            date={date}
-            mode = "date"
-            onDateChange={setDate}
-            style = {{marginBottom: 20}}
-            customStyles={{
-            dateInput: {
-              backgroundColor: "white",
-              
-            }
-            // ... You can check the source to find the other keys.
-            }}
-          />
-          <Text>Invite Users</Text>
-          {/*INVITE USER VIEW (USED TO PUT BUTTON AND INPUT ON ONE LINE)*/ }
-          <View style = {{display: "flex", flexWrap: "wrap", flexDirection: "row",  marginBottom: 30, height: "20%"}}>
-            <TextInput
-              style = {{borderBottomColor: 'gray', borderBottomWidth: 1, width: "75%",height: 50, marginRight: "5%"}}
-              placeholder = "Username"
-              onChangeText = {text => changeInvUsers(text)}
-              value={invUsers}
-            />
-            <View
-              style = {{backgroundColor: "#1974d3", width: "20%", height: 40, marginTop: 10, alignContent: "center", borderWidth: 1, borderRadius: 10, borderColor: "#197FFF"}}
-            >
-              <TouchableHighlight onPress = {addUsersToList}
-                style = {{borderWidth: 1, borderRadius: 10, borderColor: "#197FFF"}}
-                activeOpacity={0.6}
-                underlayColor="#00181"
-              >
-                <Text style = {{alignSelf:"center", color: "#E4FFFF", height: "100%", paddingTop: 10}}>Invite</Text>
-              </TouchableHighlight>
+        <LinearGradient
+              style = {{width: "100%", height: "78%",  paddingTop: 20}}
+              colors={['white', "lightgray"]}
+              start={{ x: 1, y: 1 }}
+              end={{ x: 1, y: 0 }}
+        >
+          <View style={{padding: 20}}>
+            <View style = {{backgroundColor: "white", padding: 10, bottom: 50, borderRadius: 10, height: "80%"}}>
+              <Text style = {{alignSelf: "center"}}>Project Name</Text>
+              <TextInput
+                style = {{borderBottomColor: 'gray', color: 'black', borderBottomWidth: 1, width: "90%", height: 50, padding: 0, marginBottom: 30, alignSelf: "center", textAlign: "center"}}
+                placeholder = "Office Function"
+                onChangeText = {text => changeProjectName(text)}
+                value={projectName}
+              />
+            
+              <Text  style = {{marginBottom: 10, alignSelf: "center"}} >Due Date</Text>
+              <DatePicker
+                date={date}
+                mode = "date"
+                onDateChange={setDate}
+                style = {{marginBottom: 20, alignSelf: "center", left: 20}}
+                customStyles={{
+                dateInput: {
+                  backgroundColor: "white",
+                  
+                }
+                // ... You can check the source to find the other keys.
+                }}
+              />
+            <Text style = {{alignSelf: "center"}}>Invite Users</Text>
+            {/*INVITE USER VIEW (USED TO PUT BUTTON AND INPUT ON ONE LINE)*/ }
+            <View style = {{marginBottom: 0, height: "20%"}}>
+              <TextInput
+                autoFocus={true}
+                style = {{borderBottomColor: 'gray', borderBottomWidth: 1, width: "75%",height: 50, textAlign: "center", alignSelf: "center", marginBottom: 10}}
+                placeholder = "Username"
+                onChangeText = {text => changeInvUsers(text)}
+                value={invUsers}
+              />
+               <TouchableHighlight onPress = {addUsersToList}
+                  style = {{position: "absolute", marginLeft: 295, top: 10}}
+                  activeOpacity={0.6}
+                  underlayColor="#00181"
+                >
+                  <Icon
+                    name="addusergroup" 
+                    size = {35} 
+                  />
+               </TouchableHighlight>
+              {checkUser == true &&
+              <Text style = {{alignSelf: "center"}}>User Successfully Added!</Text>
+              }
+              {checkUser == false &&
+                <Text style = {{alignSelf: "center"}}>User Not Found</Text>
+              }
             </View>
-            {checkUser == true &&
-            <Text>User Successfully Added!</Text>
-            }
-            {checkUser == false &&
-              <Text>User Not Found</Text>
-            }
-          </View>
-          {/*CREATE PROJECT BUTTON*/ }
-          <View style = {{height: "20%"}}>
-            <View style = {{backgroundColor: "#AEFFFF", width: "60%", height: 60, borderWidth: 1, borderColor:"#82D1D1", borderRadius: 10, alignSelf: "center"}}>
-              <TouchableHighlight onPress = {createNewProject}
-                style = {{borderRadius: 10, height: "100%"}}
-                activeOpacity={0.1}
-                underlayColor="#00181"
-              >
-                <Text style = {{alignSelf: "center", paddingTop: 15, color: "#000181", fontSize: 20}}>Create Project</Text>
-              </TouchableHighlight>
+            </View> 
+            {/*CREATE PROJECT BUTTON*/ }
+            <View style = {{height: "5%"}}>
+              <LinearGradient
+                style = {{backgroundColor: "#2a9df4", width: "60%", height: 60,  borderRadius: 10, alignSelf: "center"}}
+                colors={["#187bcd", '#2a9df4']}
+                start={{ x: 1, y: 1 }}
+                end={{ x: 1, y: 0 }}
+                >
+                  <TouchableHighlight onPress = {createNewProject}
+                    style = {{borderRadius: 10, height: "100%"}}
+                    activeOpacity={0.1}
+                    underlayColor="#00181"
+                  >
+                    <Icon
+                     name="pluscircleo"
+                     color = "white"
+                     style={{alignSelf: "center", paddingTop: 17, color: "white", fontSize: 20}}
+                    >
+                      {'  '}Create Project
+                    </Icon>
+                    {/* <Text style = {{alignSelf: "center", paddingTop: 15, color: "white", fontSize: 20}}>Create Project</Text> */}
+                  </TouchableHighlight>
+              </LinearGradient>
             </View>
           </View>
-        </View>
+        </LinearGradient>
       </View>
     </TopBar>
   );
