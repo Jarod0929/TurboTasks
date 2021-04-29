@@ -256,7 +256,6 @@ export function ProjectCreation ({ route, navigation }) {
                     >
                       {'  '}Create Project
                     </Icon>
-                    {/* <Text style = {{alignSelf: "center", paddingTop: 15, color: "white", fontSize: 20}}>Create Project</Text> */}
                   </TouchableHighlight>
               </LinearGradient>
             </View>
