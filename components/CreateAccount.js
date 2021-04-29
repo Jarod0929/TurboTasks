@@ -4,6 +4,9 @@ import {
   View,
   TouchableHighlight,
   TextInput,
+  LayoutAnimation,
+  Platform,
+  UIManager,
 } from 'react-native';
 import database from '@react-native-firebase/database';
 import * as styles from './styles.js';
@@ -14,29 +17,6 @@ import * as styles from './styles.js';
  * @param {object} props including navigation and children
  * @returns the bar under the topbar with navigation to LogIn
  */
-const Drawer = (props)=>{
-  const [drawer, changeDrawer] = useState(false);
-  return(
-    <View>
-    {/* Opens Drawer */}
-      <TouchableHighlight style={styles.navigationButtons}
-        onPress = {() => {
-          changeDrawer(!drawer);
-        }}
-      >
-        <Text>Open Navigation Drawer</Text>
-      </TouchableHighlight>
-    {/* Navigation to different screens */}
-      {drawer &&
-        <View style= {styles.Drawercont}>
-    {/* Closes Drawer */}
-          <TouchableHighlight onPress={()=> changeDrawer(!drawer)} style={styles.navigationButtons}><Text>Close</Text></TouchableHighlight>
-          <TouchableHighlight onPress={()=>props.navigation.navigate("LogIn")} style={styles.navigationButtons}><Text>LogIn</Text></TouchableHighlight>
-        </View>
-      }
-    </View>  
-  );
-}
 
 /**
  * Establishes the entire container with all the children under the bar
@@ -44,12 +24,33 @@ const Drawer = (props)=>{
  * @param {tag} {children} The rest of the tags of CreateAccount
  * @returns Top blue bar with all its children below it
  */
-const TopBar = ({children}) => {
+ const TopBar = (props) => {
+  const [drawer, changeDrawer] = useState(false);
   return (
     <View style = {styles.container}>
-      <View style = {styles.topBarContainer}>  
+      <View style = {styles.topBarContainer}>
+        <View style = {styles.openContainer}>
+          <TouchableHighlight
+            onPress = {() => {
+              changeDrawer(!drawer);
+              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            }}
+            style={styles.openDrawerButton}
+          >
+            <Text style = {styles.textAbove}>Open</Text>
+          </TouchableHighlight>
+        </View>
       </View>
-      {children}
+      <View style = {[styles.drawerContainer, drawer? undefined: {width: 0}]}>
+        <TouchableHighlight onPress={()=> changeDrawer(!drawer)} style={styles.navigationButtons}>
+          <Text>Close</Text>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={()=>props.navigation.navigate("LogIn")} style={styles.navigationButtons}>
+          <Text>LogIn</Text>
+        </TouchableHighlight>
+       
+      </View>
+      {props.children}
     </View>
   )
 };
@@ -117,8 +118,8 @@ export function CreateAccount ({navigation}) {
   };
   
   return (
-    <TopBar>
-      <Drawer navigation={navigation}></Drawer>
+    <TopBar navigation={navigation}>
+      
       <View style = {styles.flexAlignContainer}>
       {/* Title Box */}
         <View style = {styles.titleContainer}>
