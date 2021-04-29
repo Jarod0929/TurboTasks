@@ -7,57 +7,69 @@ import {
   TextInput,
   FlatList,
   Image,
+  LayoutAnimation,
+  Platform,
+  UIManager,
 } from 'react-native';
 import DatePicker from 'react-native-datepicker'
 import database from '@react-native-firebase/database';
 import Icon from "react-native-vector-icons/AntDesign";
 import LinearGradient from 'react-native-linear-gradient'
 import * as styles from './styles.js';
-/**
- * Creates the drawer with all the navigation
- * 
- * @param {object} props including navigation and children
- * @returns the bar under the topbar with navigation to CreateAccount
- */
-const Drawer = (props)=>{
-  const [drawer, changeDrawer] = useState(false);
-  return(
-    <View>
-      <TouchableHighlight style={styles.navigationButtons}
-        onPress = {() => {
-          changeDrawer(!drawer);
-        }}
-      >
-        <Text>Open Navigation Drawer</Text>
-      </TouchableHighlight>
-      {drawer &&
-        <View style= {styles.Drawercont}>
-          <TouchableHighlight onPress={()=> changeDrawer(!drawer)} style={styles.navigationButtons}><Text>Close</Text></TouchableHighlight>
-          <TouchableHighlight onPress={()=>props.navigation.navigate("ProjectList",{user:props.userInfo})} style={styles.navigationButtons}><Text>ProjectList</Text></TouchableHighlight>
-        </View>
-      }
-    </View>
-  );
-}
+
 /**
  * Establishes the entire container with all the children under the bar
  * 
  * @param {tag} {children} The rest of the tags of LogIn
  * @returns Top blue bar with all its children below it
  */
+
 const TopBar = (props) => {
+  const [drawer, changeDrawer] = useState(false);
   return (
     <View style = {styles.container}>
       <View style = {styles.topBarContainer}>
+        <View style = {styles.openContainer}>
+          <TouchableHighlight
+            onPress = {() => {
+              changeDrawer(!drawer);
+              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            }}
+            style={styles.openDrawerButton}
+          >
+            <Text style = {styles.textAbove}>Open</Text>
+          </TouchableHighlight>
+        </View>
+      </View>
+      <View style = {[styles.drawerContainer, drawer? undefined: {width: 0}]}>
+        <TouchableHighlight 
+          onPress={()=> 
+            changeDrawer(!drawer)
+          } 
+          style={styles.navigationButtons}
+        >
+            <Text>
+              Close
+            </Text>
+        </TouchableHighlight>
         <TouchableHighlight
           onPress = {()=>{
             props.reset();
             props.navigation.goBack();
           }}
+          style={styles.navigationButtons}
         >
-          <View>
-            <Text>Go Back</Text>
-          </View>
+          <Text>
+            Go Back
+          </Text>
+        </TouchableHighlight>
+        <TouchableHighlight 
+          onPress={()=>props.navigation.navigate("ProjectList",{user:props.userInfo})}
+          style={styles.navigationButtons}
+        >
+          <Text>
+            ProjectList
+            </Text>
         </TouchableHighlight>
       </View>
       {props.children}
@@ -158,7 +170,7 @@ export function ProjectCreation ({ route, navigation }) {
   };
     
   return (// TopBar is supposed to handle the Drawer and don't forget about it
-    <TopBar navigation = {navigation} reset = {resetEverything}>
+    <TopBar navigation = {navigation} reset = {resetEverything} userInfo={route.params.user}>
       {/* {<Drawer userInfo={route.params.user} navigation={navigation}></Drawer>} */}
       {/*PARENT VIEW*/ }
       <View style={{flex: 1, backgroundColor: "white", width: "100%", height: "100%"}}>

@@ -5,78 +5,82 @@ import {
   TouchableHighlight,
   FlatList,
   Modal,
+  LayoutAnimation,
+  Platform,
+  UIManager,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import database from '@react-native-firebase/database';
 import * as styles from './styles.js';
 
-const Drawer = (props)=>{
-  const [drawer, changeDrawer] = useState(false);
-  return(
-    <View>
-      <TouchableHighlight style={styles.navigationButtons}
-        onPress = {() => {
-          changeDrawer(!drawer);
-        }}
-      >
-        <Text>Open Navigation Drawer</Text>
-      </TouchableHighlight>
-      {drawer &&
-        <View style= {styles.Drawercont}>
-          <TouchableHighlight 
-            onPress={()=> 
-              changeDrawer(!drawer)
-            } 
-            style={styles.navigationButtons}
-          >
-            <Text>
-              Close
-            </Text>
-          </TouchableHighlight>
-          <TouchableHighlight 
-            onPress={()=>
-              props.navigation.navigate("ProjectCreation",{user:props.userInfo})
-            } 
-            style={styles.navigationButtons}
-          >
-            <Text>
-              Project Creation
-            </Text>
-          </TouchableHighlight>
-          <TouchableHighlight 
-            onPress={()=>
-              props.navigation.navigate("Settings",{user:props.userInfo})
-            } 
-            style={styles.navigationButtons}
-          >
-            <Text>
-              Settings⚙️
-            </Text>
-          </TouchableHighlight>
-        </View>
-      }
-    </View>
-  );
-}
 
 const TopBar = (props) => {
+  const [drawer, changeDrawer] = useState(false);
   return (
     <View style = {styles.container}>
       <View style = {styles.topBarContainer}>
+        <View style = {styles.openContainer}>
+          <TouchableHighlight
+            onPress = {() => {
+              changeDrawer(!drawer);
+              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            }}
+            style={styles.openDrawerButton}
+          >
+            <Text style = {styles.textAbove}>Open</Text>
+          </TouchableHighlight>
+        </View>
+      </View>
+      <View style = {[styles.drawerContainer, drawer? undefined: {width: 0}]}>
+        <TouchableHighlight 
+          onPress={()=> 
+            changeDrawer(!drawer)
+          } 
+          style={styles.navigationButtons}
+        >
+          <Text>
+            Close
+          </Text>
+        </TouchableHighlight>
         <TouchableHighlight
           onPress = {()=>{
             props.navigation.goBack();
           }}
+          style={styles.navigationButtons}
         >
           <View>
             <Text>Go Back</Text>
           </View>
         </TouchableHighlight>
+            <TouchableHighlight 
+              onPress={()=>
+                props.navigation.navigate("ProjectCreation",{user:props.userInfo})
+              } 
+              style={styles.navigationButtons}
+            >
+              <Text>
+                Project Creation
+              </Text>
+            </TouchableHighlight>
+            <TouchableHighlight 
+              onPress={()=>
+                props.navigation.navigate("Settings",{user:props.userInfo})
+              } 
+              style={styles.navigationButtons}
+            >
+              <Text>
+                Settings⚙️
+              </Text>
+            </TouchableHighlight>
+          
+            
+      
       </View>
       {props.children}
     </View>
   )
 };
+
   
 export function ProjectList ({ route, navigation }) {
   const [projects, changeProjects] = useState(null);//List of project ID's for user
@@ -158,13 +162,7 @@ export function ProjectList ({ route, navigation }) {
   }
  
   return (
-    <TopBar navigation = {navigation}>
-      <Drawer 
-        userInfo={route.params.user} 
-        navigation={navigation}
-      >        
-      </Drawer>
-
+    <TopBar navigation = {navigation} userInfo={route.params.user}>
       {/* Description and Delete modal for Project */}
       <Modal 
         animationType="slide"

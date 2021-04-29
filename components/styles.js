@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     drawerContainer: {
       width: '30%',
       height: '90%',
-      backgroundColor: 'green',
+      backgroundColor: spiroDiscoBall,
       position: 'absolute',
       bottom: 0,
       left: 0,
@@ -236,6 +236,11 @@ const styles = StyleSheet.create({
       margin: "2%",
       width: "45%",
       alignItems: 'center'
+    },
+    openDrawerButton:{
+      backgroundColor: "#ccffff",
+      padding:1,
+      borderWidth: 1,
     }
 
 });
