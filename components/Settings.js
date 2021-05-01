@@ -172,40 +172,42 @@ export function Settings({ route, navigation }) {
     <TopBar navigation = {navigation} userInfo={route.params.user}>
       
       <View style={styles.settingsPage}>
-        <View style = {styles.flexAlignContainer}>
-          <Text>Hello {username} Welcome to your Settings</Text> 
-          <Text>Enter your password to Change Your Username</Text>
-          <View style={styles.textInputContainer}>
-            <TextInput 
-              onChangeText = {text => changeUserEnteredPasswordForUsername(text)}
-              placeholder = {inputTextForUsername}
-              value = {userEnteredPasswordForUsername}
-            />
+        <View style={styles.innerSettingsPage}>
+          <View style = {styles.flexAlignContainer}>
+            <Text>Hello {username} Welcome to your Settings</Text> 
+            <Text>Enter your password to Change Your Username</Text>
+            <View style={styles.textInputContainer}>
+              <TextInput 
+                onChangeText = {text => changeUserEnteredPasswordForUsername(text)}
+                placeholder = {inputTextForUsername}
+                value = {userEnteredPasswordForUsername}
+              />
+            </View>
+            <TouchableHighlight 
+              style={styles.buttonContainer} 
+              onPress={()=>
+                changeUsername()
+              }
+            >
+              <Text style={styles.buttonText}>Enter</Text>
+            </TouchableHighlight>
+            <Text>Enter your password to Change Your password</Text>
+            <View style={styles.textInputContainer}>
+              <TextInput 
+                onChangeText = {text => changeUserEnteredPassword(text)}
+                placeholder = {inputTextForPassword}
+                value = {userEnteredPassword}
+              />
+            </View>
+            <TouchableHighlight 
+              style={styles.buttonContainer} 
+              onPress={()=>
+                isPassword()
+              }
+            >
+              <Text style={styles.buttonText}>Enter</Text>
+            </TouchableHighlight>
           </View>
-          <TouchableHighlight 
-            style={styles.buttonContainer} 
-            onPress={()=>
-              changeUsername()
-            }
-          >
-            <Text style={styles.buttonText}>Enter</Text>
-          </TouchableHighlight>
-          <Text>Enter your password to Change Your password</Text>
-          <View style={styles.textInputContainer}>
-            <TextInput 
-              onChangeText = {text => changeUserEnteredPassword(text)}
-              placeholder = {inputTextForPassword}
-              value = {userEnteredPassword}
-            />
-          </View>
-          <TouchableHighlight 
-            style={styles.buttonContainer} 
-            onPress={()=>
-              isPassword()
-            }
-          >
-            <Text style={styles.buttonText}>Enter</Text>
-          </TouchableHighlight>
         </View>
       </View>
     </TopBar>

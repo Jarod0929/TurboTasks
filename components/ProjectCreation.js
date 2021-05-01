@@ -86,8 +86,10 @@ export function ProjectCreation ({ route, navigation }) {
   const [date, setDate] = useState(new Date());//Date selector
   const [checkUser, changeCheckUser] = useState(null);//Used to check if user exists
   const addProjectIds = (userId, projectId) => {
+    console.log(userId);
     //Gets projects[] from user  
   let add = database().ref(`/Database/Users/${userId}/projects`).on('value', snap => {
+    
       if(snap.val() != null){
         let temp = snap.val();
         temp.push(projectId);
@@ -138,6 +140,7 @@ export function ProjectCreation ({ route, navigation }) {
       //Sets project ID
       newData.update({ID: newDataKey});
       //Loops through users in invUsersList and adds project: id 
+      
       invUsersList.forEach(element => addProjectIds(element, newDataKey));
       changeProjectName("");
       addUsersList([user]);
