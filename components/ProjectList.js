@@ -90,7 +90,6 @@ export function ProjectList ({ route, navigation }) {
   const [user, changeUser] = useState(null);//user's ID
   const [visibility, changeVisibility] = useState(false);//visibility of the delete project modal
   const [currentProj,changeCurrentProj]= useState(null);//ID of the current project showing in the delete modal
-  
   const [invUsers, changeInvUsers] = useState('');//For the inviteUsers field
   const [checkUser, changeCheckUser] = useState(null);//Used to check if user exists
   const[validUser,changeValidUser]=useState(true); // validates the user checks if the user already is in the list
@@ -98,13 +97,13 @@ export function ProjectList ({ route, navigation }) {
   let addedUserID;// The user you are trying to adds ID
 
   /* Takes the users info looking for the users projects */  
-  
   //Updates projects state variable to be list of ID's of projects the user is in
   const handleProject = snapshot => {
    
     changeProjects(snapshot.val().projects);
   }
 
+  //adds the username to the project on the databse
   const addProjectIds = (userId, projectId) => {
   
   let add = database().ref(`/Database/Users/${userId}/projects`).on('value', snap => {
@@ -124,6 +123,7 @@ export function ProjectList ({ route, navigation }) {
       }
     });
   }
+
   // Finds the added userID
   const findAddedUserID= snapshot=>{
     for(let key in snapshot.val()){
@@ -160,13 +160,13 @@ export function ProjectList ({ route, navigation }) {
      }
     }
     if(valid==false){
-      console.log(validUser);
+      
       changeValidUser(false);
       changeCheckUser(false);
       changeInvUsers('');
     }
     else{
-      console.log(validUser);
+      
       changeValidUser(true);
       changeCheckUser(true);
       changeInvUsers('');
