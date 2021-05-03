@@ -81,18 +81,19 @@ const TopBar = (props) => {
   )
 };
 
-//Settings Page for the current logged in User takes in
+//Settings Page for the current logged in User takes:
 //route, user- this is the usersID
-
+//navigation
 export function Settings({ route, navigation }) {
-  const [userEnteredPassword,changeUserEnteredPassword]=useState(''); // user entered password
-  const [userEnteredPasswordForUsername,changeUserEnteredPasswordForUsername]=useState(''); // this takes a password first then a new username second
-  const [password,changePassword]=useState(''); // pulled database password
-  const [username,changeUser]=useState(''); // usetrname
-  const [inputTextForPassword,changeinputTextForPassword]=useState('Password'); // input text for background of box
-  const [inputTextForUsername,changeinputTextForUsername]=useState('Password');
-  const [Accepted,changeAccepted]=useState("False"); // password is true or false 
-  const [usernameChangeValid,changeUsernameValidity]=useState("False"); // for changing the username
+  
+  const [userEnteredPassword,changeUserEnteredPassword]=useState('');//password the user nters into the change password box
+  const [userEnteredPasswordForUsername,changeUserEnteredPasswordForUsername]=useState('');//password the user enters into the change username box
+  const [password,changePassword]=useState('');//pulled database password
+  const [username,changeUser]=useState('');//pulled databse username
+  const [inputTextForPassword,changeinputTextForPassword]=useState('Password');//background text for change password box
+  const [inputTextForUsername,changeinputTextForUsername]=useState('Password');//background text for change username box
+  const [Accepted,changeAccepted]=useState("False");//variable for password validation it is a string: true/false
+  const [usernameChangeValid,changeUsernameValidity]=useState("False");//variable for username validation it is a string: true/false
 
   //finds the username of the current logged in user
   const handleUsername = snapshot => {
@@ -107,8 +108,8 @@ export function Settings({ route, navigation }) {
   //test to see if the typed in password is the correct one
   const isPassword = () =>{
   
-    //If the user entered the correct password and they have typed in a new password and hit enter
-    // then their password will be changed
+    //if the user entered the correct password and they have typed in a new password and hit enter
+    //then their password will be changed
     if(Accepted=='True'){
       if(userEnteredPassword != ''){
         database().ref("/Database/Users/" + route.params.user).update({Password: userEnteredPassword});
@@ -123,9 +124,9 @@ export function Settings({ route, navigation }) {
         changeinputTextForPassword("Something Went Wrong");
       }    
 
-    // If it its the correct password the user will enter in their new desired password
+    // If it its the correct password then the user will enter in their new desired password
     } else if(userEnteredPassword==password){
-      console.log("right");
+      
       changeUserEnteredPassword('');
       changeAccepted('True');
       changeinputTextForPassword("Enter New Password");
@@ -135,13 +136,17 @@ export function Settings({ route, navigation }) {
       
     }
   }
+  //changes the users username
   const changeUsername=()=>{
+    //if the user entered the valid password then empty the text field and ask for their desired username
     if(userEnteredPasswordForUsername==password){
       changeUserEnteredPasswordForUsername('');
       changeUsernameValidity('True');
       changeinputTextForUsername("Enter New Username");
     }
+    //if the user entered the correct password and a new username update their username
     else if(usernameChangeValid=='True'){
+      // if they did not try to enter an empty username
       if(userEnteredPasswordForUsername != ''){
         database().ref("/Database/Users/" + route.params.user).update({Username: userEnteredPasswordForUsername});
         changeUser(userEnteredPasswordForUsername);
