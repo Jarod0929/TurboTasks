@@ -5,6 +5,9 @@ import {
   TouchableHighlight,
   FlatList,
   Modal,
+  LayoutAnimation,
+  Platform,
+  UIManager,
 } from 'react-native';
 
 import * as styles from './styles.js';
@@ -12,70 +15,64 @@ import * as styles from './styles.js';
 import database from '@react-native-firebase/database';
 import {  useFocusEffect, useIsFocused } from '@react-navigation/native';
 
-const Drawer = (props)=>{
-  const [drawer, changeDrawer] = useState(false);
-  return(
-    <View>
-      <TouchableHighlight style={styles.navigationButtons}
-        onPress = {() => {
-          changeDrawer(!drawer);
-        }}
-      >
-        <Text>Open Navigation Drawer</Text>
-      </TouchableHighlight>
-      {drawer &&
-        <View style= {styles.Drawercont}>
-          <TouchableHighlight 
-            onPress={()=> 
-              changeDrawer(!drawer)
-            } 
-            style={styles.navigationButtons}
-          >
-            <Text>Close</Text>
-          </TouchableHighlight>
-          <TouchableHighlight 
-            onPress={()=>
-              props.navigation.navigate("ProjectList", {user:props.userInfo})
-            } 
-            style={styles.navigationButtons}
-          >
-            <Text>ProjectList</Text>
-          </TouchableHighlight>
-          <TouchableHighlight 
-            onPress={()=>
-              props.navigation.navigate("ProjectCreation", {user:props.userInfo})
-            } 
-            style={styles.navigationButtons}
-          >
-            <Text>ProjectCreation</Text>
-          </TouchableHighlight>
-          <TouchableHighlight 
-            onPress={()=>
-              props.navigation.navigate("Settings", {user:props.userInfo})
-            } 
-            style={styles.navigationButtons}
-          >
-            <Text>Settings⚙️</Text>
-          </TouchableHighlight>
-        </View>
-      }
-    </View>
-  );
-}
-
 const TopBar = (props) => {
+  const [drawer, changeDrawer] = useState(false);
   return (
     <View style = {styles.container}>
       <View style = {styles.topBarContainer}>
-        <TouchableHighlight onPress = {()=>{
-          props.navigation.goBack();
-        }}>
-        <View>
-          <Text>
-            GO BACK
-          </Text>
+        <View style = {styles.openContainer}>
+          <TouchableHighlight
+            onPress = {() => {
+              changeDrawer(!drawer);
+              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            }}
+            style={styles.openDrawerButton}
+          >
+            <Text style = {styles.textAbove}>Open</Text>
+          </TouchableHighlight>
         </View>
-        </TouchableHighlight>
+      </View>
+      <View style = {[styles.drawerContainer, drawer? undefined: {width: 0}]}>
+        <TouchableHighlight 
+              onPress={()=> 
+                changeDrawer(!drawer)
+              } 
+              style={styles.navigationButtons}
+            >
+              <Text>Close</Text>
+            </TouchableHighlight>
+            <TouchableHighlight onPress = {()=>{
+                props.navigation.goBack();
+              }}
+              style={styles.navigationButtons}>
+              <Text>
+              Go Back
+              </Text>
+            </TouchableHighlight>
+            <TouchableHighlight 
+              onPress={()=>
+                props.navigation.navigate("ProjectList", {user:props.userInfo})
+              } 
+              style={styles.navigationButtons}
+            >
+              <Text>ProjectList</Text>
+            </TouchableHighlight>
+            <TouchableHighlight 
+              onPress={()=>
+                props.navigation.navigate("ProjectCreation", {user:props.userInfo})
+              } 
+              style={styles.navigationButtons}
+            >
+              <Text>ProjectCreation</Text>
+            </TouchableHighlight>
+            <TouchableHighlight 
+              onPress={()=>
+                props.navigation.navigate("Settings", {user:props.userInfo})
+              } 
+              style={styles.navigationButtons}
+            >
+              <Text>Settings⚙️</Text>
+            </TouchableHighlight>
       </View>
       {props.children}
     </View>
@@ -197,7 +194,6 @@ export function Project ({ navigation, route }) {
 
   return (// TopBar is supposed to handle the Drawer and don't forget about it
     <TopBar userInfo={route.params.user} navigation={navigation}>
-      <Drawer userInfo={route.params.user} navigation={navigation}></Drawer>
       {/* Main Container */}
       <View style={styles.projectTaskListConatiner}>
         {/* Modal for showing task information */}

@@ -92,8 +92,9 @@ const styles = StyleSheet.create({
     drawerContainer: {
       width: '30%',
       height: '90%',
-      backgroundColor: 'green',
+      backgroundColor: spiroDiscoBall,
       position: 'absolute',
+      flex:2,
       bottom: 0,
       left: 0,
       zIndex: 100,
@@ -133,18 +134,31 @@ const styles = StyleSheet.create({
       backgroundColor:"yellow",
       borderWidth:1,
       width:"50%",
+     
 
     },
     settingsPage:{
       backgroundColor:'white',
       width: "100%",
       height: "100%",
+      flex: 1,
+      alignItems: "center",
+    },
+    innerSettingsPage:{
+      backgroundColor:  "white",
+      width: "80%",
+      height: "100%",
+    
     },
     projectListModal:{
       height: "80%", 
       width: "80%", 
       margin:"10%", 
-      backgroundColor:'green'
+      alignItems: "center",
+      zIndex: 1,
+      backgroundColor:'#66ccff',
+      borderWidth: 5,
+      borderRadius:15,
     },
     projectCreationPlusPosition:{
       width: "15%",
@@ -236,6 +250,11 @@ const styles = StyleSheet.create({
       margin: "2%",
       width: "45%",
       alignItems: 'center'
+    },
+    openDrawerButton:{
+      backgroundColor: "#ccffff",
+      padding:1,
+      borderWidth: 1,
     }
 
 });

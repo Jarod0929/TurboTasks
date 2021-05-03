@@ -22,7 +22,7 @@ const TopBar = (props) => {
         >
           <View>
             <Text>
-            GO BACK 
+            Go Back
             </Text>
           </View>
         </TouchableHighlight>
