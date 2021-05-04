@@ -20,36 +20,7 @@ import { create } from 'eslint/lib/rules/*';
  * @param {tag} {children} The rest of the tags of CreateAccount
  * @returns Top blue bar with all its children below it
  */
- const TopBar = (props) => {
-  const [drawer, changeDrawer] = useState(false);
-  return (
-    <View style = {basicStyles.container}>
-      <View style = {topBarStyles.topBarContainer}>
-        <View style = {topBarStyles.openContainer}>
-          <TouchableHighlight
-            onPress = {() => {
-              changeDrawer(!drawer);
-              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-            }}
-            style={topBarStyles.openDrawerButton}
-          >
-            <Text>Open</Text>
-          </TouchableHighlight>
-        </View>
-      </View>
-      <View style = {[topBarStyles.drawerContainer, drawer? undefined: {width: 0}]}>
-        <TouchableHighlight onPress={()=> changeDrawer(!drawer)} style={topBarStyles.navigationButtons}>
-          <Text>Close</Text>
-        </TouchableHighlight>
-        <TouchableHighlight onPress={()=>props.navigation.navigate("LogIn")} style={topBarStyles.navigationButtons}>
-          <Text>LogIn</Text>
-        </TouchableHighlight>
-       
-      </View>
-      {props.children}
-    </View>
-  )
-};
+ 
 
 /**
  * A page where the user creates their account.
@@ -136,6 +107,45 @@ export function CreateAccount ({navigation}) {
   );
 }
 
+const TopBar = (props) => {
+  const [drawer, changeDrawer] = useState(false);
+  return (
+    <View style = {basicStyles.container}>
+      <View style = {topBarStyles.topBarContainer}>
+        <View style = {topBarStyles.openContainer}>
+          <ButtonBoxForNavigation
+           onClick = {() => {
+            changeDrawer(!drawer);
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+           }}
+           text="Open"
+           style={topBarStyles.openAndDrawerButton}
+          />
+        </View>
+      </View>
+      <View style = {[topBarStyles.drawerContainer, drawer? undefined: {width: 0}]}>
+        <ButtonBoxForNavigation
+          onClick={() => {
+            changeDrawer(!drawer);
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+          }}
+          text={"Close"}
+          style={topBarStyles.navigationButtons}
+        />
+        <ButtonBoxForNavigation
+          onClick={()=>
+            props.navigation.navigate("LogIn")
+          }
+          text={"LogIn"}
+          style={topBarStyles.navigationButtons}
+        />
+      </View>
+      {props.children}
+    </View>
+  )
+};
+
+
 const TextInputBox = props => {
   return (
   <View style = {basicStyles.textAreaContainer}>
@@ -161,5 +171,16 @@ const ButtonBox = props => {
       <Text style = {basicStyles.buttonText}>{props.text}</Text>
     </TouchableHighlight>
   </View>
+  );
+};
+
+const ButtonBoxForNavigation = props => {
+  return(
+    <TouchableHighlight 
+      style = {props.style}
+      onPress = {props.onClick}
+    >
+      <Text style = {topBarStyles.buttonText}>{props.text}</Text>
+    </TouchableHighlight>
   );
 };
