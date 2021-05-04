@@ -179,7 +179,7 @@ export function ProjectCreation ({ route, navigation }) {
       <View style={{flex: 1, backgroundColor: "white", width: "100%", height: "100%"}}>
         {/*LOGO AND TEXT VIEW*/ }
         <LinearGradient
-              style = {{width: "100%", height: "30%", padding: 10}}
+              style = {{width: "100%", height: "30%", padding: "3%"}}
               colors={["#187bcd", '#2a9df4', '#1167b1']}
               start={{ x: 1, y: 1 }}
               end={{ x: 0, y: 0 }}
@@ -189,21 +189,21 @@ export function ProjectCreation ({ route, navigation }) {
           >
             Create a Project
           </Text>
-          <Icon name="addfolder" size={100} color="blue"  style={{alignSelf: "center", top: 10}} ></Icon>
+          <Icon name="addfolder" size={100} color="blue"  style={{alignSelf: "center", top: "5%"}} ></Icon>
 
           </LinearGradient>
         {/* INPUT VIEW */ }
         <LinearGradient
-              style = {{width: "100%", height: "78%",  paddingTop: 20}}
+              style = {{width: "100%", height: "65%",  paddingTop: "5%"}}
               colors={['white', "lightgray"]}
               start={{ x: 1, y: 1 }}
               end={{ x: 1, y: 0 }}
         >
           <View style={{padding: 20}}>
-            <View style = {{backgroundColor: "white", padding: 10, bottom: 50, borderRadius: 10, height: "80%"}}>
+            <View style = {{backgroundColor: "white", paddingTop: "10%", bottom: "15%", borderRadius: 10, height: "90%"}}>
               <Text style = {{alignSelf: "center"}}>Project Name</Text>
               <TextInput
-                style = {{borderBottomColor: 'gray', color: 'black', borderBottomWidth: 1, width: "90%", height: 50, padding: 0, marginBottom: 30, alignSelf: "center", textAlign: "center"}}
+                style = {{borderBottomColor: 'gray', color: 'black', borderBottomWidth: 1, width: "90%", height: "18%", marginBottom: "8%", alignSelf: "center", textAlign: "center"}}
                 placeholder = "Office Function"
                 onChangeText = {text => changeProjectName(text)}
                 value={projectName}
@@ -214,7 +214,7 @@ export function ProjectCreation ({ route, navigation }) {
                 date={date}
                 mode = "date"
                 onDateChange={setDate}
-                style = {{marginBottom: 20, alignSelf: "center", left: 20}}
+                style = {{marginBottom: 20, alignSelf: "center", left: "7%"}}
                 customStyles={{
                 dateInput: {
                   backgroundColor: "white",
@@ -225,16 +225,16 @@ export function ProjectCreation ({ route, navigation }) {
               />
             <Text style = {{alignSelf: "center"}}>Invite Users</Text>
             {/*INVITE USER VIEW (USED TO PUT BUTTON AND INPUT ON ONE LINE)*/ }
-            <View style = {{marginBottom: 0, height: "20%"}}>
+            <View style = {{height: "18%"}}>
               <TextInput
                 autoFocus={true}
-                style = {{borderBottomColor: 'gray', borderBottomWidth: 1, width: "75%",height: 50, textAlign: "center", alignSelf: "center", marginBottom: 10}}
+                style = {{borderBottomColor: 'gray', borderBottomWidth: 1, width: "75%",height: "100%", textAlign: "center", alignSelf: "center", marginBottom: 10}}
                 placeholder = "Username"
                 onChangeText = {text => changeInvUsers(text)}
                 value={invUsers}
               />
                <TouchableHighlight onPress = {addUsersToList}
-                  style = {{position: "absolute", marginLeft: 295, top: 10}}
+                  style = {{position: "absolute", marginLeft: "85%", top: "15%"}}
                   activeOpacity={0.6}
                   underlayColor="#00181"
                 >
@@ -252,9 +252,9 @@ export function ProjectCreation ({ route, navigation }) {
             </View>
             </View> 
             {/*CREATE PROJECT BUTTON*/ }
-            <View style = {{height: "5%"}}>
+            <View style = {{height: "15%", bottom: "5%"}}>
               <LinearGradient
-                style = {{backgroundColor: "#2a9df4", width: "60%", height: 60,  borderRadius: 10, alignSelf: "center"}}
+                style = {{backgroundColor: "#2a9df4", width: "60%", height:"100%",  borderRadius: 10, alignSelf: "center"}}
                 colors={["#187bcd", '#2a9df4']}
                 start={{ x: 1, y: 1 }}
                 end={{ x: 1, y: 0 }}
