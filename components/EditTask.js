@@ -9,12 +9,14 @@ import {
 import database from '@react-native-firebase/database';
 
 import * as styles from './styles/styles.js';
+import * as basicStyles from './styles/basicStyles.js';
+import * as topBarStyles from './styles/topBarStyles.js';
 import Moment from 'moment';
 
 const TopBar = (props) => {
   return (
-    <View style = {styles.container}>
-      <View style = {styles.topBarContainer}>
+    <View style = {basicStyles.container}>
+      <View style = {topBarStyles.topBarContainer}>
         <TouchableHighlight 
           onPress = {()=>{
             props.navigation.goBack();

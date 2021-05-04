@@ -12,31 +12,33 @@ import {
 import { useFocusEffect } from '@react-navigation/native';
 import database from '@react-native-firebase/database';
 import * as styles from './styles/styles.js';
+import * as basicStyles from './styles/basicStyles.js';
+import * as topBarStyles from './styles/topBarStyles.js';
 
 
 const TopBar = (props) => {
   const [drawer, changeDrawer] = useState(false);
   return (
-    <View style = {styles.container}>
-      <View style = {styles.topBarContainer}>
-        <View style = {styles.openContainer}>
+    <View style = {basicStyles.container}>
+      <View style = {topBarStyles.topBarContainer}>
+        <View style = {topBarStyles.openContainer}>
           <TouchableHighlight
             onPress = {() => {
               changeDrawer(!drawer);
               LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             }}
-            style={styles.openDrawerButton}
+            style={topBarStyles.openDrawerButton}
           >
-            <Text style = {styles.textAbove}>Open</Text>
+            <Text>Open</Text>
           </TouchableHighlight>
         </View>
       </View>
-      <View style = {[styles.drawerContainer, drawer? undefined: {width: 0}]}>
+      <View style = {[topBarStyles.drawerContainer, drawer? undefined: {width: 0}]}>
         <TouchableHighlight 
           onPress={()=> 
             changeDrawer(!drawer)
           } 
-          style={styles.navigationButtons}
+          style={topBarStyles.navigationButtons}
         >
           <Text>
             Close
@@ -46,7 +48,7 @@ const TopBar = (props) => {
           onPress = {()=>{
             props.navigation.goBack();
           }}
-          style={styles.navigationButtons}
+          style={topBarStyles.navigationButtons}
         >
           <Text>
             Go Back
@@ -58,7 +60,7 @@ const TopBar = (props) => {
             props.navigation.navigate("ProjectCreation", {user:props.userInfo})
               
           }
-          style={styles.navigationButtons}
+          style={topBarStyles.navigationButtons}
         >
           <Text>
             Project Creation
@@ -68,7 +70,7 @@ const TopBar = (props) => {
           onPress={()=>
             props.navigation.navigate("ProjectList", {user:props.userInfo})
           }
-          style={styles.navigationButtons}
+          style={topBarStyles.navigationButtons}
         >
           <Text>
             ProjectList
@@ -178,10 +180,10 @@ export function Settings({ route, navigation }) {
       
       <View style={styles.settingsPage}>
         <View style={styles.innerSettingsPage}>
-          <View style = {styles.flexAlignContainer}>
+          <View style = {basicStyles.flexAlignContainer}>
             <Text>Hello {username} Welcome to your Settings</Text> 
             <Text>Enter your password to Change Your Username</Text>
-            <View style={styles.textInputContainer}>
+            <View style={basicStyles.textInputContainer}>
               <TextInput 
                 onChangeText = {text => changeUserEnteredPasswordForUsername(text)}
                 placeholder = {inputTextForUsername}
@@ -189,15 +191,15 @@ export function Settings({ route, navigation }) {
               />
             </View>
             <TouchableHighlight 
-              style={styles.buttonContainer} 
+              style={basicStyles.buttonContainer} 
               onPress={()=>
                 changeUsername()
               }
             >
-              <Text style={styles.buttonText}>Enter</Text>
+              <Text style={basicStyles.buttonText}>Enter</Text>
             </TouchableHighlight>
             <Text>Enter your password to Change Your password</Text>
-            <View style={styles.textInputContainer}>
+            <View style={basicStyles.textInputContainer}>
               <TextInput 
                 onChangeText = {text => changeUserEnteredPassword(text)}
                 placeholder = {inputTextForPassword}
@@ -205,12 +207,12 @@ export function Settings({ route, navigation }) {
               />
             </View>
             <TouchableHighlight 
-              style={styles.buttonContainer} 
+              style={basicStyles.buttonContainer} 
               onPress={()=>
                 isPassword()
               }
             >
-              <Text style={styles.buttonText}>Enter</Text>
+              <Text style={basicStyles.buttonText}>Enter</Text>
             </TouchableHighlight>
           </View>
         </View>

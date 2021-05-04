@@ -10,7 +10,8 @@ import {
 } from 'react-native';
 import database from '@react-native-firebase/database';
 import LinearGradient from 'react-native-linear-gradient'
-import * as styles from './styles/styles.js';
+import * as basicStyles from './styles/basicStyles.js';
+import * as topBarStyles from './styles/topBarStyles.js';
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -61,9 +62,9 @@ export function LogIn({ navigation }){
   return(
     <TopBar navigation={navigation}> 
       
-      <View style = {styles.flexAlignContainer}>
-        <View style = {styles.titleContainer}>
-          <Text style = {styles.titleText}>Sign In</Text>
+      <View style = {basicStyles.flexAlignContainer}>
+        <View style = {basicStyles.titleContainer}>
+          <Text style = {basicStyles.titleText}>Sign In</Text>
         </View>
         <TextInputBox
           changeValue = {changeUsername}
@@ -80,8 +81,8 @@ export function LogIn({ navigation }){
           text = "Sign In"
         />
         {failedMessage &&
-          <View style = {styles.failedContainer}>
-            <Text style = {styles.failedText}>Username does not exist or Password is false</Text>
+          <View style = {basicStyles.failedContainer}>
+            <Text style = {basicStyles.failedText}>Username does not exist or Password is false</Text>
           </View>
         }
         <ButtonBox
@@ -96,26 +97,25 @@ export function LogIn({ navigation }){
 const TopBar = (props) => {
   const [drawer, changeDrawer] = useState(false);
   return (
-    <View style = {styles.container}>
-      <View style = {styles.topBarContainer}>
-        <View style = {styles.openContainer}>
+    <View style = {basicStyles.container}>
+      <View style = {topBarStyles.topBarContainer}>
+        <View style = {topBarStyles.openContainer}>
           <TouchableHighlight
             onPress = {() => {
               changeDrawer(!drawer);
               LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             }}
-            style={styles.openDrawerButton}
-            
+            style={topBarStyles.openDrawerButton}
           >
             <Text>Open</Text>
           </TouchableHighlight>
         </View>
       </View>
-      <View style = {[styles.drawerContainer, drawer? undefined: {width: 0}]}>
-        <TouchableHighlight onPress={()=> changeDrawer(!drawer)} style={styles.navigationButtons}>
+      <View style = {[topBarStyles.drawerContainer, drawer? undefined: {width: 0}]}>
+        <TouchableHighlight onPress={()=> changeDrawer(!drawer)} style={topBarStyles.navigationButtons}>
           <Text>Close</Text>
         </TouchableHighlight>
-        <TouchableHighlight onPress={()=>props.navigation.navigate("CreateAccount")} style={styles.navigationButtons}>
+        <TouchableHighlight onPress={()=>props.navigation.navigate("CreateAccount")} style={topBarStyles.navigationButtons}>
           <Text>Create an Account</Text>
         </TouchableHighlight>
        
@@ -127,9 +127,9 @@ const TopBar = (props) => {
 
 const TextInputBox = props => {
   return (
-  <View style = {styles.textAreaContainer}>
-    <Text style = {styles.defaultText}>{props.text}</Text>
-      <View style = {styles.textInputContainer}>
+  <View style = {basicStyles.textAreaContainer}>
+    <Text style = {basicStyles.defaultText}>{props.text}</Text>
+      <View style = {basicStyles.textInputContainer}>
         <TextInput
           onChangeText = {text => props.changeValue(text)}
           placeholder = {props.text}
@@ -142,12 +142,12 @@ const TextInputBox = props => {
 
 const ButtonBox = props => {
   return(
-  <View style = {styles.buttonContainer}>
+  <View style = {basicStyles.buttonContainer}>
     <TouchableHighlight 
-      style = {styles.button}
+      style = {basicStyles.button}
       onPress = {props.onClick}
     >
-      <Text style = {styles.buttonText}>{props.text}</Text>
+      <Text style = {basicStyles.buttonText}>{props.text}</Text>
     </TouchableHighlight>
   </View>
   );

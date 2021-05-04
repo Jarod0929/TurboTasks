@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import database from '@react-native-firebase/database';
 import * as styles from './styles/styles.js';
+import * as basicStyles from './styles/basicStyles.js';
+import * as topBarStyles from './styles/topBarStyles.js';
 import { create } from 'eslint/lib/rules/*';
 
 /**
@@ -21,25 +23,25 @@ import { create } from 'eslint/lib/rules/*';
  const TopBar = (props) => {
   const [drawer, changeDrawer] = useState(false);
   return (
-    <View style = {styles.container}>
-      <View style = {styles.topBarContainer}>
-        <View style = {styles.openContainer}>
+    <View style = {basicStyles.container}>
+      <View style = {topBarStyles.topBarContainer}>
+        <View style = {topBarStyles.openContainer}>
           <TouchableHighlight
             onPress = {() => {
               changeDrawer(!drawer);
               LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             }}
-            style={styles.openDrawerButton}
+            style={topBarStyles.openDrawerButton}
           >
-            <Text style = {styles.textAbove}>Open</Text>
+            <Text>Open</Text>
           </TouchableHighlight>
         </View>
       </View>
-      <View style = {[styles.drawerContainer, drawer? undefined: {width: 0}]}>
-        <TouchableHighlight onPress={()=> changeDrawer(!drawer)} style={styles.navigationButtons}>
+      <View style = {[topBarStyles.drawerContainer, drawer? undefined: {width: 0}]}>
+        <TouchableHighlight onPress={()=> changeDrawer(!drawer)} style={topBarStyles.navigationButtons}>
           <Text>Close</Text>
         </TouchableHighlight>
-        <TouchableHighlight onPress={()=>props.navigation.navigate("LogIn")} style={styles.navigationButtons}>
+        <TouchableHighlight onPress={()=>props.navigation.navigate("LogIn")} style={topBarStyles.navigationButtons}>
           <Text>LogIn</Text>
         </TouchableHighlight>
        
@@ -103,34 +105,28 @@ export function CreateAccount ({navigation}) {
     <TopBar navigation={navigation}>
       
       <View style = {styles.flexAlignContainer}>
-      {/* Title Box */}
         <View style = {styles.titleContainer}>
           <Text style = {styles.titleText}>Sign Up</Text>
         </View>
-      {/* Feedback Failed Box */}
         {failedMessage &&
           <View style = {styles.redFailedContainer}>
             <Text style = {styles.redFailedText}>Username Already Exists</Text>
           </View>
         }
-      {/* Username Input Box */}
       <TextInputBox
           changeValue = {changeUsername}
           text = {"Username"}
           value = {username}
       />
-      {/* Password Input Box */}
       <TextInputBox
           changeValue = {changePassword}
           text = {"Password"}
           value = {password}
       />
-      {/* Create new account Button */}
       <ButtonBox
         onClick = {attemptCreateAccount}
         text = "Sign Up"
       />
-      {/* Goto Login Button */}
       <ButtonBox
         onClick = {goToLogIn}
         text = "Sign In"
@@ -142,9 +138,9 @@ export function CreateAccount ({navigation}) {
 
 const TextInputBox = props => {
   return (
-  <View style = {styles.textAreaContainer}>
-    <Text style = {styles.defaultText}>{props.text}</Text>
-      <View style = {styles.textInputContainer}>
+  <View style = {basicStyles.textAreaContainer}>
+    <Text style = {basicStyles.defaultText}>{props.text}</Text>
+      <View style = {basicStyles.textInputContainer}>
         <TextInput
           onChangeText = {text => props.changeValue(text)}
           placeholder = {props.text}
@@ -157,12 +153,12 @@ const TextInputBox = props => {
 
 const ButtonBox = props => {
   return(
-  <View style = {styles.buttonContainer}>
+  <View style = {basicStyles.buttonContainer}>
     <TouchableHighlight 
-      style = {styles.button}
+      style = {basicStyles.button}
       onPress = {props.onClick}
     >
-      <Text style = {styles.buttonText}>{props.text}</Text>
+      <Text style = {basicStyles.buttonText}>{props.text}</Text>
     </TouchableHighlight>
   </View>
   );

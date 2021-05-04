@@ -16,6 +16,8 @@ import database from '@react-native-firebase/database';
 import Icon from "react-native-vector-icons/AntDesign";
 import LinearGradient from 'react-native-linear-gradient'
 import * as styles from './styles/styles.js';
+import * as basicStyles from './styles/basicStyles.js';
+import * as topBarStyles from './styles/topBarStyles.js';
 
 /**
  * Establishes the entire container with all the children under the bar
@@ -27,26 +29,26 @@ import * as styles from './styles/styles.js';
 const TopBar = (props) => {
   const [drawer, changeDrawer] = useState(false);
   return (
-    <View style = {styles.container}>
-      <View style = {styles.topBarContainer}>
-        <View style = {styles.openContainer}>
+    <View style = {basicStyles.container}>
+      <View style = {topBarStyles.topBarContainer}>
+        <View style = {topBarStyles.openContainer}>
           <TouchableHighlight
             onPress = {() => {
               changeDrawer(!drawer);
               LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             }}
-            style={styles.openDrawerButton}
+            style={topBarStyles.openDrawerButton}
           >
-            <Text style = {styles.textAbove}>Open</Text>
+            <Text>Open</Text>
           </TouchableHighlight>
         </View>
       </View>
-      <View style = {[styles.drawerContainer, drawer? undefined: {width: 0}]}>
+      <View style = {[topBarStyles.drawerContainer, drawer? undefined: {width: 0}]}>
         <TouchableHighlight 
           onPress={()=> 
             changeDrawer(!drawer)
           } 
-          style={styles.navigationButtons}
+          style={topBarStyles.navigationButtons}
         >
             <Text>
               Close
@@ -57,7 +59,7 @@ const TopBar = (props) => {
             props.reset();
             props.navigation.goBack();
           }}
-          style={styles.navigationButtons}
+          style={topBarStyles.navigationButtons}
         >
           <Text>
             Go Back
@@ -65,7 +67,7 @@ const TopBar = (props) => {
         </TouchableHighlight>
         <TouchableHighlight 
           onPress={()=>props.navigation.navigate("ProjectList",{user:props.userInfo})}
-          style={styles.navigationButtons}
+          style={topBarStyles.navigationButtons}
         >
           <Text>
             ProjectList
