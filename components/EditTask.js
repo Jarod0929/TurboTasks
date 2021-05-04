@@ -41,16 +41,16 @@ export function EditTask ({ navigation, route }){
       if(snapshot.val().parentTask != 'none'){
         database().ref("/Database/Tasks/" + snapshot.val().parentTask).once("value", snap => {
           const array = snap.val().subTasks.filter(ID => ID != delTaskID);
+          route.params.changeAllProjectTasks(array);
           database().ref("/Database/Tasks/" + snapshot.val().parentTask).update({
             subTasks: array,
           });
         });
         database().ref("/Database/Tasks/" + delTaskID).remove();
-      }
-      else{
+      }else{
         database().ref("/Database/Projects/" + projectID).once("value", snap => {
-          console.log(snap.val());
           const array = snap.val().tasks.filter(ID => ID != delTaskID);
+          route.params.changeAllProjectTasks(array);
           database().ref("/Database/Projects/" + projectID).update({
             tasks: array,
           });

@@ -45,12 +45,14 @@ export function Project ({ navigation, route }) {
     changeVisibility(true);
     changeCurrentTask(taskID);
   }
-  const addATaskByClick=()=>{
+  const addTask=()=>{
     const newTask = database().ref(`/Database/Tasks`).push();
     const newTaskID = newTask.key;
     let newArray = [];
     if(allProjectTasks != null){
       newArray = allProjectTasks.slice();
+    }else{
+      newArray = [];
     }
     newArray.push(newTaskID);
     changeAllProjectTasks(newArray);
@@ -95,7 +97,7 @@ export function Project ({ navigation, route }) {
         <View style = {styles.projectListMainView}>
           {/* Add task button */}
           <AddTaskButton
-            onClick={addATaskByClick}
+            onClick={addTask}
             text="Add Task"  
           />
           <TaskList
@@ -104,6 +106,7 @@ export function Project ({ navigation, route }) {
             projectID={route.params.projectID}
             changeTaskDescriptor={changeTaskDescriptor}
             allProjectTasks={allProjectTasks}
+            changeAllProjectTasks = {changeAllProjectTasks}
           />        
         </View>
       </View>       
@@ -151,7 +154,7 @@ const TaskPanel = (props) => {
             style={styles.taskPanelEdit}
             onPress = {() => {
             //CHANGE PROPS.PROJECT => PROPS.TASKID
-              props.navigation.navigate("EditTask", {taskID: props.taskID, projectID: props.projectID,user: props.userId});
+              props.navigation.navigate("EditTask", {taskID: props.taskID, projectID: props.projectID,user: props.userId, changeAllProjectTasks: props.changeAllProjectTasks});
             }}
           >
             <View style={{alignItems: 'center'}}>
@@ -325,6 +328,7 @@ const TaskList = props =>{
         projectID ={props.projectID}
         userId={props.user}
         changeTaskDescriptor = {props.changeTaskDescriptor}
+        changeAllProjectTasks = {props.changeAllProjectTasks}
     />
     </React.StrictMode>
     }
