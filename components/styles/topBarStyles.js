@@ -7,8 +7,7 @@ let spiroDiscoBall = '#19d9ff';
 const topBarStyles = StyleSheet.create({
   topBarContainer: {
     backgroundColor: "cyan",
-    borderBottomRightRadius: 20,
-    borderWidth: 5,
+    borderWidth: 2,
     height: 60,
     width: '100%',
     zIndex: 200,
