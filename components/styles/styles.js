@@ -118,7 +118,17 @@ const styles = StyleSheet.create({
     padding: 5,
     margin: "2%",
     width: "45%",
+    top: 10,
+    
     alignItems: 'center'
+  },
+  taskModal:{
+    backgroundColor: "#ccffff",
+    width:"100%", 
+    height: "100%",
+  },
+  emptyTouchableHighlights:{
+
   },
 
 });
