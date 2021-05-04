@@ -16,71 +16,7 @@ import * as topBarStyles from './styles/topBarStyles.js';
 
 import database from '@react-native-firebase/database';
 import {  useFocusEffect, useIsFocused } from '@react-navigation/native';
-
-const TopBar = (props) => {
-  const [drawer, changeDrawer] = useState(false);
-  return (
-    <View style = {basicStyles.container}>
-      <View style = {topBarStyles.topBarContainer}>
-        <View style = {topBarStyles.openContainer}>
-          <TouchableHighlight
-            onPress = {() => {
-              changeDrawer(!drawer);
-              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-            }}
-            style={topBarStyles.openDrawerButton}
-          >
-            <Text style = {topBarStyles.textAbove}>Open</Text>
-          </TouchableHighlight>
-        </View>
-      </View>
-      <View style = {[topBarStyles.drawerContainer, drawer? undefined: {width: 0}]}>
-        <TouchableHighlight 
-              onPress={()=> 
-                changeDrawer(!drawer)
-              } 
-              style={topBarStyles.navigationButtons}
-            >
-              <Text>Close</Text>
-            </TouchableHighlight>
-            <TouchableHighlight onPress = {()=>{
-                props.navigation.goBack();
-              }}
-              style={topBarStyles.navigationButtons}>
-              <Text>
-              Go Back
-              </Text>
-            </TouchableHighlight>
-            <TouchableHighlight 
-              onPress={()=>
-                props.navigation.navigate("ProjectList", {user:props.userInfo})
-              } 
-              style={topBarStyles.navigationButtons}
-            >
-              <Text>ProjectList</Text>
-            </TouchableHighlight>
-            <TouchableHighlight 
-              onPress={()=>
-                props.navigation.navigate("ProjectCreation", {user:props.userInfo})
-              } 
-              style={topBarStyles.navigationButtons}
-            >
-              <Text>ProjectCreation</Text>
-            </TouchableHighlight>
-            <TouchableHighlight 
-              onPress={()=>
-                props.navigation.navigate("Settings", {user:props.userInfo})
-              } 
-              style={topBarStyles.navigationButtons}
-            >
-              <Text>Settings⚙️</Text>
-            </TouchableHighlight>
-      </View>
-      {props.children}
-    </View>
-  )
-};
-  
+ 
 const TaskPanel = (props) => {
   const [task, changeTask] = useState(null);//all task information from database
 
@@ -281,3 +217,73 @@ export function Project ({ navigation, route }) {
     </TopBar> 
   );
 }
+
+const TopBar = (props) => {
+  const [drawer, changeDrawer] = useState(false);
+  return (
+    <View style = {basicStyles.container}>
+      <View style = {topBarStyles.topBarContainer}>
+        <View style = {topBarStyles.openContainer}>
+            <ButtonBoxForNavigation
+              onClick={() => {
+                changeDrawer(!drawer);
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+              }}
+          text={"Open"}
+          style={topBarStyles.openAndDrawerButton}
+        />
+           
+        </View>
+      </View>
+      <View style = {[topBarStyles.drawerContainer, drawer? undefined: {width: 0}]}>
+        <ButtonBoxForNavigation
+          onClick={()=> 
+            changeDrawer(!drawer)
+          } 
+          text={"Close"}
+          style={topBarStyles.navigationButtons}
+        />
+        <ButtonBoxForNavigation
+          onClick={()=>{
+            props.navigation.goBack();
+          }}
+          text={"Go Back"}
+          style={topBarStyles.navigationButtons}
+        />
+        <ButtonBoxForNavigation
+          onClick={()=>
+            props.navigation.navigate("ProjectList", {user:props.userInfo})
+          } 
+          text={"ProjectList"}
+          style={topBarStyles.navigationButtons}
+        />
+        <ButtonBoxForNavigation
+          onClick={()=>
+            props.navigation.navigate("ProjectCreation", {user:props.userInfo})
+          } 
+          text={"ProjectCreation"}
+          style={topBarStyles.navigationButtons}
+        />
+        <ButtonBoxForNavigation
+          onClick={()=>
+            props.navigation.navigate("Settings", {user:props.userInfo})
+          } 
+          text={"Settings⚙️"}
+          style={topBarStyles.navigationButtons}
+        />
+      </View>
+      {props.children}
+    </View>
+  )
+};
+
+const ButtonBoxForNavigation = props => {
+  return(
+    <TouchableHighlight 
+      style = {props.style}
+      onPress = {props.onClick}
+    >
+      <Text style = {topBarStyles.buttonText}>{props.text}</Text>
+    </TouchableHighlight>
+  );
+};
