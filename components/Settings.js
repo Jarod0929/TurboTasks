@@ -15,6 +15,7 @@ import * as styles from './styles/styles.js';
 import * as basicStyles from './styles/basicStyles.js';
 import * as topBarStyles from './styles/topBarStyles.js';
 
+
 //Settings Page for the current logged in User takes:
 //route, user- this is the usersID
 //navigation
@@ -77,9 +78,9 @@ export function Settings({ route, navigation }) {
       changeUserEnteredPasswordForUsername('');
       changeUsernameValidity('True');
       changeinputTextForUsername("Enter New Username");
-    }
+    
     //if the user entered the correct password and a new username update their username
-    else if(usernameChangeValid=='True'){
+    }else if(usernameChangeValid=='True'){
       // if they did not try to enter an empty username
       if(userEnteredPasswordForUsername != ''){
         database().ref("/Database/Users/" + route.params.user).update({Username: userEnteredPasswordForUsername});
@@ -88,12 +89,11 @@ export function Settings({ route, navigation }) {
         changeUsernameValidity('False');
         changeinputTextForUsername('Enter your password');
        
-      } else {
+      }else{
         changeUserEnteredPassword('');
         changeinputTextForUsername("Something Went Wrong");
       }   
-    }
-    else{
+    }else{
       console.log("wrong password try again");
     }
   }
@@ -101,9 +101,9 @@ export function Settings({ route, navigation }) {
   // finds username of current logged in user
   if(username==''){
     database().ref("/Database/Users/" + route.params.user).once("value", handleUsername);
-  }
+    
   //finds password of current logged in user
-  if(password==''){
+  }if(password==''){
       database().ref("/Database/Users/" + route.params.user+"/Password").once("value", handlePassword);
   }
 
@@ -158,15 +158,14 @@ const TopBar = (props) => {
     <View style = {basicStyles.container}>
       <View style = {topBarStyles.topBarContainer}>
         <View style = {topBarStyles.openContainer}>
-            <ButtonBoxForNavigation
-              onClick={() => {
-                changeDrawer(!drawer);
-                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-              }}
-          text={"Open"}
-          style={topBarStyles.openAndDrawerButton}
-        />
-           
+          <ButtonBoxForNavigation
+            onClick={() => {
+              changeDrawer(!drawer);
+              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            }}
+            text={"Open"}
+            style={topBarStyles.openAndDrawerButton}
+          />
         </View>
       </View>
       <View style = {[topBarStyles.drawerContainer, drawer? undefined: {width: 0}]}>
@@ -198,7 +197,6 @@ const TopBar = (props) => {
           text={"ProjectCreation"}
           style={topBarStyles.navigationButtons}
         />
-        
       </View>
       {props.children}
     </View>
@@ -215,4 +213,6 @@ const ButtonBoxForNavigation = props => {
     </TouchableHighlight>
   );
 };
+
+
     
