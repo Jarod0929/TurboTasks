@@ -109,7 +109,6 @@ export function Settings({ route, navigation }) {
 
   return(
     <TopBar navigation = {navigation} userInfo={route.params.user}>
-      
       <View style={styles.settingsPage}>
         <View style={styles.innerSettingsPage}>
           <View style = {basicStyles.flexAlignContainer}>
