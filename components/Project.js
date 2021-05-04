@@ -218,8 +218,6 @@ export function Project ({ navigation, route }) {
   );
 }
 
-
-
 const TopBar = (props) => {
   const [drawer, changeDrawer] = useState(false);
   return (
