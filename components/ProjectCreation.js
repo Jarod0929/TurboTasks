@@ -10,6 +10,7 @@ import {
   LayoutAnimation,
   Platform,
   UIManager,
+  Dimensions,
 } from 'react-native';
 import DatePicker from 'react-native-datepicker'
 import database from '@react-native-firebase/database';
@@ -26,58 +27,7 @@ import * as topBarStyles from './styles/topBarStyles.js';
  * @returns Top blue bar with all its children below it
  */
 
-const TopBar = (props) => {
-  const [drawer, changeDrawer] = useState(false);
-  return (
-    <View style = {basicStyles.container}>
-      <View style = {topBarStyles.topBarContainer}>
-        <View style = {topBarStyles.openContainer}>
-          <TouchableHighlight
-            onPress = {() => {
-              changeDrawer(!drawer);
-              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-            }}
-            style={topBarStyles.openDrawerButton}
-          >
-            <Text>Open</Text>
-          </TouchableHighlight>
-        </View>
-      </View>
-      <View style = {[topBarStyles.drawerContainer, drawer? undefined: {width: 0}]}>
-        <TouchableHighlight 
-          onPress={()=> 
-            changeDrawer(!drawer)
-          } 
-          style={topBarStyles.navigationButtons}
-        >
-            <Text>
-              Close
-            </Text>
-        </TouchableHighlight>
-        <TouchableHighlight
-          onPress = {()=>{
-            props.reset();
-            props.navigation.goBack();
-          }}
-          style={topBarStyles.navigationButtons}
-        >
-          <Text>
-            Go Back
-          </Text>
-        </TouchableHighlight>
-        <TouchableHighlight 
-          onPress={()=>props.navigation.navigate("ProjectList",{user:props.userInfo})}
-          style={topBarStyles.navigationButtons}
-        >
-          <Text>
-            ProjectList
-            </Text>
-        </TouchableHighlight>
-      </View>
-      {props.children}
-    </View>
-  )
-};
+
 
 /*Project creation Page*/
 export function ProjectCreation ({ route, navigation }) { 
@@ -87,6 +37,8 @@ export function ProjectCreation ({ route, navigation }) {
   const [invUsersList, addUsersList] = useState([user]);//For the inviteUsers button
   const [date, setDate] = useState(new Date());//Date selector
   const [checkUser, changeCheckUser] = useState(null);//Used to check if user exists
+  
+  
   const addProjectIds = (userId, projectId) => {
     console.log(userId);
     //Gets projects[] from user  
@@ -181,31 +133,30 @@ export function ProjectCreation ({ route, navigation }) {
       <View style={{flex: 1, backgroundColor: "white", width: "100%", height: "100%"}}>
         {/*LOGO AND TEXT VIEW*/ }
         <LinearGradient
-              style = {{width: "100%", height: "30%", padding: 10}}
+              style = {{width: "100%", height: "30%", padding: "3%"}}
               colors={["#187bcd", '#2a9df4', '#1167b1']}
               start={{ x: 1, y: 1 }}
               end={{ x: 0, y: 0 }}
             >
             <Text
-            style = {{alignSelf: "center", fontSize: 35, fontFamily: "Courier New", color: "white"}}
+            style = {{alignSelf: "center", fontSize: 35 * (Dimensions.get("screen").height/780), fontFamily: "Courier New", color: "white"}}
           >
             Create a Project
           </Text>
-          <Icon name="addfolder" size={100} color="blue"  style={{alignSelf: "center", top: 10}} ></Icon>
-
-          </LinearGradient>
+          <Icon name="addfolder" size={100 * (Dimensions.get("screen").height/780)} color="blue"  style={{alignSelf: "center", top: "5%"}} ></Icon>
+        </LinearGradient>
         {/* INPUT VIEW */ }
         <LinearGradient
-              style = {{width: "100%", height: "78%",  paddingTop: 20}}
+              style = {{width: "100%", height: "65%",  paddingTop: "5%"}}
               colors={['white', "lightgray"]}
               start={{ x: 1, y: 1 }}
               end={{ x: 1, y: 0 }}
         >
-          <View style={{padding: 20}}>
-            <View style = {{backgroundColor: "white", padding: 10, bottom: 50, borderRadius: 10, height: "80%"}}>
+          <View style={{width: "100%"}}>
+            <View style = {{backgroundColor: "white", paddingTop: "5%", bottom: "10%", borderRadius: 10, height: "85%", width: "90%", alignSelf: "center"}}>
               <Text style = {{alignSelf: "center"}}>Project Name</Text>
               <TextInput
-                style = {{borderBottomColor: 'gray', color: 'black', borderBottomWidth: 1, width: "90%", height: 50, padding: 0, marginBottom: 30, alignSelf: "center", textAlign: "center"}}
+                style = {{borderBottomColor: 'gray', color: 'black', borderBottomWidth: 1, width: "90%", height: "18%", marginBottom: "8%", alignSelf: "center", textAlign: "center"}}
                 placeholder = "Office Function"
                 onChangeText = {text => changeProjectName(text)}
                 value={projectName}
@@ -216,7 +167,7 @@ export function ProjectCreation ({ route, navigation }) {
                 date={date}
                 mode = "date"
                 onDateChange={setDate}
-                style = {{marginBottom: 20, alignSelf: "center", left: 20}}
+                style = {{marginBottom: 20, alignSelf: "center", left: "7%"}}
                 customStyles={{
                 dateInput: {
                   backgroundColor: "white",
@@ -225,38 +176,38 @@ export function ProjectCreation ({ route, navigation }) {
                 // ... You can check the source to find the other keys.
                 }}
               />
-            <Text style = {{alignSelf: "center"}}>Invite Users</Text>
-            {/*INVITE USER VIEW (USED TO PUT BUTTON AND INPUT ON ONE LINE)*/ }
-            <View style = {{marginBottom: 0, height: "20%"}}>
-              <TextInput
-                autoFocus={true}
-                style = {{borderBottomColor: 'gray', borderBottomWidth: 1, width: "75%",height: 50, textAlign: "center", alignSelf: "center", marginBottom: 10}}
-                placeholder = "Username"
-                onChangeText = {text => changeInvUsers(text)}
-                value={invUsers}
-              />
-               <TouchableHighlight onPress = {addUsersToList}
-                  style = {{position: "absolute", marginLeft: 295, top: 10}}
-                  activeOpacity={0.6}
-                  underlayColor="#00181"
-                >
-                  <Icon
-                    name="addusergroup" 
-                    size = {35} 
-                  />
-               </TouchableHighlight>
-              {checkUser == true &&
-              <Text style = {{alignSelf: "center"}}>User Successfully Added!</Text>
-              }
-              {checkUser == false &&
-                <Text style = {{alignSelf: "center"}}>User Not Found</Text>
-              }
-            </View>
+              <Text style = {{alignSelf: "center"}}>Invite Users</Text>
+              {/*INVITE USER VIEW (USED TO PUT BUTTON AND INPUT ON ONE LINE)*/ }
+              <View style = {{height: "18%"}}>
+                <TextInput
+                  autoFocus={true}
+                  style = {{borderBottomColor: 'gray', borderBottomWidth: 1, width: "75%",height: "100%", textAlign: "center", alignSelf: "center", marginBottom: 10}}
+                  placeholder = "Username"
+                  onChangeText = {text => changeInvUsers(text)}
+                  value={invUsers}
+                />
+                <TouchableHighlight onPress = {addUsersToList}
+                    style = {{position: "absolute", marginLeft: "85%", top: "15%"}}
+                    activeOpacity={0.6}
+                    underlayColor="#00181"
+                  >
+                    <Icon
+                      name="addusergroup" 
+                      size = {35} 
+                    />
+                </TouchableHighlight>
+                {checkUser == true &&
+                <Text style = {{alignSelf: "center"}}>User Successfully Added!</Text>
+                }
+                {checkUser == false &&
+                  <Text style = {{alignSelf: "center"}}>User Not Found</Text>
+                }
+              </View>
             </View> 
             {/*CREATE PROJECT BUTTON*/ }
-            <View style = {{height: "5%"}}>
+            <View style = {{height: "15%", bottom: "5%"}}>
               <LinearGradient
-                style = {{backgroundColor: "#2a9df4", width: "60%", height: 60,  borderRadius: 10, alignSelf: "center"}}
+                style = {{backgroundColor: "#2a9df4", width: "60%", height:"100%",  borderRadius: 10, alignSelf: "center"}}
                 colors={["#187bcd", '#2a9df4']}
                 start={{ x: 1, y: 1 }}
                 end={{ x: 1, y: 0 }}
@@ -282,3 +233,58 @@ export function ProjectCreation ({ route, navigation }) {
     </TopBar>
   );
 }
+
+const TopBar = (props) => {
+  const [drawer, changeDrawer] = useState(false);
+  return (
+    <View style = {basicStyles.container}>
+      <View style = {topBarStyles.topBarContainer}>
+        <View style = {topBarStyles.openContainer}>
+          <ButtonBoxForNavigation
+            onClick={() => {
+              changeDrawer(!drawer);
+              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            }}
+            text={"Open"}
+            style={topBarStyles.openAndDrawerButton}
+          />
+           
+        </View>
+      </View>
+      <View style = {[topBarStyles.drawerContainer, drawer? undefined: {width: 0}]}>
+        <ButtonBoxForNavigation
+          onClick={()=> 
+            changeDrawer(!drawer)
+          } 
+          text={"Close"}
+          style={topBarStyles.navigationButtons}
+        />
+        <ButtonBoxForNavigation
+          onClick={()=>{
+            props.navigation.goBack();
+          }}
+          text={"Go Back"}
+          style={topBarStyles.navigationButtons}
+        />
+        <ButtonBoxForNavigation
+          onClick={()=>
+            props.navigation.navigate("ProjectList", {user:props.userInfo})
+          } 
+          text={"ProjectList"}
+          style={topBarStyles.navigationButtons}
+        />
+      </View>
+      {props.children}
+    </View>
+  )
+};
+const ButtonBoxForNavigation = props => {
+  return(
+    <TouchableHighlight 
+      style = {props.style}
+      onPress = {props.onClick}
+    >
+      <Text style = {topBarStyles.buttonText}>{props.text}</Text>
+    </TouchableHighlight>
+  );
+};

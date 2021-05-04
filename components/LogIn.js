@@ -100,25 +100,32 @@ const TopBar = (props) => {
     <View style = {basicStyles.container}>
       <View style = {topBarStyles.topBarContainer}>
         <View style = {topBarStyles.openContainer}>
-          <TouchableHighlight
-            onPress = {() => {
-              changeDrawer(!drawer);
-              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-            }}
-            style={topBarStyles.openDrawerButton}
-          >
-            <Text>Open</Text>
-          </TouchableHighlight>
+        <ButtonBoxForNavigation
+          onClick={() => {
+            changeDrawer(!drawer);
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+          }}
+          text={"Open"}
+          style={topBarStyles.openAndDrawerButton}
+        />
+          
         </View>
       </View>
       <View style = {[topBarStyles.drawerContainer, drawer? undefined: {width: 0}]}>
-        <TouchableHighlight onPress={()=> changeDrawer(!drawer)} style={topBarStyles.navigationButtons}>
-          <Text>Close</Text>
-        </TouchableHighlight>
-        <TouchableHighlight onPress={()=>props.navigation.navigate("CreateAccount")} style={topBarStyles.navigationButtons}>
-          <Text>Create an Account</Text>
-        </TouchableHighlight>
-       
+        <ButtonBoxForNavigation
+          onClick={()=>
+            changeDrawer(!drawer)
+          }
+          text={"Close"}
+          style={topBarStyles.navigationButtons}
+        />
+        <ButtonBoxForNavigation
+          onClick={()=>
+            props.navigation.navigate("CreateAccount")
+          }
+          text={"Create an Account"}
+          style={topBarStyles.navigationButtons}
+        />  
       </View>
       {props.children}
     </View>
@@ -150,5 +157,15 @@ const ButtonBox = props => {
       <Text style = {basicStyles.buttonText}>{props.text}</Text>
     </TouchableHighlight>
   </View>
+  );
+};
+const ButtonBoxForNavigation = props => {
+  return(
+    <TouchableHighlight 
+      style = {props.style}
+      onPress = {props.onClick}
+    >
+      <Text style = {topBarStyles.buttonText}>{props.text}</Text>
+    </TouchableHighlight>
   );
 };

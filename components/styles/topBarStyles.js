@@ -7,8 +7,7 @@ let spiroDiscoBall = '#19d9ff';
 const topBarStyles = StyleSheet.create({
   topBarContainer: {
     backgroundColor: "cyan",
-    borderBottomRightRadius: 20,
-    borderWidth: 5,
+    borderWidth: 2,
     height: 60,
     width: '100%',
     zIndex: 200,
@@ -35,10 +34,20 @@ const topBarStyles = StyleSheet.create({
     backgroundColor: '#1974D3',
     borderWidth: 0,
   },
-  openDrawerButton:{
+  openAndDrawerButton:{
+    color: 'black',
     backgroundColor: "#ccffff",
     padding:1,
     borderWidth: 1,
+    zIndex: 30,
+  },
+
+  
+  buttonText: {
+    color: 'black',
+    fontSize: 15,
+    
+    zIndex: 30,
   },
 });
 

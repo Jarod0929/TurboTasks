@@ -27,6 +27,9 @@ import {
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer, useFocusEffect, useIsFocused } from '@react-navigation/native';
+import Icon from "react-native-vector-icons/AntDesign";
+import DatePicker from 'react-native-datepicker'
+import LinearGradient from 'react-native-linear-gradient'
 
 
 import {LogIn} from './components/LogIn.js';
@@ -47,7 +50,7 @@ function Test(){
     <View style = {{height: "100%", width: "100%", backgroundColor:"blue"}}>
       <View style = {{height: "90%", width: "90%", backgroundColor: "white", position: "absolute", top: "5%", left: "5%"}}>
         <View style = {{position: "absolute", height:"80%", width: "80%", backgroundColor: "black", top: "10%", left: "10%"}}>
-
+        
         </View>
       </View>
     </View> 
