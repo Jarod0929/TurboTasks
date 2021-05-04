@@ -28,13 +28,8 @@ if (Platform.OS === 'android') {
 export function LogIn({ navigation }){
   const [username, changeUsername] = useState('');
   const [password, changePassword] = useState('');
-  const [failedMessage, changeFailedMessage] = useState(false);//Only sets to true when they failed once on account and sets feedback message
-  //const FirstUsers = database().ref("/Database/Users").push(); //First Account and is structure of how it should look
-  //FirstUsers.set({ 
-  //  Username: "Fruit",
-  //  Password: "Apple",
-  //  Projects: [""],
-  //});
+  //Only sets to true when they failed once on account and sets feedback message
+  const [failedMessage, changeFailedMessage] = useState(false);
 
   const isPassword = snapshot => { 
     if(snapshot.val() != null && snapshot.val().Password === password){
@@ -67,34 +62,28 @@ export function LogIn({ navigation }){
     <TopBar navigation={navigation}> 
       
       <View style = {styles.flexAlignContainer}>
-      {/* Title */}
         <View style = {styles.titleContainer}>
           <Text style = {styles.titleText}>Sign In</Text>
         </View>
-      {/* Username Input Box */}
         <TextInputBox
           changeValue = {changeUsername}
           text = {"Username"}
           value = {username}
         />
-      {/* Password Input Box */}
         <TextInputBox
             changeValue = {changePassword}
             text = {"Password"}
             value = {password}
         />
-      {/* Log In Button */}
         <ButtonBox
           onClick = {isUsername}
           text = "Sign In"
         />
-      {/* Feedback Message */}
         {failedMessage &&
           <View style = {styles.failedContainer}>
             <Text style = {styles.failedText}>Username does not exist or Password is false</Text>
           </View>
         }
-      {/* Goto CreateAccount */}
         <ButtonBox
           onClick = {goToCreateAccount}
           text = "Sign Up"
