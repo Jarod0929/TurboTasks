@@ -10,6 +10,7 @@ import {
   LayoutAnimation,
   Platform,
   UIManager,
+  Dimensions,
 } from 'react-native';
 import DatePicker from 'react-native-datepicker'
 import database from '@react-native-firebase/database';
@@ -85,6 +86,9 @@ export function ProjectCreation ({ route, navigation }) {
   const [invUsersList, addUsersList] = useState([user]);//For the inviteUsers button
   const [date, setDate] = useState(new Date());//Date selector
   const [checkUser, changeCheckUser] = useState(null);//Used to check if user exists
+  let minFont = 25;
+  let minIconSize = 50;
+  
   const addProjectIds = (userId, projectId) => {
     console.log(userId);
     //Gets projects[] from user  
@@ -185,13 +189,12 @@ export function ProjectCreation ({ route, navigation }) {
               end={{ x: 0, y: 0 }}
             >
             <Text
-            style = {{alignSelf: "center", fontSize: 35, fontFamily: "Courier New", color: "white"}}
+            style = {{alignSelf: "center", fontSize: 35 * (Dimensions.get("screen").height/780), fontFamily: "Courier New", color: "white"}}
           >
             Create a Project
           </Text>
-          <Icon name="addfolder" size={100} color="blue"  style={{alignSelf: "center", top: "5%"}} ></Icon>
-
-          </LinearGradient>
+          <Icon name="addfolder" size={100 * (Dimensions.get("screen").height/780)} color="blue"  style={{alignSelf: "center", top: "5%"}} ></Icon>
+        </LinearGradient>
         {/* INPUT VIEW */ }
         <LinearGradient
               style = {{width: "100%", height: "65%",  paddingTop: "5%"}}
@@ -199,8 +202,8 @@ export function ProjectCreation ({ route, navigation }) {
               start={{ x: 1, y: 1 }}
               end={{ x: 1, y: 0 }}
         >
-          <View style={{padding: 20}}>
-            <View style = {{backgroundColor: "white", paddingTop: "10%", bottom: "15%", borderRadius: 10, height: "90%"}}>
+          <View style={{width: "100%"}}>
+            <View style = {{backgroundColor: "white", paddingTop: "5%", bottom: "10%", borderRadius: 10, height: "85%", width: "90%", alignSelf: "center"}}>
               <Text style = {{alignSelf: "center"}}>Project Name</Text>
               <TextInput
                 style = {{borderBottomColor: 'gray', color: 'black', borderBottomWidth: 1, width: "90%", height: "18%", marginBottom: "8%", alignSelf: "center", textAlign: "center"}}
@@ -223,33 +226,33 @@ export function ProjectCreation ({ route, navigation }) {
                 // ... You can check the source to find the other keys.
                 }}
               />
-            <Text style = {{alignSelf: "center"}}>Invite Users</Text>
-            {/*INVITE USER VIEW (USED TO PUT BUTTON AND INPUT ON ONE LINE)*/ }
-            <View style = {{height: "18%"}}>
-              <TextInput
-                autoFocus={true}
-                style = {{borderBottomColor: 'gray', borderBottomWidth: 1, width: "75%",height: "100%", textAlign: "center", alignSelf: "center", marginBottom: 10}}
-                placeholder = "Username"
-                onChangeText = {text => changeInvUsers(text)}
-                value={invUsers}
-              />
-               <TouchableHighlight onPress = {addUsersToList}
-                  style = {{position: "absolute", marginLeft: "85%", top: "15%"}}
-                  activeOpacity={0.6}
-                  underlayColor="#00181"
-                >
-                  <Icon
-                    name="addusergroup" 
-                    size = {35} 
-                  />
-               </TouchableHighlight>
-              {checkUser == true &&
-              <Text style = {{alignSelf: "center"}}>User Successfully Added!</Text>
-              }
-              {checkUser == false &&
-                <Text style = {{alignSelf: "center"}}>User Not Found</Text>
-              }
-            </View>
+              <Text style = {{alignSelf: "center"}}>Invite Users</Text>
+              {/*INVITE USER VIEW (USED TO PUT BUTTON AND INPUT ON ONE LINE)*/ }
+              <View style = {{height: "18%"}}>
+                <TextInput
+                  autoFocus={true}
+                  style = {{borderBottomColor: 'gray', borderBottomWidth: 1, width: "75%",height: "100%", textAlign: "center", alignSelf: "center", marginBottom: 10}}
+                  placeholder = "Username"
+                  onChangeText = {text => changeInvUsers(text)}
+                  value={invUsers}
+                />
+                <TouchableHighlight onPress = {addUsersToList}
+                    style = {{position: "absolute", marginLeft: "85%", top: "15%"}}
+                    activeOpacity={0.6}
+                    underlayColor="#00181"
+                  >
+                    <Icon
+                      name="addusergroup" 
+                      size = {35} 
+                    />
+                </TouchableHighlight>
+                {checkUser == true &&
+                <Text style = {{alignSelf: "center"}}>User Successfully Added!</Text>
+                }
+                {checkUser == false &&
+                  <Text style = {{alignSelf: "center"}}>User Not Found</Text>
+                }
+              </View>
             </View> 
             {/*CREATE PROJECT BUTTON*/ }
             <View style = {{height: "15%", bottom: "5%"}}>
