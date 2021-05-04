@@ -17,72 +17,6 @@ import * as styles from './styles/styles.js';
 import * as basicStyles from './styles/basicStyles.js';
 import * as topBarStyles from './styles/topBarStyles.js';
 import { on } from 'npm';
-
-
-const TopBar = (props) => {
-  const [drawer, changeDrawer] = useState(false);
-  return (
-    <View style = {basicStyles.container}>
-      <View style = {topBarStyles.topBarContainer}>
-        <View style = {topBarStyles.openContainer}>
-          <TouchableHighlight
-            onPress = {() => {
-              changeDrawer(!drawer);
-              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-            }}
-            style={topBarStyles.openDrawerButton}
-          >
-            <Text>Open</Text>
-          </TouchableHighlight>
-        </View>
-      </View>
-      <View style = {[topBarStyles.drawerContainer, drawer? undefined: {width: 0}]}>
-        <TouchableHighlight 
-          onPress={()=> 
-            changeDrawer(!drawer)
-          } 
-          style={topBarStyles.navigationButtons}
-        >
-          <Text>
-            Close
-          </Text>
-        </TouchableHighlight>
-        <TouchableHighlight
-          onPress = {()=>{
-            props.navigation.goBack();
-          }}
-          style={topBarStyles.navigationButtons}
-        >
-          <View>
-            <Text>Go Back</Text>
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight 
-          onPress={()=>
-            props.navigation.navigate("ProjectCreation",{user:props.userInfo})
-          } 
-          style={topBarStyles.navigationButtons}
-        >
-          <Text>
-            Project Creation
-          </Text>
-        </TouchableHighlight>
-        <TouchableHighlight 
-          onPress={()=>
-            props.navigation.navigate("Settings",{user:props.userInfo})
-          } 
-          style={topBarStyles.navigationButtons}
-        >
-          <Text>
-            Settings⚙️
-          </Text>
-        </TouchableHighlight>
-      </View>
-      {props.children}
-    </View>
-  )
-};
-
   
 export function ProjectList ({ route, navigation }) {
   const [projects, changeProjects] = useState(null);//List of project ID's for user
@@ -420,3 +354,67 @@ const ProjectPanelInfo = (props) => {
     </View>
   );
 }
+
+const TopBar = (props) => {
+  const [drawer, changeDrawer] = useState(false);
+  return (
+    <View style = {basicStyles.container}>
+      <View style = {topBarStyles.topBarContainer}>
+        <View style = {topBarStyles.openContainer}>
+            <ButtonBoxForNavigation
+              onClick={() => {
+                changeDrawer(!drawer);
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+              }}
+          text={"Open"}
+          style={topBarStyles.openAndDrawerButton}
+        />
+           
+        </View>
+      </View>
+      <View style = {[topBarStyles.drawerContainer, drawer? undefined: {width: 0}]}>
+        <ButtonBoxForNavigation
+          onClick={()=> 
+            changeDrawer(!drawer)
+          } 
+          text={"Close"}
+          style={topBarStyles.navigationButtons}
+        />
+        <ButtonBoxForNavigation
+          onClick={()=>{
+            props.navigation.goBack();
+          }}
+          text={"Go Back"}
+          style={topBarStyles.navigationButtons}
+        />
+        
+        <ButtonBoxForNavigation
+          onClick={()=>
+            props.navigation.navigate("ProjectCreation", {user:props.userInfo})
+          } 
+          text={"ProjectCreation"}
+          style={topBarStyles.navigationButtons}
+        />
+        <ButtonBoxForNavigation
+          onClick={()=>
+            props.navigation.navigate("Settings", {user:props.userInfo})
+          } 
+          text={"Settings⚙️"}
+          style={topBarStyles.navigationButtons}
+        />
+      </View>
+      {props.children}
+    </View>
+  )
+};
+
+const ButtonBoxForNavigation = props => {
+  return(
+    <TouchableHighlight 
+      style = {props.style}
+      onPress = {props.onClick}
+    >
+      <Text style = {topBarStyles.buttonText}>{props.text}</Text>
+    </TouchableHighlight>
+  );
+};
