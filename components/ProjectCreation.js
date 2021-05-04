@@ -31,11 +31,14 @@ import * as topBarStyles from './styles/topBarStyles.js';
 
 /*Project creation Page*/
 export function ProjectCreation ({ route, navigation }) { 
+  const today = new Date();
+  const today_format = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, '0') + "-" + String(today.getDate()).padStart(2, '0');
+
   const user = route.params.user;//Current User
   const [projectName, changeProjectName] = useState('');//For the projectName field
   const [invUsers, changeInvUsers] = useState('');//For the inviteUsers field
   const [invUsersList, addUsersList] = useState([user]);//For the inviteUsers button
-  const [date, setDate] = useState(new Date());//Date selector
+  const [date, setDate] = useState(today_format);//Date selector
   const [checkUser, changeCheckUser] = useState(null);//Used to check if user exists
   
   
