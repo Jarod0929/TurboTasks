@@ -97,8 +97,8 @@ const UserProjectsFlatlist = (props) => {
           <React.StrictMode>
             <ProjectPanel
               project = {item}
-              navigation ={props.navigation}
-              user={props.route.params.user}
+              navigation = {props.navigation}
+              user = {props.route.params.user}
               deletionPage = {props.deletionPage}
             />
           </React.StrictMode>
@@ -334,7 +334,9 @@ const ProjectPanel = (props) => {
 
 const ProjectPanelInfo = (props) => {
   return (
-    <View>
+    <View
+      style = {styles.projectPanelInfoCentering}
+    >
       {/* Project Title */}
       <Text style={{fontSize: 20}}>
         {props.projectTitle}

@@ -24,6 +24,8 @@ export function Project ({ navigation, route }) {
   const isFocused = navigation.isFocused();//Is true whenever the user is on the screen, but it isn't as efficient as it can be
   const [visibility, changeVisibility] = useState(false); //visibility toggle for modal
 
+  console.log(allProjectTasks);
+
   useEffect(() => {
     if(route.params.taskID == null){
       database().ref(`/Database/Projects/${route.params.projectID}`).once('value', snapshot => {
@@ -45,6 +47,7 @@ export function Project ({ navigation, route }) {
     changeVisibility(true);
     changeCurrentTask(taskID);
   }
+
   const addTask=()=>{
     const newTask = database().ref(`/Database/Tasks`).push();
     const newTaskID = newTask.key;
@@ -329,7 +332,7 @@ const TaskList = props =>{
         userId={props.user}
         changeTaskDescriptor = {props.changeTaskDescriptor}
         changeAllProjectTasks = {props.changeAllProjectTasks}
-    />
+      />
     </React.StrictMode>
     }
     keyExtractor={item => item}
