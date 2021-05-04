@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import database from '@react-native-firebase/database';
-import * as styles from './styles.js';
+import * as styles from './styles/styles.js';
 
 
 const TopBar = (props) => {

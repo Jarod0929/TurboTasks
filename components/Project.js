@@ -10,7 +10,7 @@ import {
   UIManager,
 } from 'react-native';
 
-import * as styles from './styles.js';
+import * as styles from './styles/styles.js';
 
 import database from '@react-native-firebase/database';
 import {  useFocusEffect, useIsFocused } from '@react-navigation/native';

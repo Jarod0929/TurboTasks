@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import database from '@react-native-firebase/database';
 import LinearGradient from 'react-native-linear-gradient'
-import * as styles from './styles.js';
+import * as styles from './styles/styles.js';
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {

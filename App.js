@@ -37,7 +37,7 @@ import {ProjectCreation} from './components/ProjectCreation.js';
 import {Settings} from './components/Settings.js';
 import {EditTask} from './components/EditTask.js';
 import {Project} from './components/Project.js';
-import * as styles from './components/styles.js';
+import * as styles from './components/styles/styles.js';
 
 /**
  * For Testing Purposes

@@ -99,28 +99,8 @@ const styles = StyleSheet.create({
       left: 0,
       zIndex: 100,
     },
-    drawerContainerOther: {
-      width: '70%',
-      height: '90%',
-      position: 'absolute',
-      bottom: 0,
-      right: 0,
-      zIndex: 100,
-    },
-
-    Drawercont:{
-      width:"100%",
-      height:"100%",
-      top:0,
-      left:0,
-      position: "absolute",
-      backgroundColor: "white",
-      flexDirection:"row",
-      borderWidth:1
-
-    },
     navigationButtons:{
-      padding:0,
+      padding: 0,
       backgroundColor: '#1974D3',
       borderWidth: 0,
     },
@@ -128,13 +108,6 @@ const styles = StyleSheet.create({
       backgroundColor:"white",
       borderWidth:1,
       width: "50%"
-
-    },
-    enterBt:{
-      backgroundColor:"yellow",
-      borderWidth:1,
-      width:"50%",
-     
 
     },
     settingsPage:{

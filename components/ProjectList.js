@@ -13,7 +13,7 @@ import {
 import { useFocusEffect } from '@react-navigation/native';
 import database from '@react-native-firebase/database';
 import Icon from "react-native-vector-icons/AntDesign";
-import * as styles from './styles.js';
+import * as styles from './styles/styles.js';
 import { on } from 'npm';
 
 

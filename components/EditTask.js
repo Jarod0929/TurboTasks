@@ -8,7 +8,7 @@ import {
 
 import database from '@react-native-firebase/database';
 
-import * as styles from './styles.js';
+import * as styles from './styles/styles.js';
 import Moment from 'moment';
 
 const TopBar = (props) => {

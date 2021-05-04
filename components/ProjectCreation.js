@@ -15,7 +15,7 @@ import DatePicker from 'react-native-datepicker'
 import database from '@react-native-firebase/database';
 import Icon from "react-native-vector-icons/AntDesign";
 import LinearGradient from 'react-native-linear-gradient'
-import * as styles from './styles.js';
+import * as styles from './styles/styles.js';
 
 /**
  * Establishes the entire container with all the children under the bar
