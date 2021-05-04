@@ -27,58 +27,7 @@ import * as topBarStyles from './styles/topBarStyles.js';
  * @returns Top blue bar with all its children below it
  */
 
-const TopBar = (props) => {
-  const [drawer, changeDrawer] = useState(false);
-  return (
-    <View style = {basicStyles.container}>
-      <View style = {topBarStyles.topBarContainer}>
-        <View style = {topBarStyles.openContainer}>
-          <TouchableHighlight
-            onPress = {() => {
-              changeDrawer(!drawer);
-              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-            }}
-            style={topBarStyles.openDrawerButton}
-          >
-            <Text>Open</Text>
-          </TouchableHighlight>
-        </View>
-      </View>
-      <View style = {[topBarStyles.drawerContainer, drawer? undefined: {width: 0}]}>
-        <TouchableHighlight 
-          onPress={()=> 
-            changeDrawer(!drawer)
-          } 
-          style={topBarStyles.navigationButtons}
-        >
-            <Text>
-              Close
-            </Text>
-        </TouchableHighlight>
-        <TouchableHighlight
-          onPress = {()=>{
-            props.reset();
-            props.navigation.goBack();
-          }}
-          style={topBarStyles.navigationButtons}
-        >
-          <Text>
-            Go Back
-          </Text>
-        </TouchableHighlight>
-        <TouchableHighlight 
-          onPress={()=>props.navigation.navigate("ProjectList",{user:props.userInfo})}
-          style={topBarStyles.navigationButtons}
-        >
-          <Text>
-            ProjectList
-            </Text>
-        </TouchableHighlight>
-      </View>
-      {props.children}
-    </View>
-  )
-};
+
 
 /*Project creation Page*/
 export function ProjectCreation ({ route, navigation }) { 
@@ -284,3 +233,58 @@ export function ProjectCreation ({ route, navigation }) {
     </TopBar>
   );
 }
+
+const TopBar = (props) => {
+  const [drawer, changeDrawer] = useState(false);
+  return (
+    <View style = {basicStyles.container}>
+      <View style = {topBarStyles.topBarContainer}>
+        <View style = {topBarStyles.openContainer}>
+          <ButtonBoxForNavigation
+            onClick={() => {
+              changeDrawer(!drawer);
+              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            }}
+            text={"Open"}
+            style={topBarStyles.openAndDrawerButton}
+          />
+           
+        </View>
+      </View>
+      <View style = {[topBarStyles.drawerContainer, drawer? undefined: {width: 0}]}>
+        <ButtonBoxForNavigation
+          onClick={()=> 
+            changeDrawer(!drawer)
+          } 
+          text={"Close"}
+          style={topBarStyles.navigationButtons}
+        />
+        <ButtonBoxForNavigation
+          onClick={()=>{
+            props.navigation.goBack();
+          }}
+          text={"Go Back"}
+          style={topBarStyles.navigationButtons}
+        />
+        <ButtonBoxForNavigation
+          onClick={()=>
+            props.navigation.navigate("ProjectList", {user:props.userInfo})
+          } 
+          text={"ProjectList"}
+          style={topBarStyles.navigationButtons}
+        />
+      </View>
+      {props.children}
+    </View>
+  )
+};
+const ButtonBoxForNavigation = props => {
+  return(
+    <TouchableHighlight 
+      style = {props.style}
+      onPress = {props.onClick}
+    >
+      <Text style = {topBarStyles.buttonText}>{props.text}</Text>
+    </TouchableHighlight>
+  );
+};

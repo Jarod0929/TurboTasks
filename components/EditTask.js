@@ -13,26 +13,7 @@ import * as basicStyles from './styles/basicStyles.js';
 import * as topBarStyles from './styles/topBarStyles.js';
 import Moment from 'moment';
 
-const TopBar = (props) => {
-  return (
-    <View style = {basicStyles.container}>
-      <View style = {topBarStyles.topBarContainer}>
-        <TouchableHighlight 
-          onPress = {()=>{
-            props.navigation.goBack();
-          }}
-        >
-          <View>
-            <Text>
-            Go Back
-            </Text>
-          </View>
-        </TouchableHighlight>
-      </View>
-      {props.children}
-    </View>
-  )
-};
+
 
 export function EditTask ({ navigation, route }){
   const [title, changeTitle] = useState(null); //title of the task
@@ -144,3 +125,31 @@ export function EditTask ({ navigation, route }){
     </TopBar>
   );
 }
+
+const TopBar = (props) => {
+  return (
+    <View style = {basicStyles.container}>
+      <View style = {topBarStyles.topBarContainer}>
+        <ButtonBoxForNavigation
+          onClick={()=>{
+            props.navigation.goBack();
+          }}
+          text={"Go Back"}
+          style={basicStyles.navigationButtons}
+        />
+      </View>
+      {props.children}
+    </View>
+  )
+};
+
+const ButtonBoxForNavigation = props => {
+  return(
+    <TouchableHighlight 
+      style = {props.style}
+      onPress = {props.onClick}
+    >
+      <Text style = {topBarStyles.buttonText}>{props.text}</Text>
+    </TouchableHighlight>
+  );
+};

@@ -35,10 +35,20 @@ const topBarStyles = StyleSheet.create({
     backgroundColor: '#1974D3',
     borderWidth: 0,
   },
-  openDrawerButton:{
+  openAndDrawerButton:{
+    color: 'black',
     backgroundColor: "#ccffff",
     padding:1,
     borderWidth: 1,
+    zIndex: 30,
+  },
+
+  
+  buttonText: {
+    color: 'black',
+    fontSize: 15,
+    
+    zIndex: 30,
   },
 });
 
