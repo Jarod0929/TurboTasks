@@ -34,5 +34,4 @@ Return
 
 **Number of Spaces = 2**
 
-**Type of Comments = Javascript Docs**
 
