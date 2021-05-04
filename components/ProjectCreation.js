@@ -86,8 +86,7 @@ export function ProjectCreation ({ route, navigation }) {
   const [invUsersList, addUsersList] = useState([user]);//For the inviteUsers button
   const [date, setDate] = useState(new Date());//Date selector
   const [checkUser, changeCheckUser] = useState(null);//Used to check if user exists
-  let minFont = 25;
-  let minIconSize = 50;
+  
   
   const addProjectIds = (userId, projectId) => {
     console.log(userId);
