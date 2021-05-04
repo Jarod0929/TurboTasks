@@ -18,45 +18,6 @@ if (Platform.OS === 'android') {
   }
 }
 
-
-/**
- * Establishes the entire container with all the children under the bar
- * 
- * @param {tag} {children} The rest of the tags of LogIn
- * @returns Top blue bar with all its children below it
- */
-const TopBar = (props) => {
-  const [drawer, changeDrawer] = useState(false);
-  return (
-    <View style = {styles.container}>
-      <View style = {styles.topBarContainer}>
-        <View style = {styles.openContainer}>
-          <TouchableHighlight
-            onPress = {() => {
-              changeDrawer(!drawer);
-              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-            }}
-            style={styles.openDrawerButton}
-            
-          >
-            <Text>Open</Text>
-          </TouchableHighlight>
-        </View>
-      </View>
-      <View style = {[styles.drawerContainer, drawer? undefined: {width: 0}]}>
-        <TouchableHighlight onPress={()=> changeDrawer(!drawer)} style={styles.navigationButtons}>
-          <Text>Close</Text>
-        </TouchableHighlight>
-        <TouchableHighlight onPress={()=>props.navigation.navigate("CreateAccount")} style={styles.navigationButtons}>
-          <Text>Create an Account</Text>
-        </TouchableHighlight>
-       
-      </View>
-      {props.children}
-    </View>
-  )
-};
-
 /**
  * A page where the user logs in to their account.
  * 2 input boxes for username and password
@@ -142,6 +103,38 @@ export function LogIn({ navigation }){
     </TopBar>
   );
 }
+
+const TopBar = (props) => {
+  const [drawer, changeDrawer] = useState(false);
+  return (
+    <View style = {styles.container}>
+      <View style = {styles.topBarContainer}>
+        <View style = {styles.openContainer}>
+          <TouchableHighlight
+            onPress = {() => {
+              changeDrawer(!drawer);
+              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            }}
+            style={styles.openDrawerButton}
+            
+          >
+            <Text>Open</Text>
+          </TouchableHighlight>
+        </View>
+      </View>
+      <View style = {[styles.drawerContainer, drawer? undefined: {width: 0}]}>
+        <TouchableHighlight onPress={()=> changeDrawer(!drawer)} style={styles.navigationButtons}>
+          <Text>Close</Text>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={()=>props.navigation.navigate("CreateAccount")} style={styles.navigationButtons}>
+          <Text>Create an Account</Text>
+        </TouchableHighlight>
+       
+      </View>
+      {props.children}
+    </View>
+  )
+};
 
 const TextInputBox = props => {
   return (

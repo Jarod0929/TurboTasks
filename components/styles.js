@@ -120,9 +120,9 @@ const styles = StyleSheet.create({
 
     },
     navigationButtons:{
-      padding:1,
+      padding:0,
       backgroundColor: '#1974D3',
-      borderWidth: 1,
+      borderWidth: 0,
     },
     textInputFPCh:{
       backgroundColor:"white",
