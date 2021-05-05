@@ -158,19 +158,10 @@ export function ProjectCreation ({ route, navigation }) {
                 state = {projectName}
                 changeState = {changeProjectName}
               />
-            
-              <Text  style = {{marginBottom: 10, alignSelf: "center"}} >Due Date</Text>
-              <DatePicker
-                date={date}
-                mode = "date"
-                onDateChange={setDate}
-                style = {{marginBottom: 20, alignSelf: "center", left: "7%"}}
-                customStyles={{
-                dateInput: {
-                  backgroundColor: "white", 
-                }
-                }}
-              />
+              <DatePickerBox
+                state = {date}
+                changeState = {setDate}
+              />  
               <TextInputBox 
                 titleStyle = {{alignSelf: "center"}}
                 titleText = "Invite Users"
@@ -319,6 +310,24 @@ const TextInputBox = props => {
         placeholder = {props.placeholder}
         onChangeText = {text => props.changeState(text)}
         value={props.state}
+      />
+    </View>
+  );
+}
+const DatePickerBox = props => {
+  return(
+    <View>
+      <Text  style = {{marginBottom: 10, alignSelf: "center"}} >Due Date</Text>
+      <DatePicker
+        date={props.state}
+        mode = "date"
+        onDateChange={props.changeState}
+        style = {{marginBottom: 20, alignSelf: "center", left: "7%"}}
+        customStyles={{
+        dateInput: {
+          backgroundColor: "white", 
+        }
+        }}
       />
     </View>
   );
