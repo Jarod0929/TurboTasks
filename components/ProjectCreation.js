@@ -19,6 +19,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import * as styles from './styles/styles.js';
 import * as basicStyles from './styles/basicStyles.js';
 import * as topBarStyles from './styles/topBarStyles.js';
+import { baseProps } from 'react-native-gesture-handler/lib/typescript/handlers/gestureHandlers';
 
 /**
  * Establishes the entire container with all the children under the bar
@@ -128,38 +129,34 @@ export function ProjectCreation ({ route, navigation }) {
     
   return (// TopBar is supposed to handle the Drawer and don't forget about it
     <TopBar navigation = {navigation} reset = {resetEverything} userInfo={route.params.user}>
-      {/* {<Drawer userInfo={route.params.user} navigation={navigation}></Drawer>} */}
-      {/*PARENT VIEW*/ }
       <View style={{flex: 1, backgroundColor: "white", width: "100%", height: "100%"}}>
-        {/*LOGO AND TEXT VIEW*/ }
-        <LinearGradient
-              style = {{width: "100%", height: "30%", padding: "3%"}}
-              colors={["#187bcd", '#2a9df4', '#1167b1']}
-              start={{ x: 1, y: 1 }}
-              end={{ x: 0, y: 0 }}
-            >
-            <Text
-            style = {{alignSelf: "center", fontSize: 35 * (Dimensions.get("screen").height/780), fontFamily: "Courier New", color: "white"}}
-          >
-            Create a Project
-          </Text>
-          <Icon name="addfolder" size={100 * (Dimensions.get("screen").height/780)} color="blue"  style={{alignSelf: "center", top: "5%"}} ></Icon>
-        </LinearGradient>
-        {/* INPUT VIEW */ }
-        <LinearGradient
+        <TopGradient
+          colors= {["#187bcd", '#2a9df4', '#1167b1']}
+          start= {{ x: 1, y: 1 }}
+          end= {{ x: 0, y: 0 }}
+          text = "Create a Project"
+        >
+          <TopIcon
+            iconName = "addfolder"
+            iconColor = "blue"
+            iconSize = {100}
+          />
+        </TopGradient>
+        <ContainerGradient
               style = {{width: "100%", height: "65%",  paddingTop: "5%"}}
               colors={['white', "lightgray"]}
               start={{ x: 1, y: 1 }}
               end={{ x: 1, y: 0 }}
         >
           <View style={{width: "100%"}}>
-            <View style = {{backgroundColor: "white", paddingTop: "5%", bottom: "10%", borderRadius: 10, height: "85%", width: "90%", alignSelf: "center"}}>
-              <Text style = {{alignSelf: "center"}}>Project Name</Text>
-              <TextInput
-                style = {{borderBottomColor: 'gray', color: 'black', borderBottomWidth: 1, width: "90%", height: "18%", marginBottom: "8%", alignSelf: "center", textAlign: "center"}}
+            <CreationBox>
+              <TextInputBox 
+                titleStyle = {{alignSelf: "center"}}
+                titleText = "Project Name"
+                inputStyle = {{borderBottomColor: 'gray', color: 'black', borderBottomWidth: 1, width: "90%", height: "90%", alignSelf: "center", textAlign: "center"}}
                 placeholder = "Office Function"
-                onChangeText = {text => changeProjectName(text)}
-                value={projectName}
+                state = {projectName}
+                changeState = {changeProjectName}
               />
             
               <Text  style = {{marginBottom: 10, alignSelf: "center"}} >Due Date</Text>
@@ -170,65 +167,49 @@ export function ProjectCreation ({ route, navigation }) {
                 style = {{marginBottom: 20, alignSelf: "center", left: "7%"}}
                 customStyles={{
                 dateInput: {
-                  backgroundColor: "white",
-                  
+                  backgroundColor: "white", 
                 }
-                // ... You can check the source to find the other keys.
                 }}
               />
-              <Text style = {{alignSelf: "center"}}>Invite Users</Text>
-              {/*INVITE USER VIEW (USED TO PUT BUTTON AND INPUT ON ONE LINE)*/ }
-              <View style = {{height: "18%"}}>
-                <TextInput
-                  autoFocus={true}
-                  style = {{borderBottomColor: 'gray', borderBottomWidth: 1, width: "75%",height: "100%", textAlign: "center", alignSelf: "center", marginBottom: 10}}
-                  placeholder = "Username"
-                  onChangeText = {text => changeInvUsers(text)}
-                  value={invUsers}
+              <TextInputBox 
+                titleStyle = {{alignSelf: "center"}}
+                titleText = "Invite Users"
+                inputStyle = {{borderBottomColor: 'gray', color: 'black', borderBottomWidth: 1, width: "75%", height: "90%", alignSelf: "center", textAlign: "center"}}
+                placeholder = "Username"
+                state = {invUsers}
+                changeState = {changeInvUsers}
+              />
+              <InviteUsersTH 
+                onPress = {addUsersToList}
+                style = {{position: "absolute", marginLeft: "85%", top: "70%"}}
+                activeOpacity={0.6}
+                underlayColor="#00181"
+              >
+                <Icon
+                  name="addusergroup" 
+                  size = {35} 
                 />
-                <TouchableHighlight onPress = {addUsersToList}
-                    style = {{position: "absolute", marginLeft: "85%", top: "15%"}}
-                    activeOpacity={0.6}
-                    underlayColor="#00181"
-                  >
-                    <Icon
-                      name="addusergroup" 
-                      size = {35} 
-                    />
-                </TouchableHighlight>
-                {checkUser == true &&
-                <Text style = {{alignSelf: "center"}}>User Successfully Added!</Text>
-                }
-                {checkUser == false &&
-                  <Text style = {{alignSelf: "center"}}>User Not Found</Text>
-                }
-              </View>
-            </View> 
-            {/*CREATE PROJECT BUTTON*/ }
-            <View style = {{height: "15%", bottom: "5%"}}>
-              <LinearGradient
-                style = {{backgroundColor: "#2a9df4", width: "60%", height:"100%",  borderRadius: 10, alignSelf: "center"}}
-                colors={["#187bcd", '#2a9df4']}
-                start={{ x: 1, y: 1 }}
-                end={{ x: 1, y: 0 }}
-                >
-                  <TouchableHighlight onPress = {createNewProject}
-                    style = {{borderRadius: 10, height: "100%"}}
-                    activeOpacity={0.1}
-                    underlayColor="#00181"
-                  >
-                    <Icon
-                     name="pluscircleo"
-                     color = "white"
-                     style={{alignSelf: "center", paddingTop: 17, color: "white", fontSize: 20}}
-                    >
-                      {'  '}Create Project
-                    </Icon>
-                  </TouchableHighlight>
-              </LinearGradient>
-            </View>
+              </InviteUsersTH>
+              {checkUser == true &&
+              <Text style = {{alignSelf: "center"}}>User Successfully Added!</Text>
+              }
+              {checkUser == false &&
+                <Text style = {{alignSelf: "center"}}>User Not Found</Text>
+              }              
+            </CreationBox> 
+            <ButtonIconBox 
+              onPress = {createNewProject}
+              style = {{backgroundColor: "#2a9df4", width: "60%", height:"100%",  borderRadius: 10, alignSelf: "center"}}
+              colors={["#187bcd", '#2a9df4']}
+              start={{ x: 1, y: 1 }}
+              end={{ x: 1, y: 0 }}
+              activeOpacity={0.1}
+              underlayColor="#00181"
+              name="pluscircleo"
+              color = "white"
+            />
           </View>
-        </LinearGradient>
+        </ContainerGradient>
       </View>
     </TopBar>
   );
@@ -288,3 +269,96 @@ const ButtonBoxForNavigation = props => {
     </TouchableHighlight>
   );
 };
+const TopGradient = props =>{
+  return(
+    <LinearGradient
+        style = {{width: "100%", height: "30%", padding: "3%"}}
+        colors={props.colors}
+        start={props.start}
+        end={props.end}
+    >
+      <Text
+        style = {{alignSelf: "center", fontSize: 35 * (Dimensions.get("screen").height/780), fontFamily: "Courier New", color: "white"}}
+      >
+        {props.text}
+      </Text>
+      {props.children}
+    </LinearGradient>
+  );
+}
+const TopIcon = props =>{
+  return(
+    <Icon name = {props.iconName} size={props.iconSize * (Dimensions.get("screen").height/780)} color={props.iconColor}  style={{alignSelf: "center", top: "5%"}} />
+  );
+}
+const ContainerGradient = props =>{
+  return(
+    <LinearGradient
+      style = {props.style}
+      colors={props.colors}
+      start={props.start}
+      end={props.end}
+    >
+      {props.children}
+    </LinearGradient>
+  );
+}
+const CreationBox = props => {
+  return(
+    <View style = {{backgroundColor: "white", paddingTop: "5%", bottom: "10%", borderRadius: 10, height: "85%", width: "90%", alignSelf: "center"}}>
+      {props.children}
+    </View>
+  );
+}
+const TextInputBox = props => {
+  return(
+    <View style = {{height: "18%", marginBottom: "8%",}}>
+      <Text style = {props.titleStyle}>{props.titleText}</Text>
+      <TextInput
+        style = {props.inputStyle}
+        placeholder = {props.placeholder}
+        onChangeText = {text => props.changeState(text)}
+        value={props.state}
+      />
+    </View>
+  );
+}
+const InviteUsersTH = props =>{
+  return(
+    <TouchableHighlight 
+      onPress = {props.onPress}
+      style = {props.style}
+      activeOpacity={props.activeOpacity}
+      underlayColor= {props.underlayColor}
+    >
+      {props.children}  
+    </TouchableHighlight>
+  );
+}
+const ButtonIconBox = props =>{
+  return(
+    <View style = {{height: "15%", bottom: "5%"}}>
+      <ContainerGradient
+        style = {props.style}
+        colors={props.colors}
+        start={props.start}
+        end={props.end}
+      >
+          <TouchableHighlight 
+            onPress = {props.onPress}
+            activeOpacity= {props.activeOpacity}
+            underlayColor= {props.underlayColor}
+            style = {{borderRadius: 10, height: "100%"}}
+          >
+            <Icon
+              name= {props.name}
+              color = {props.color}
+              style={{alignSelf: "center", paddingTop: 17, color: "white", fontSize: 20}}
+            >
+              {'  '}Create Project
+            </Icon>
+          </TouchableHighlight>
+      </ContainerGradient>
+    </View>
+  );
+}
