@@ -16,9 +16,11 @@ import DatePicker from 'react-native-datepicker'
 import database from '@react-native-firebase/database';
 import Icon from "react-native-vector-icons/AntDesign";
 import LinearGradient from 'react-native-linear-gradient'
-import * as styles from './styles/styles.js';
+
 import * as basicStyles from './styles/basicStyles.js';
 import * as topBarStyles from './styles/topBarStyles.js';
+import * as projectCreationStyles from './styles/projectCreationStyles.js';
+
 
 /**
  * Establishes the entire container with all the children under the bar
@@ -40,7 +42,6 @@ export function ProjectCreation ({ route, navigation }) {
   const [invUsersList, addUsersList] = useState([user]);//For the inviteUsers button
   const [date, setDate] = useState(today_format);//Date selector
   const [checkUser, changeCheckUser] = useState(null);//Used to check if user exists
-  
   
   const addProjectIds = (userId, projectId) => {
     console.log(userId);
@@ -130,108 +131,62 @@ export function ProjectCreation ({ route, navigation }) {
   };
     
   return (// TopBar is supposed to handle the Drawer and don't forget about it
-    <TopBar navigation = {navigation} reset = {resetEverything} userInfo={route.params.user}>
-      {/* {<Drawer userInfo={route.params.user} navigation={navigation}></Drawer>} */}
-      {/*PARENT VIEW*/ }
-      <View style={{flex: 1, backgroundColor: "white", width: "100%", height: "100%"}}>
-        {/*LOGO AND TEXT VIEW*/ }
-        <LinearGradient
-              style = {{width: "100%", height: "30%", padding: "3%"}}
-              colors={["#187bcd", '#2a9df4', '#1167b1']}
-              start={{ x: 1, y: 1 }}
-              end={{ x: 0, y: 0 }}
-            >
-            <Text
-            style = {{alignSelf: "center", fontSize: 35 * (Dimensions.get("screen").height/780), fontFamily: "Courier New", color: "white"}}
-          >
-            Create a Project
-          </Text>
-          <Icon name="addfolder" size={100 * (Dimensions.get("screen").height/780)} color="blue"  style={{alignSelf: "center", top: "5%"}} ></Icon>
-        </LinearGradient>
-        {/* INPUT VIEW */ }
-        <LinearGradient
-              style = {{width: "100%", height: "65%",  paddingTop: "5%"}}
-              colors={['white', "lightgray"]}
-              start={{ x: 1, y: 1 }}
-              end={{ x: 1, y: 0 }}
+    <TopBar navigation = {navigation} reset = {resetEverything} userInfo = {route.params.user}>
+      <View style = {projectCreationStyles.container}>
+        <TopGradient
+          colors = {["#187bcd", '#2a9df4', '#1167b1']}
+          start = {{ x: 1, y: 1 }}
+          end = {{ x: 0, y: 0 }}
+          text = "Create a Project"
         >
-          <View style={{width: "100%"}}>
-            <View style = {{backgroundColor: "white", paddingTop: "5%", bottom: "10%", borderRadius: 10, height: "85%", width: "90%", alignSelf: "center"}}>
-              <Text style = {{alignSelf: "center"}}>Project Name</Text>
-              <TextInput
-                style = {{borderBottomColor: 'gray', color: 'black', borderBottomWidth: 1, width: "90%", height: "18%", marginBottom: "8%", alignSelf: "center", textAlign: "center"}}
-                placeholder = "Office Function"
-                onChangeText = {text => changeProjectName(text)}
-                value={projectName}
+          <TopIcon
+            iconName = "addfolder"
+            iconColor = "blue"
+            iconSize = {100}
+          />
+        </TopGradient>
+        <ContainerGradient
+              style = {projectCreationStyles.bottomLayerGradient}
+              colors = {['white', "lightgray"]}
+              start = {{ x: 1, y: 1 }}
+              end = {{ x: 1, y: 0 }}
+        >
+          <View style = {{width: "100%"}}>
+            <CreationBox
+              projectName = {projectName}
+              changeProjectName = {changeProjectName}
+              date = {date}
+              setDate = {setDate}
+              invUsers = {invUsers}
+              changeInvUsers = {changeInvUsers}
+              addUsersList = {addUsersToList}
+              checkUser = {checkUser}
+            >
+              <InviteUsersTH 
+                onPress = {addUsersToList}
+                style = {projectCreationStyles.buttonIcon}
+                activeOpacity = {0.6}
+                underlayColor = "#00181"
+              >
+              <Icon
+                name = "addusergroup" 
+                size = {35} 
               />
-            
-              <Text  style = {{marginBottom: 10, alignSelf: "center"}} >Due Date</Text>
-              <DatePicker
-                date={date}
-                mode = "date"
-                onDateChange={setDate}
-                style = {{marginBottom: 20, alignSelf: "center", left: "7%"}}
-                customStyles={{
-                dateInput: {
-                  backgroundColor: "white",
-                  
-                }
-                // ... You can check the source to find the other keys.
-                }}
-              />
-              <Text style = {{alignSelf: "center"}}>Invite Users</Text>
-              {/*INVITE USER VIEW (USED TO PUT BUTTON AND INPUT ON ONE LINE)*/ }
-              <View style = {{height: "18%"}}>
-                <TextInput
-                  autoFocus={true}
-                  style = {{borderBottomColor: 'gray', borderBottomWidth: 1, width: "75%",height: "100%", textAlign: "center", alignSelf: "center", marginBottom: 10}}
-                  placeholder = "Username"
-                  onChangeText = {text => changeInvUsers(text)}
-                  value={invUsers}
-                />
-                <TouchableHighlight onPress = {addUsersToList}
-                    style = {{position: "absolute", marginLeft: "85%", top: "15%"}}
-                    activeOpacity={0.6}
-                    underlayColor="#00181"
-                  >
-                    <Icon
-                      name="addusergroup" 
-                      size = {35} 
-                    />
-                </TouchableHighlight>
-                {checkUser == true &&
-                <Text style = {{alignSelf: "center"}}>User Successfully Added!</Text>
-                }
-                {checkUser == false &&
-                  <Text style = {{alignSelf: "center"}}>User Not Found</Text>
-                }
-              </View>
-            </View> 
-            {/*CREATE PROJECT BUTTON*/ }
-            <View style = {{height: "15%", bottom: "5%"}}>
-              <LinearGradient
-                style = {{backgroundColor: "#2a9df4", width: "60%", height:"100%",  borderRadius: 10, alignSelf: "center"}}
-                colors={["#187bcd", '#2a9df4']}
-                start={{ x: 1, y: 1 }}
-                end={{ x: 1, y: 0 }}
-                >
-                  <TouchableHighlight onPress = {createNewProject}
-                    style = {{borderRadius: 10, height: "100%"}}
-                    activeOpacity={0.1}
-                    underlayColor="#00181"
-                  >
-                    <Icon
-                     name="pluscircleo"
-                     color = "white"
-                     style={{alignSelf: "center", paddingTop: 17, color: "white", fontSize: 20}}
-                    >
-                      {'  '}Create Project
-                    </Icon>
-                  </TouchableHighlight>
-              </LinearGradient>
-            </View>
+              </InviteUsersTH>
+            </CreationBox>              
+            <ButtonIconBox 
+              onPress = {createNewProject}
+              style = {projectCreationStyles.createButton}
+              colors = {["#187bcd", '#2a9df4']}
+              start = {{ x: 1, y: 1 }}
+              end = {{ x: 1, y: 0 }}
+              activeOpacity = {0.1}
+              underlayColor = "#00181"
+              name = "pluscircleo"
+              color = "white"
+            />
           </View>
-        </LinearGradient>
+        </ContainerGradient>
       </View>
     </TopBar>
   );
@@ -244,37 +199,37 @@ const TopBar = (props) => {
       <View style = {topBarStyles.topBarContainer}>
         <View style = {topBarStyles.openContainer}>
           <ButtonBoxForNavigation
-            onClick={() => {
+            onClick = {() => {
               changeDrawer(!drawer);
               LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             }}
-            text={"Open"}
-            style={topBarStyles.openAndDrawerButton}
+            text = {"Open"}
+            style = {topBarStyles.openAndDrawerButton}
           />
            
         </View>
       </View>
       <View style = {[topBarStyles.drawerContainer, drawer? undefined: {width: 0}]}>
         <ButtonBoxForNavigation
-          onClick={()=> 
+          onClick = {() => 
             changeDrawer(!drawer)
           } 
-          text={"Close"}
-          style={topBarStyles.navigationButtons}
+          text = {"Close"}
+          style = {topBarStyles.navigationButtons}
         />
         <ButtonBoxForNavigation
-          onClick={()=>{
+          onClick = {() =>{
             props.navigation.goBack();
           }}
-          text={"Go Back"}
-          style={topBarStyles.navigationButtons}
+          text = {"Go Back"}
+          style = {topBarStyles.navigationButtons}
         />
         <ButtonBoxForNavigation
-          onClick={()=>
+          onClick ={() =>
             props.navigation.navigate("ProjectList", {user:props.userInfo})
           } 
-          text={"ProjectList"}
-          style={topBarStyles.navigationButtons}
+          text = {"ProjectList"}
+          style = {topBarStyles.navigationButtons}
         />
       </View>
       {props.children}
@@ -291,3 +246,141 @@ const ButtonBoxForNavigation = props => {
     </TouchableHighlight>
   );
 };
+const TopGradient = props =>{
+  return(
+    <LinearGradient
+        style = {projectCreationStyles.topGradient}
+        colors = {props.colors}
+        start = {props.start}
+        end = {props.end}
+    >
+      <Text
+      //FONTSIZE INLINE STYLE IS FOR RESPONSIVE TEXT SIZE
+        style = {[projectCreationStyles.topText, {fontSize: 35 * (Dimensions.get("screen").height/780)}]}
+      >
+        {props.text}
+      </Text>
+      {props.children}
+    </LinearGradient>
+  );
+}
+const TopIcon = props =>{
+  return(
+    <Icon name = {props.iconName} size={props.iconSize * (Dimensions.get("screen").height/780)} color={props.iconColor}  style={projectCreationStyles.topIcon} />
+  );
+}
+const ContainerGradient = props =>{
+  return(
+    <LinearGradient
+      style = {props.style}
+      colors = {props.colors}
+      start = {props.start}
+      end = {props.end}
+    >
+      {props.children}
+    </LinearGradient>
+  );
+}
+const CreationBox = props => {
+  return(
+    <View style = {projectCreationStyles.creationBox}>
+      <TextInputBox 
+        titleStyle = {projectCreationStyles.center}
+        titleText = "Project Name"
+        inputStyle = {projectCreationStyles.topTextInput}
+        placeholder = "Office Function"
+        state = {props.projectName}
+        changeState = {props.changeProjectName}
+      />
+      <DatePickerBox
+        state = {props.date}
+        changeState = {props.setDate}
+      />  
+      <TextInputBox 
+        titleStyle = {projectCreationStyles.center}
+        titleText = "Invite Users"
+        inputStyle = {projectCreationStyles.bottomTextInput}
+        placeholder = "Username"
+        state = {props.invUsers}
+        changeState = {props.changeInvUsers}
+      />
+      {props.children}
+      {props.checkUser == true &&
+      <Text style = {projectCreationStyles.center}>User Successfully Added!</Text>
+      }
+      {props.checkUser == false &&
+        <Text style = {projectCreationStyles.center}>User Not Found</Text>
+      }  
+    </View>
+  );
+}
+const TextInputBox = props => {
+  return(
+    <View style = {projectCreationStyles.textInputBoxView}>
+      <Text style = {props.titleStyle}>{props.titleText}</Text>
+      <TextInput
+        style = {props.inputStyle}
+        placeholder = {props.placeholder}
+        onChangeText = {text => props.changeState(text)}
+        value = {props.state}
+      />
+    </View>
+  );
+}
+const DatePickerBox = props => {
+  return(
+    <View>
+      <Text  style = {projectCreationStyles.dateTitle} >Due Date</Text>
+      <DatePicker
+        date = {props.state}
+        mode = "date"
+        onDateChange = {props.changeState}
+        style = {projectCreationStyles.datePicker}
+        customStyles = {{
+        dateInput: {
+          backgroundColor: "white", 
+        }
+        }}
+      />
+    </View>
+  );
+}
+const InviteUsersTH = props =>{
+  return(
+    <TouchableHighlight 
+      onPress = {props.onPress}
+      style = {props.style}
+      activeOpacity = {props.activeOpacity}
+      underlayColor = {props.underlayColor}
+    >
+      {props.children}  
+    </TouchableHighlight>
+  );
+}
+const ButtonIconBox = props =>{
+  return(
+    <View style = {projectCreationStyles.buttonIconBoxView}>
+      <ContainerGradient
+        style = {props.style}
+        colors = {props.colors}
+        start = {props.start}
+        end = {props.end}
+      >
+          <TouchableHighlight 
+            onPress = {props.onPress}
+            activeOpacity = {props.activeOpacity}
+            underlayColor = {props.underlayColor}
+            style = {projectCreationStyles.buttonIconBoxTH}
+          >
+            <Icon
+              name = {props.name}
+              color = {props.color}
+              style ={projectCreationStyles.buttonIconBoxDetails}
+            >
+              {'  '}Create Project
+            </Icon>
+          </TouchableHighlight>
+      </ContainerGradient>
+    </View>
+  );
+}
