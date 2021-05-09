@@ -16,10 +16,11 @@ import DatePicker from 'react-native-datepicker'
 import database from '@react-native-firebase/database';
 import Icon from "react-native-vector-icons/AntDesign";
 import LinearGradient from 'react-native-linear-gradient'
-import * as styles from './styles/styles.js';
+
 import * as basicStyles from './styles/basicStyles.js';
 import * as topBarStyles from './styles/topBarStyles.js';
-import { baseProps } from 'react-native-gesture-handler/lib/typescript/handlers/gestureHandlers';
+import * as projecrCreationStyles from './styles/projectCreationStyles.js';
+
 
 /**
  * Establishes the entire container with all the children under the bar
@@ -151,45 +152,28 @@ export function ProjectCreation ({ route, navigation }) {
               end={{ x: 1, y: 0 }}
         >
           <View style={{width: "100%"}}>
-            <CreationBox>
-              <TextInputBox 
-                titleStyle = {{alignSelf: "center"}}
-                titleText = "Project Name"
-                inputStyle = {{borderBottomColor: 'gray', color: 'black', borderBottomWidth: 1, width: "90%", height: "90%", alignSelf: "center", textAlign: "center"}}
-                placeholder = "Office Function"
-                state = {projectName}
-                changeState = {changeProjectName}
-              />
-              <DatePickerBox
-                state = {date}
-                changeState = {setDate}
-              />  
-              <TextInputBox 
-                titleStyle = {{alignSelf: "center"}}
-                titleText = "Invite Users"
-                inputStyle = {{borderBottomColor: 'gray', color: 'black', borderBottomWidth: 1, width: "75%", height: "90%", alignSelf: "center", textAlign: "center"}}
-                placeholder = "Username"
-                state = {invUsers}
-                changeState = {changeInvUsers}
-              />
+            <CreationBox
+              projectName = {projectName}
+              changeProjectName = {changeProjectName}
+              date = {date}
+              setDate = {setDate}
+              invUsers = {invUsers}
+              changeInvUsers = {changeInvUsers}
+              addUsersList = {addUsersToList}
+              checkUser = {checkUser}
+            >
               <InviteUsersTH 
                 onPress = {addUsersToList}
                 style = {{position: "absolute", marginLeft: "85%", top: "70%"}}
                 activeOpacity={0.6}
                 underlayColor="#00181"
               >
-                <Icon
-                  name="addusergroup" 
-                  size = {35} 
-                />
+              <Icon
+                name="addusergroup" 
+                size = {35} 
+              />
               </InviteUsersTH>
-              {checkUser == true &&
-              <Text style = {{alignSelf: "center"}}>User Successfully Added!</Text>
-              }
-              {checkUser == false &&
-                <Text style = {{alignSelf: "center"}}>User Not Found</Text>
-              }              
-            </CreationBox> 
+            </CreationBox>              
             <ButtonIconBox 
               onPress = {createNewProject}
               style = {{backgroundColor: "#2a9df4", width: "60%", height:"100%",  borderRadius: 10, alignSelf: "center"}}
@@ -299,7 +283,33 @@ const ContainerGradient = props =>{
 const CreationBox = props => {
   return(
     <View style = {{backgroundColor: "white", paddingTop: "5%", bottom: "10%", borderRadius: 10, height: "85%", width: "90%", alignSelf: "center"}}>
+      <TextInputBox 
+        titleStyle = {{alignSelf: "center"}}
+        titleText = "Project Name"
+        inputStyle = {{borderBottomColor: 'gray', color: 'black', borderBottomWidth: 1, width: "90%", height: "90%", alignSelf: "center", textAlign: "center"}}
+        placeholder = "Office Function"
+        state = {props.projectName}
+        changeState = {props.changeProjectName}
+      />
+      <DatePickerBox
+        state = {props.date}
+        changeState = {props.setDate}
+      />  
+      <TextInputBox 
+        titleStyle = {{alignSelf: "center"}}
+        titleText = "Invite Users"
+        inputStyle = {{borderBottomColor: 'gray', color: 'black', borderBottomWidth: 1, width: "75%", height: "90%", alignSelf: "center", textAlign: "center"}}
+        placeholder = "Username"
+        state = {props.invUsers}
+        changeState = {props.changeInvUsers}
+      />
       {props.children}
+      {props.checkUser == true &&
+      <Text style = {{alignSelf: "center"}}>User Successfully Added!</Text>
+      }
+      {props.checkUser == false &&
+        <Text style = {{alignSelf: "center"}}>User Not Found</Text>
+      }  
     </View>
   );
 }
