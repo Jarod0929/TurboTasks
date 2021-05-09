@@ -18,14 +18,11 @@ import Moment from 'moment';
 export function EditTask ({ navigation, route }){
   const [title, changeTitle] = useState(null); //title of the task
   const [description, changeDescription] = useState(null); // description of the task
-  const [date, changeDate] = useState(Moment.locale('en')); //due date of the task
+  
   useEffect(() => {
     database().ref(`/Database/Tasks/${route.params.taskID}`).once('value', snapshot => {
       changeTitle(snapshot.val().title);
       changeDescription(snapshot.val().text);
-      if(snapshot.val().due != null && snapshot.val().due != ""){
-        changeDate(Date(snapshot.val().due + "T00:00:00.000Z").toISOString());
-      }
     });
   }, [route.params.taskID]);
 
@@ -65,8 +62,19 @@ export function EditTask ({ navigation, route }){
     database().ref(`/Database/Tasks/${route.params.taskID}`).update({
       title: title,
       text: description,
-      // due: date.getTime()
     });
+  }
+
+  const saveChanges = () => {
+    handleText();
+    changeTitle(null);
+    changeDescription(null);
+    navigation.navigate('Project');
+  }
+
+  const deleteThisTask = () => {
+    deleteTasks(route.params.taskID, route.params.projectID);
+    navigation.navigate('Project');
   }
 
   return(
@@ -76,55 +84,77 @@ export function EditTask ({ navigation, route }){
     >
       {/* Editable Options */}
       <View style={styles.editTaskMainView}>
-        {/* Edit task title */}
-        <Text style={{fontSize: 20}}>
-          Task Title:
-        </Text>
-        <TextInput 
-          style={styles.editTaskInputs}
-          onChangeText = {text => changeTitle(text)}
+        <TitleTextInputBox
+          text = "Task Title"
+          style = {styles.editTaskInputs}
+          onChangeText = {changeTitle}
           value = {title}
         />
-        {/* Edit task description */}
-        <Text style={{fontSize: 20}}>
-          Task Description:
-        </Text>
-        <TextInput         
-          multiline
-          numberOfLines={4}
-          style={styles.editTaskInputs}
-          onChangeText = {text => changeDescription(text)}
+        <DescriptionTextInputBox
+          text = "Task Description"
+          style = {styles.editTaskInputs}
+          onChangeText = {changeDescription}
           value = {description}
         />
       </View>
-      {/* Save changes button */}
-      <TouchableHighlight
-        style={[styles.editTaskBottomBar, {right: 0}]}
-        onPress = {() => {
-          handleText();
-          changeTitle(null);
-          changeDescription(null);
-          changeDate(new Date());
-          navigation.navigate('Project');
-        }}
-      >
-        <Text style={styles.editTaskBottomBarButtons}>Save Changes</Text>
-      </TouchableHighlight>
-      {/* Delete task button */}
-      <TouchableHighlight
-        style={styles.editTaskBottomBar}
-        onPress = {() => {
-          deleteTasks(route.params.taskID, route.params.projectID);
-          navigation.navigate('Project');
-        }}
-      >
-        <Text style={styles.editTaskBottomBarButtons}>
-          Delete Task
-        </Text>
-      </TouchableHighlight> 
+      <ButtonBox
+        onClick = {saveChanges}
+        text = "Save Changes"
+        buttonStyle = {[styles.editTaskBottomBar, {right: 0}]}
+      />
+      <ButtonBox
+        onClick = {deleteThisTask}
+        text = "Delete Task"
+        buttonStyle = {styles.editTaskBottomBar}
+      />
     </TopBar>
   );
 }
+
+
+const ButtonBox = props => {
+  return(
+      <TouchableHighlight 
+        style = {props.buttonStyle}
+        onPress = {props.onClick}
+      >
+        <Text style = {styles.editTaskBottomBarButtons}>{props.text}</Text>
+      </TouchableHighlight>
+  );
+};
+
+
+const TitleTextInputBox = props => {
+  return (
+    <View style = {styles.editTaskTitleInput}>
+      <Text style = {basicStyles.defaultText}>{props.text}</Text>
+      <TextInput
+        onChangeText = {text => props.onChangeText(text)}
+        placeholder = {props.text}
+        value = {props.value}
+        style = {props.style}
+      />
+    </View>
+  );
+};
+
+
+const DescriptionTextInputBox = props => {
+  return (
+    <View style = {styles.editTaskTitleInput}>
+      <Text style = {basicStyles.defaultText}>{props.text}</Text>
+      <TextInput
+        multiline
+        numberOfLines={4}
+        onChangeText = {text => props.onChangeText(text)}
+        placeholder = {props.text}
+        value = {props.value}
+        style = {props.style}
+      />
+    </View>
+  );
+};
+
 
 const TopBar = (props) => {
   return (

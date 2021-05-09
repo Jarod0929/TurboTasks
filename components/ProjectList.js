@@ -17,99 +17,13 @@ import * as styles from './styles/styles.js';
 import * as basicStyles from './styles/basicStyles.js';
 import * as topBarStyles from './styles/topBarStyles.js';
 import { on } from 'npm';
-
-
-
   
 export function ProjectList ({ route, navigation }) {
   const [projects, changeProjects] = useState(null);//List of project ID's for user
   const [user, changeUser] = useState(null);//user's ID
+  const [currentProj, changeCurrentProj] = useState(null);//ID of the current project showing in the delete modal
+  const [validUser, changeValidUser] = useState(true); // validates the user checks if the user already is in the list
   const [visibility, changeVisibility] = useState(false);//visibility of the delete project modal
-  const [currentProj,changeCurrentProj]= useState(null);//ID of the current project showing in the delete modal
-  const [invUsers, changeInvUsers] = useState('');//For the inviteUsers field
-  const [checkUser, changeCheckUser] = useState(null);//Used to check if user exists
-  const[validUser,changeValidUser]=useState(true); // validates the user checks if the user already is in the list
- 
-  let addedUserID;// The user you are trying to adds ID
-
-  /* Takes the users info looking for the users projects */  
-  //Updates projects state variable to be list of ID's of projects the user is in
-  const handleProject = snapshot => {
-   
-    changeProjects(snapshot.val().projects);
-  }
-
-  //adds the username to the project on the databse
-  const addProjectIds = (userId, projectId) => {
-  
-  let add = database().ref(`/Database/Users/${userId}/projects`).on('value', snap => {
-      if(snap.val() != null){
-        let temp = snap.val();
-        temp.push(projectId);
-        database().ref(`/Database/Users/${userId}`).update({
-          projects: temp,
-        });
-        database().ref(`/Database/Users/${userId}/projects`).off("value", add);
-      }
-      else{
-        database().ref(`/Database/Users/${userId}`).update({
-          projects: [projectId],
-        });
-        database().ref(`/Database/Users/${userId}/projects`).off("value", add);
-      }
-    });
-  }
-
-  // Finds the added userID
-  const findAddedUserID= snapshot=>{
-    for(let key in snapshot.val()){
-      addedUserID=key;
-    }
-    //Validates the user that is being added
-    database().ref(`/Database/Projects/${currentProj}`).once("value",validateUser);
-    
-  }
-
-  //finds the userID for the added user
-  const addUsersToList = () =>{
-    
-    database().ref("/Database/Users").orderByChild("Username").equalTo(invUsers).once("value",findAddedUserID);
-  };
-  // adds user to the project under the database
-  const addUserToProject=snapshot=>{
-    if(snapshot.val().users!=null){
-      let userList = snapshot.val().users.slice();
-      userList.push(addedUserID);// pushes the new user
-      database().ref(`/Database/Projects/${currentProj}`).update({users:userList});
-      addProjectIds(addedUserID,currentProj);
-    }
-  }
-
-  // checks if the user is already in the list
-  const validateUser = snapshot=>{
-    let valid=true;
-   
-    let userList=snapshot.val().users;
-    for(let i =0;i<userList.length;i++){
-     if(invUsers==userList[i]){
-       valid=false;
-     }
-    }
-    if(valid==false){
-      
-      changeValidUser(false);
-      changeCheckUser(false);
-      changeInvUsers('');
-    }
-    else{
-      
-      changeValidUser(true);
-      changeCheckUser(true);
-      changeInvUsers('');
-      database().ref(`/Database/Projects/${currentProj}`).once("value",addUserToProject);
-    }
-    
-  }
 
   useEffect(() => {
     if(user != null){
@@ -119,15 +33,176 @@ export function ProjectList ({ route, navigation }) {
     database().ref("/Database/Users/" + route.params.user).on("value", handleProject);
   }, [route.params.user]);
 
+  /* Takes the users info looking for the users projects */  
+  //Updates projects state variable to be list of ID's of projects the user is in
+  const handleProject = snapshot => {
+   
+    changeProjects(snapshot.val().projects);
+  }
+
   //Shows the modal for the description and delete page for a project
   function deletionPage(projID){
     changeVisibility(true);
     changeCurrentProj(projID);    
   }
 
-   // Deletes deltaskID and its subtasks for the current project
-   //@param delTaskID is string representing id of task to delete along with its subtasks
-   const deleteTasks = (delTaskID) => {
+  return (
+    <TopBar navigation = {navigation} userInfo={route.params.user}>
+      {/* Description and Delete modal for Project */}
+      <ProjectModal
+        changeVisibility = {changeVisibility}
+        visibility = {visibility}
+        user = {user}
+        changeValidUser = {changeValidUser}
+        currentProj = {currentProj}
+      />
+      {/* Plus button that takes you to creating a new project */}
+      <TouchableHighlight 
+        style={styles.projectCreationPlusPosition}
+        onPress={() => {
+          navigation.navigate("ProjectCreation", { user: route.params.user});
+        }}
+      >
+        <View>
+          <Text style={styles.projectCreationPlusDesign}>+</Text>
+        </View> 
+      </TouchableHighlight>
+      <UserProjectsFlatlist
+        projects = {projects}
+        deletionPage = {deletionPage}
+        navigation = {navigation}
+        route = {route}
+      />
+    </TopBar>
+  );
+}
+
+const UserProjectsFlatlist = (props) => {
+  return (
+    <View 
+      style={styles.projectListMainView}
+    >
+      {/* Displays if user is not in any projects */}
+      {(props.projects == null) &&
+        <View>
+          <Text>
+            No Projects
+          </Text> 
+        </View>
+      }
+      <FlatList
+        style={{width: "100%"}}
+        data={props.projects}
+        renderItem={({item}) => 
+          <React.StrictMode>
+            <ProjectPanel
+              project = {item}
+              navigation = {props.navigation}
+              user = {props.route.params.user}
+              deletionPage = {props.deletionPage}
+            />
+          </React.StrictMode>
+        }
+        keyExtractor={item => item.ID}
+      />
+    </View>
+  );
+}
+  
+const ProjectModal = (props) => {
+  const [invUsers, changeInvUsers] = useState('');//For the inviteUsers field
+  const [checkUser, changeCheckUser] = useState(null);//Used to check if user exists 
+  let addedUserID;// The user you are trying to adds ID
+
+  //adds the username to the project on the databse
+  const addProjectIds = (userId, projectId) => {  
+    const add = database().ref(`/Database/Users/${userId}/projects`).on('value', snap => {
+      if(snap.val() != null){
+        let temp = snap.val();
+        temp.push(projectId);
+        database().ref(`/Database/Users/${userId}`).update({
+          projects: temp,
+        });
+        database().ref(`/Database/Users/${userId}/projects`).off("value", add);
+      } else {
+        database().ref(`/Database/Users/${userId}`).update({
+          projects: [projectId],
+        });
+        database().ref(`/Database/Users/${userId}/projects`).off("value", add);
+      }
+    });
+  }
+  
+  // Finds the added userID
+  const findAddedUserID= snapshot=>{
+    for(let key in snapshot.val()){
+      addedUserID=key;
+    }
+    //Validates the user that is being added
+    database().ref(`/Database/Projects/${props.currentProj}`).once("value",validateUser);        
+  }
+  
+  //finds the userID for the added user
+  const addUsersToList = () =>{
+    database().ref("/Database/Users").orderByChild("Username").equalTo(invUsers).once("value",findAddedUserID);
+  };
+
+  // adds user to the project under the database
+  const addUserToProject=snapshot=>{
+    console.log(snapshot.val());
+    if(snapshot.val().users!=null){
+      let userList = snapshot.val().users.slice();
+      userList.push(addedUserID);// pushes the new user
+      database().ref(`/Database/Projects/${props.currentProj}`).update({users:userList});
+      addProjectIds(addedUserID, props.currentProj);
+    }
+  }
+
+  // checks if the user is already in the list
+  const validateUser = snapshot=>{
+    let valid=true;
+    let userList=snapshot.val().users;
+    for(let i =0;i<userList.length;i++){
+      if(invUsers==userList[i]){
+        valid=false;
+      }
+    }
+    props.changeValidUser(valid);
+    changeCheckUser(valid);
+    changeInvUsers('');
+    if(valid){
+      database().ref(`/Database/Projects/${props.currentProj}`).once("value",addUserToProject);
+    }
+  }
+
+  // Deletes the Project from the held Project
+  const deleteProj= ()=>{
+    //Deletes project from the users Projects list
+    database().ref("/Database/Users/" + props.user).once("value",  snapshot=>{
+      const array = snapshot.val().projects.filter(item=> item!= props.currentProj);
+      database().ref("/Database/Users/" + props.user).update({projects:array});  
+    });
+    
+    // Deletes the current project from Projects
+    database().ref("/Database/Projects/" + props.currentProj).once("value",  snapshot=>{
+      const array = snapshot.val().users.filter(item => item != props.user);
+      database().ref("/Database/Projects/" + props.currentProj).update({users:array});
+      
+      //iff no users in the project 
+      //then delete project and all of its tasks
+      if(array.length===0){
+        for(let key in snapshot.val().tasks){
+          deleteTasks(snapshot.val().tasks[key]);
+        }
+        //deletes the project from Projects
+        database().ref("/Database/Projects/"+ props.currentProj).remove();    
+      }
+    });
+  }
+
+  // Deletes deltaskID and its subtasks for the current project
+  //@param delTaskID is string representing id of task to delete along with its subtasks
+  const deleteTasks = (delTaskID) => {
     database().ref("/Database/Tasks/" + delTaskID).once("value", snapshot => {
       //Recursively calls on each of subtasks
       if(snapshot.val().subTasks != undefined){
@@ -152,124 +227,68 @@ export function ProjectList ({ route, navigation }) {
     });    
   };
 
-  // Deletes the Project from the held Project
-  const deleteProj= ()=>{
-    //Deletes project from the users Projects list
-    database().ref("/Database/Users/" + user).once("value",  snapshot=>{
-      const array = snapshot.val().projects.filter(item=> item!=currentProj);
-      database().ref("/Database/Users/" + user).update({projects:array});  
-    });
-    
-    // Deletes the current project from Projects
-    database().ref("/Database/Projects/" + currentProj).once("value",  snapshot=>{
-      const array = snapshot.val().users.filter(item=> item!=user);
-      database().ref("/Database/Projects/" + currentProj).update({users:array});
-      
-      //iff no users in the project 
-      //then delete project and all of its tasks
-      if(array.length===0){
-        for(let key in snapshot.val().tasks){
-          deleteTasks(snapshot.val().tasks[key]);
-        }
-        //deletes the project from Projects
-        database().ref("/Database/Projects/"+currentProj).remove();    
-      }
-    });
-  }
- 
   return (
-    <TopBar navigation = {navigation} userInfo={route.params.user}>
-      {/* Description and Delete modal for Project */}
-      <Modal 
-        animationType="slide"
-        transparent={true}
-        visible={visibility}
-      > 
-        <TouchableHighlight 
-          onPress = {() => {
-            changeVisibility(false);
-          }}
-        >
-          <View style={styles.projectListModal}>
-            <TouchableHighlight onPress={()=>{deleteProj()}}>
-              <Text>
-                Delete
-              </Text>
-            </TouchableHighlight>
-            <Text style = {{alignSelf: "center"}}>Invite Users</Text>
-            {/*INVITE USER VIEW (USED TO PUT BUTTON AND INPUT ON ONE LINE)*/ }
-            <View style = {{marginBottom: 0, height: "20%"}}>
-              <TextInput
-                autoFocus={true}
-                style = {{borderBottomColor: 'gray', borderBottomWidth: 1, width: "75%",height: 50, textAlign: "center", alignSelf: "center", marginBottom: 10}}
-                placeholder = "Username"
-                onChangeText = {text => changeInvUsers(text)}
-                value={invUsers}
-              />
-               <TouchableHighlight onPress = {addUsersToList}
-               style={{alignItems:"center"}}
-                  
-                >
-                  <Icon
-                  stlye={{margin: 2}}
-                    name="addusergroup" 
-                    size = {35} 
-                  />
-               </TouchableHighlight>
-              {checkUser == true &&
-              <Text style = {{alignSelf: "center"}}>User Successfully Added!</Text>
-              }
-              {checkUser == false &&
-                <Text style = {{alignSelf: "center"}}>User Not Found</Text>
-              }
-            </View>
-            
-          </View>
-        </TouchableHighlight>
-      </Modal>
-
-      {/* Plus button that takes you to creating a new project */}
+    <Modal 
+      animationType="slide"
+      transparent={true}
+      visible={props.visibility}
+    > 
       <TouchableHighlight 
-        style={styles.projectCreationPlusPosition}
-        onPress={() => {
-          navigation.navigate("ProjectCreation", { user: route.params.user});
+        onPress = {() => {
+          props.changeVisibility(false);
         }}
       >
-        <View>
-          <Text style={styles.projectCreationPlusDesign}>+</Text>
-        </View> 
-      </TouchableHighlight>
-
-      {/* List of the projects for the user */}
-      <View style={styles.projectListMainView}>
-        {/* Displays if user is not in any projects */}
-        {(projects == null) &&
-          <View>
+        <View 
+          style={styles.projectListModal}
+        >
+          <TouchableHighlight 
+            onPress={()=>{
+              deleteProj()
+            }}
+          >
             <Text>
-              No Projects
-            </Text> 
+              Delete
+            </Text>
+          </TouchableHighlight>
+          <Text 
+            style = {{alignSelf: "center"}}
+          >
+            Invite Users
+          </Text>
+          {/*INVITE USER VIEW (USED TO PUT BUTTON AND INPUT ON ONE LINE)*/ }
+          <View 
+            style = {{marginBottom: 0, height: "20%"}}
+          >
+            <TextInput
+              autoFocus={true}
+              style = {{borderBottomColor: 'gray', borderBottomWidth: 1, width: "75%",height: 50, textAlign: "center", alignSelf: "center", marginBottom: 10}}
+              placeholder = "Username"
+              onChangeText = {text => changeInvUsers(text)}
+              value={invUsers}
+            />
+            <TouchableHighlight onPress = {addUsersToList}
+              style={{alignItems:"center"}}                
+            >
+                <Icon
+                stlye={{margin: 2}}
+                  name="addusergroup" 
+                  size = {35} 
+                />
+            </TouchableHighlight>
+            {checkUser == true &&
+              <Text style = {{alignSelf: "center"}}>User Successfully Added!</Text>
+            }
+            {checkUser == false &&
+              <Text style = {{alignSelf: "center"}}>User Not Found</Text>
+            }
           </View>
-        }
-        <FlatList
-          style={{width: "100%"}}
-          data={projects}
-          renderItem={({item}) => 
-            <React.StrictMode>
-              <ProjectPanel
-                project = {item}
-                navigation ={navigation}
-                user={route.params.user}
-                deletionPage = {deletionPage}
-              />
-            </React.StrictMode>
-          }
-          keyExtractor={item => item.ID}
-        />
-      </View>
-    </TopBar>
+        </View>
+      </TouchableHighlight>
+    </Modal>
   );
 }
-  
+
+
 // Each project Box the user has
 const ProjectPanel = (props) => {
   const [project, changeProject] = useState(null);//The entire project information
@@ -277,11 +296,6 @@ const ProjectPanel = (props) => {
   //Updates project state variable to have all the project info
   const handleProject = snapshot => {
     changeProject(snapshot.val());
-  }
-
-  //If project not yet retrieved (project == null) then pulls it from the database
-  if(project == null) {
-    database().ref("/Database/Projects/" + props.project).once("value", handleProject);
   }
 
   useFocusEffect(
@@ -305,38 +319,42 @@ const ProjectPanel = (props) => {
           style={styles.projectListPanel}
         >
           <View >
-            <View>
-              {/* Project Title */}
-              <Text style={{fontSize: 20}}>
-                {project?.title}
-              </Text>
-              {/* Project tasks count id not 0 */}
-              {project?.tasks != null &&
-                <Text>
-                  {project?.tasks.length} Task(s)
-                </Text>
-              }
-              {/* Project tasks as 0 if no tasks*/}
-              {project?.tasks == null &&
-                <Text>
-                  0 Task(s)
-                </Text>
-              }
-              {/* Display due date of project */}
-              <Text>
-                Due Date: {project?.dueDate} 
-              </Text>
-              {/* Displays number of users in project */}
-              <Text>
-                {project?.users.length} User(s)
-              </Text>
-            </View>
+            <ProjectPanelInfo
+              projectTitle = {project?.title}
+              projectTaskCount = {(project?.tasks != null ? project.tasks.length : 0)}
+              projectDueDate = {project?.dueDate}
+              projectUserCount = {project?.users.length}
+            />
           </View>
         </TouchableHighlight>
       }
     </View>
   );
-  
+}
+
+const ProjectPanelInfo = (props) => {
+  return (
+    <View
+      style = {styles.projectPanelInfoCentering}
+    >
+      {/* Project Title */}
+      <Text style={{fontSize: 20}}>
+        {props.projectTitle}
+      </Text>
+      {/* Project tasks count id not 0 */}
+      <Text>
+        {props.projectTaskCount} Task(s)
+      </Text>
+      {/* Display due date of project */}
+      <Text>
+        Due Date: {props.projectDueDate} 
+      </Text>
+      {/* Displays number of users in project */}
+      <Text>
+        {props.projectUserCount} User(s)
+      </Text>
+    </View>
+  );
 }
 
 const TopBar = (props) => {
@@ -391,6 +409,7 @@ const TopBar = (props) => {
     </View>
   )
 };
+
 const ButtonBoxForNavigation = props => {
   return(
     <TouchableHighlight 

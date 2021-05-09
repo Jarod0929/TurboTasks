@@ -159,6 +159,7 @@ const ButtonBox = props => {
   </View>
   );
 };
+
 const ButtonBoxForNavigation = props => {
   return(
     <TouchableHighlight 

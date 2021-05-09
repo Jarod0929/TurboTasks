@@ -54,6 +54,9 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     alignItems: 'center'
   },
+  projectPanelInfoCentering: {
+    alignItems: 'center',
+  },
   taskPanel: {
     width: '100%',
     flexDirection: "row",
@@ -83,7 +86,7 @@ const styles = StyleSheet.create({
   },
   projectTaskListConatiner: {
     top: 0, 
-    height: "100%", 
+    height: "80%", 
     width: "100%", 
     backgroundColor: "white"
   },
@@ -113,19 +116,24 @@ const styles = StyleSheet.create({
     padding: "7%", 
     fontSize: 20
   },
+  editTaskTitleInput: {
+    width: "100%",
+    alignItems: 'center',
+  },
   addTaskButton:{
     backgroundColor: spiroDiscoBall,
     padding: 5,
     margin: "2%",
     width: "45%",
     top: 10,
-    
     alignItems: 'center'
   },
   taskModal:{
     backgroundColor: "#ccffff",
     width:"100%", 
     height: "100%",
+    padding: '5%',
+    borderRadius: 10,
   },
   emptyTouchableHighlights:{
 
