@@ -22,7 +22,9 @@ export function Project ({ navigation, route }) {
   const isFocused = navigation.isFocused();//Is true whenever the user is on the screen, but it isn't as efficient as it can be
   const [visibility, changeVisibility] = useState(false); //visibility toggle for modal
 
-  useEffect(findTasks, [isFocused]);
+  useEffect(() => {
+    findTasks();
+  }, [isFocused]);
 
   const findTasks = () => {
     if(noParentTask()){
@@ -68,10 +70,10 @@ export function Project ({ navigation, route }) {
     listOfTasks.push(newTaskID);
 
     if(noParentTask()){
-      addNewTaskInProjects();
+      addNewTaskInProjects(newTask, newTaskID, listOfTasks);
     }
     else{
-      addNewTaskInTasks();
+      addNewTaskInTasks(newTask, newTaskID, listOfTasks);
     }
     changeAllProjectTasks(listOfTasks);
   }
@@ -233,7 +235,11 @@ const TaskPanel = (props) => {
     });
   };
 
-  if(task != null){
+  const noTasks = () => {
+    return task != null;
+  }
+
+  if(noTasks()){
     return (
       <View style={styles.taskPanel}>
         {/* Task Title and click to open description modal */}

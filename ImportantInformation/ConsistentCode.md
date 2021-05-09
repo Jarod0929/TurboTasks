@@ -50,4 +50,14 @@ const functionName = (params) => {
   //Code
 };
 
+Functions with only one params should be without parenthesis
+const functionName = props => {
+
+};
+
+**UseEffects** 
+//Only one function
+useEffect(() => {
+  functionName();
+},[Something]);
 
