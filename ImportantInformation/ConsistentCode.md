@@ -7,6 +7,7 @@ Using Javascript Docs
  * @return description of returns
  */
 
+**Number of Spaces = 2**
 
 **If Else Statements**
 if (condition){
@@ -34,9 +35,17 @@ States
 Functions (Top to Down)
 Return
 
-**Number of Spaces = 2**
+**Main Component**
+export function MainComponentName (params) {
+  //Code
+}
 
-**Functions**
+**Other Component**
+const ComponentName (params) {
+  //Code
+}
+
+**Functions within Components**
 const functionName = (params) => {
   //Code
 };
