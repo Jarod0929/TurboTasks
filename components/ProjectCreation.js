@@ -89,6 +89,7 @@ export function ProjectCreation ({ route, navigation }) {
       //Initializes the new project
       const newData = database().ref("/Database/Projects").push({
         title: projectName,
+        descripton: "Enter a description",
         users: invUsersList,
         tasks: [taskKey],
         dueDate: date 

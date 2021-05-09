@@ -36,14 +36,13 @@ export function ProjectList ({ route, navigation }) {
   /* Takes the users info looking for the users projects */  
   //Updates projects state variable to be list of ID's of projects the user is in
   const handleProject = snapshot => {
-   
     changeProjects(snapshot.val().projects);
   }
 
   //Shows the modal for the description and delete page for a project
   function deletionPage(projID){
-    changeVisibility(true);
     changeCurrentProj(projID);    
+    changeVisibility(true);
   }
 
   return (
@@ -112,7 +111,27 @@ const UserProjectsFlatlist = (props) => {
 const ProjectModal = (props) => {
   const [invUsers, changeInvUsers] = useState('');//For the inviteUsers field
   const [checkUser, changeCheckUser] = useState(null);//Used to check if user exists 
+  const[title, changeTitle]=useState("");
+  const[description,changeDescription]=useState("");
+  const[userEnteredTitle, changeUserEnteredTitle]=useState(title);
+  const[userEnteredDescription,changeUserEnteredDescription]=useState(description);
   let addedUserID;// The user you are trying to adds ID
+ 
+  useEffect(() => {
+    database().ref(`/Database/Projects/${props.currentProj}`).once('value', snapshot => {
+      changeTitle(snapshot.val().title);
+      changeDescription(snapshot.val().description);
+    });
+  }, [props.currentProj]);
+  
+  // const handleDescAndTitle=() => {
+  //    database().ref(`/Database/Projects/${props.currentProj}`).once('value', snapshot => {
+  //     changeTitle(snapshot.val().title);
+  //     changeDescription(snapshot.val().description);
+   
+  //   });
+  // }
+  // useEffect(handleDescAndTitle, [title,description]);
 
   //adds the username to the project on the databse
   const addProjectIds = (userId, projectId) => {  
@@ -133,6 +152,8 @@ const ProjectModal = (props) => {
     });
   }
   
+  
+  
   // Finds the added userID
   const findAddedUserID= snapshot=>{
     for(let key in snapshot.val()){
@@ -149,7 +170,7 @@ const ProjectModal = (props) => {
 
   // adds user to the project under the database
   const addUserToProject=snapshot=>{
-    console.log(snapshot.val());
+   
     if(snapshot.val().users!=null){
       let userList = snapshot.val().users.slice();
       userList.push(addedUserID);// pushes the new user
@@ -227,6 +248,20 @@ const ProjectModal = (props) => {
     });    
   };
 
+  
+
+  const isTitle = () =>{
+    if(title!=''){
+      database().ref("/Database/Projects/"+ props.currentProj).update({title: title});
+    }
+  }
+
+  const isDescription = () =>{
+    if(description!=''){
+      database().ref("/Database/Projects/"+ props.currentProj).update({description: description});
+    }
+  }
+
   return (
     <Modal 
       animationType="slide"
@@ -236,11 +271,14 @@ const ProjectModal = (props) => {
       <TouchableHighlight 
         onPress = {() => {
           props.changeVisibility(false);
+          console.log("THis is the props "+title);
         }}
       >
         <View 
           style={styles.projectListModal}
         >
+          <Text>{title}</Text>
+          <Text>{description}</Text>
           <TouchableHighlight 
             onPress={()=>{
               deleteProj()
@@ -281,9 +319,35 @@ const ProjectModal = (props) => {
             {checkUser == false &&
               <Text style = {{alignSelf: "center"}}>User Not Found</Text>
             }
+            <Text>Project Title</Text>
+            <TextInputBox
+              changeValue={changeTitle}
+              text={title}
+              value={title}
+            />
+            <ButtonBox
+              onClick={()=>isTitle()}
+              text={"Enter to Change Title"}
+              style={basicStyles.buttonContainer}
+            />
+            <Text>Project Description</Text>
+            <DescriptionTextInputBox
+              text = "Project Description"
+              style = {styles.editProjectDescriptionInputs}
+              onChangeText = {changeDescription}
+              value = {description}
+            />
+            <ButtonBox
+              onClick={()=>isDescription()}
+              text={"Enter to Change Description"}
+              style={basicStyles.buttonContainer}
+            />
           </View>
         </View>
+          
       </TouchableHighlight>
+      
+      
     </Modal>
   );
 }
@@ -418,5 +482,46 @@ const ButtonBoxForNavigation = props => {
     >
       <Text style = {topBarStyles.buttonText}>{props.text}</Text>
     </TouchableHighlight>
+  );
+};
+
+const ButtonBox = props => {
+  return(
+    <View style = {props.style}>
+      <TouchableHighlight 
+        style = {basicStyles.button}
+        onPress = {props.onClick}
+      >
+        <Text style = {topBarStyles.buttonText}>{props.text}</Text>
+      </TouchableHighlight>
+    </View>
+  );
+};
+
+const TextInputBox = props => {
+  return (
+    <View style = {basicStyles.textInputContainer}>
+      <TextInput 
+        onChangeText = {text => props.changeValue(text)}
+        placeholder = {props.text}
+        value = {props.value}
+      />
+    </View>
+  );
+};
+
+const DescriptionTextInputBox = props => {
+  return (
+    <View style = {styles.editTaskTitleInput}>
+      <Text style = {basicStyles.defaultText}>{props.text}</Text>
+      <TextInput
+        multiline
+        numberOfLines={4}
+        onChangeText = {text => props.onChangeText(text)}
+        placeholder = {props.text}
+        value = {props.value}
+        style = {props.style}
+      />
+    </View>
   );
 };
