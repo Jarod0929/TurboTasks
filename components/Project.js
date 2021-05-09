@@ -24,23 +24,35 @@ export function Project ({ navigation, route }) {
   const isFocused = navigation.isFocused();//Is true whenever the user is on the screen, but it isn't as efficient as it can be
   const [visibility, changeVisibility] = useState(false); //visibility toggle for modal
 
-  console.log(allProjectTasks);
+  useEffect(findTasks, [isFocused]);
 
-  useEffect(() => {
-    if(route.params.taskID == null){
-      database().ref(`/Database/Projects/${route.params.projectID}`).once('value', snapshot => {
-        if(snapshot.val().tasks !== undefined){
-          changeAllProjectTasks(snapshot.val().tasks);
-        }
-      });
+  const findTasks = () => {
+    if(noParentTask()){
+      findTasksInProjects();
     } else {
-      database().ref(`/Database/Tasks/${route.params.taskID}`).once('value', snapshot => {
-        if(snapshot.val().subTasks !== undefined){
-          changeAllProjectTasks(snapshot.val().subTasks);
-        }
-      });
+      findTasksInTasks();
     }
-  }, [isFocused]); //[route.params.taskID, route.params.projectID]);
+  };
+
+  const noParentTask = () => {
+    return route.params.taskID == null;
+  };
+
+  const findTasksInProjects = () => {
+    database().ref(`/Database/Projects/${route.params.projectID}`).once('value', snapshot => {
+      if(snapshot.val().tasks !== undefined){
+        changeAllProjectTasks(snapshot.val().tasks);
+      }
+    });
+  };
+
+  const findTasksInTasks = () => {
+    database().ref(`/Database/Tasks/${route.params.taskID}`).once('value', snapshot => {
+      if(snapshot.val().subTasks !== undefined){
+        changeAllProjectTasks(snapshot.val().subTasks);
+      }
+    });
+  };
 
   //changes decription modal task and visibility to be visible
   function changeTaskDescriptor(taskID){
@@ -93,7 +105,6 @@ export function Project ({ navigation, route }) {
           visibility={visibility}
           onClick={() => {
             changeVisibility(false);
-            
           }}
           currentTask={currentTask}
         />

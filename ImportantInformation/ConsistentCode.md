@@ -29,9 +29,16 @@ Other Function
 
 **Format of Components**
 States
+- UseStates
+- UseEffects
 Functions (Top to Down)
 Return
 
 **Number of Spaces = 2**
+
+**Functions**
+const functionName = (params) => {
+  //Code
+};
 
 
