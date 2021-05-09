@@ -19,7 +19,7 @@ import LinearGradient from 'react-native-linear-gradient'
 
 import * as basicStyles from './styles/basicStyles.js';
 import * as topBarStyles from './styles/topBarStyles.js';
-import * as projecrCreationStyles from './styles/projectCreationStyles.js';
+import * as projectCreationStyles from './styles/projectCreationStyles.js';
 
 
 /**
@@ -131,12 +131,12 @@ export function ProjectCreation ({ route, navigation }) {
   };
     
   return (// TopBar is supposed to handle the Drawer and don't forget about it
-    <TopBar navigation = {navigation} reset = {resetEverything} userInfo={route.params.user}>
-      <View style={{flex: 1, backgroundColor: "white", width: "100%", height: "100%"}}>
+    <TopBar navigation = {navigation} reset = {resetEverything} userInfo = {route.params.user}>
+      <View style = {projectCreationStyles.container}>
         <TopGradient
-          colors= {["#187bcd", '#2a9df4', '#1167b1']}
-          start= {{ x: 1, y: 1 }}
-          end= {{ x: 0, y: 0 }}
+          colors = {["#187bcd", '#2a9df4', '#1167b1']}
+          start = {{ x: 1, y: 1 }}
+          end = {{ x: 0, y: 0 }}
           text = "Create a Project"
         >
           <TopIcon
@@ -146,12 +146,12 @@ export function ProjectCreation ({ route, navigation }) {
           />
         </TopGradient>
         <ContainerGradient
-              style = {{width: "100%", height: "65%",  paddingTop: "5%"}}
-              colors={['white', "lightgray"]}
-              start={{ x: 1, y: 1 }}
-              end={{ x: 1, y: 0 }}
+              style = {projectCreationStyles.bottomLayerGradient}
+              colors = {['white', "lightgray"]}
+              start = {{ x: 1, y: 1 }}
+              end = {{ x: 1, y: 0 }}
         >
-          <View style={{width: "100%"}}>
+          <View style = {{width: "100%"}}>
             <CreationBox
               projectName = {projectName}
               changeProjectName = {changeProjectName}
@@ -164,25 +164,25 @@ export function ProjectCreation ({ route, navigation }) {
             >
               <InviteUsersTH 
                 onPress = {addUsersToList}
-                style = {{position: "absolute", marginLeft: "85%", top: "70%"}}
-                activeOpacity={0.6}
-                underlayColor="#00181"
+                style = {projectCreationStyles.buttonIcon}
+                activeOpacity = {0.6}
+                underlayColor = "#00181"
               >
               <Icon
-                name="addusergroup" 
+                name = "addusergroup" 
                 size = {35} 
               />
               </InviteUsersTH>
             </CreationBox>              
             <ButtonIconBox 
               onPress = {createNewProject}
-              style = {{backgroundColor: "#2a9df4", width: "60%", height:"100%",  borderRadius: 10, alignSelf: "center"}}
-              colors={["#187bcd", '#2a9df4']}
-              start={{ x: 1, y: 1 }}
-              end={{ x: 1, y: 0 }}
-              activeOpacity={0.1}
-              underlayColor="#00181"
-              name="pluscircleo"
+              style = {projectCreationStyles.createButton}
+              colors = {["#187bcd", '#2a9df4']}
+              start = {{ x: 1, y: 1 }}
+              end = {{ x: 1, y: 0 }}
+              activeOpacity = {0.1}
+              underlayColor = "#00181"
+              name = "pluscircleo"
               color = "white"
             />
           </View>
@@ -199,37 +199,37 @@ const TopBar = (props) => {
       <View style = {topBarStyles.topBarContainer}>
         <View style = {topBarStyles.openContainer}>
           <ButtonBoxForNavigation
-            onClick={() => {
+            onClick = {() => {
               changeDrawer(!drawer);
               LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             }}
-            text={"Open"}
-            style={topBarStyles.openAndDrawerButton}
+            text = {"Open"}
+            style = {topBarStyles.openAndDrawerButton}
           />
            
         </View>
       </View>
       <View style = {[topBarStyles.drawerContainer, drawer? undefined: {width: 0}]}>
         <ButtonBoxForNavigation
-          onClick={()=> 
+          onClick = {() => 
             changeDrawer(!drawer)
           } 
-          text={"Close"}
-          style={topBarStyles.navigationButtons}
+          text = {"Close"}
+          style = {topBarStyles.navigationButtons}
         />
         <ButtonBoxForNavigation
-          onClick={()=>{
+          onClick = {() =>{
             props.navigation.goBack();
           }}
-          text={"Go Back"}
-          style={topBarStyles.navigationButtons}
+          text = {"Go Back"}
+          style = {topBarStyles.navigationButtons}
         />
         <ButtonBoxForNavigation
-          onClick={()=>
+          onClick ={() =>
             props.navigation.navigate("ProjectList", {user:props.userInfo})
           } 
-          text={"ProjectList"}
-          style={topBarStyles.navigationButtons}
+          text = {"ProjectList"}
+          style = {topBarStyles.navigationButtons}
         />
       </View>
       {props.children}
@@ -249,13 +249,14 @@ const ButtonBoxForNavigation = props => {
 const TopGradient = props =>{
   return(
     <LinearGradient
-        style = {{width: "100%", height: "30%", padding: "3%"}}
-        colors={props.colors}
-        start={props.start}
-        end={props.end}
+        style = {projectCreationStyles.topGradient}
+        colors = {props.colors}
+        start = {props.start}
+        end = {props.end}
     >
       <Text
-        style = {{alignSelf: "center", fontSize: 35 * (Dimensions.get("screen").height/780), fontFamily: "Courier New", color: "white"}}
+      //FONTSIZE INLINE STYLE IS FOR RESPONSIVE TEXT SIZE
+        style = {[projectCreationStyles.topText, {fontSize: 35 * (Dimensions.get("screen").height/780)}]}
       >
         {props.text}
       </Text>
@@ -265,16 +266,16 @@ const TopGradient = props =>{
 }
 const TopIcon = props =>{
   return(
-    <Icon name = {props.iconName} size={props.iconSize * (Dimensions.get("screen").height/780)} color={props.iconColor}  style={{alignSelf: "center", top: "5%"}} />
+    <Icon name = {props.iconName} size={props.iconSize * (Dimensions.get("screen").height/780)} color={props.iconColor}  style={projectCreationStyles.topIcon} />
   );
 }
 const ContainerGradient = props =>{
   return(
     <LinearGradient
       style = {props.style}
-      colors={props.colors}
-      start={props.start}
-      end={props.end}
+      colors = {props.colors}
+      start = {props.start}
+      end = {props.end}
     >
       {props.children}
     </LinearGradient>
@@ -282,11 +283,11 @@ const ContainerGradient = props =>{
 }
 const CreationBox = props => {
   return(
-    <View style = {{backgroundColor: "white", paddingTop: "5%", bottom: "10%", borderRadius: 10, height: "85%", width: "90%", alignSelf: "center"}}>
+    <View style = {projectCreationStyles.creationBox}>
       <TextInputBox 
-        titleStyle = {{alignSelf: "center"}}
+        titleStyle = {projectCreationStyles.center}
         titleText = "Project Name"
-        inputStyle = {{borderBottomColor: 'gray', color: 'black', borderBottomWidth: 1, width: "90%", height: "90%", alignSelf: "center", textAlign: "center"}}
+        inputStyle = {projectCreationStyles.topTextInput}
         placeholder = "Office Function"
         state = {props.projectName}
         changeState = {props.changeProjectName}
@@ -296,32 +297,32 @@ const CreationBox = props => {
         changeState = {props.setDate}
       />  
       <TextInputBox 
-        titleStyle = {{alignSelf: "center"}}
+        titleStyle = {projectCreationStyles.center}
         titleText = "Invite Users"
-        inputStyle = {{borderBottomColor: 'gray', color: 'black', borderBottomWidth: 1, width: "75%", height: "90%", alignSelf: "center", textAlign: "center"}}
+        inputStyle = {projectCreationStyles.bottomTextInput}
         placeholder = "Username"
         state = {props.invUsers}
         changeState = {props.changeInvUsers}
       />
       {props.children}
       {props.checkUser == true &&
-      <Text style = {{alignSelf: "center"}}>User Successfully Added!</Text>
+      <Text style = {projectCreationStyles.center}>User Successfully Added!</Text>
       }
       {props.checkUser == false &&
-        <Text style = {{alignSelf: "center"}}>User Not Found</Text>
+        <Text style = {projectCreationStyles.center}>User Not Found</Text>
       }  
     </View>
   );
 }
 const TextInputBox = props => {
   return(
-    <View style = {{height: "18%", marginBottom: "8%",}}>
+    <View style = {projectCreationStyles.textInputBoxView}>
       <Text style = {props.titleStyle}>{props.titleText}</Text>
       <TextInput
         style = {props.inputStyle}
         placeholder = {props.placeholder}
         onChangeText = {text => props.changeState(text)}
-        value={props.state}
+        value = {props.state}
       />
     </View>
   );
@@ -329,13 +330,13 @@ const TextInputBox = props => {
 const DatePickerBox = props => {
   return(
     <View>
-      <Text  style = {{marginBottom: 10, alignSelf: "center"}} >Due Date</Text>
+      <Text  style = {projectCreationStyles.dateTitle} >Due Date</Text>
       <DatePicker
-        date={props.state}
+        date = {props.state}
         mode = "date"
-        onDateChange={props.changeState}
-        style = {{marginBottom: 20, alignSelf: "center", left: "7%"}}
-        customStyles={{
+        onDateChange = {props.changeState}
+        style = {projectCreationStyles.datePicker}
+        customStyles = {{
         dateInput: {
           backgroundColor: "white", 
         }
@@ -349,8 +350,8 @@ const InviteUsersTH = props =>{
     <TouchableHighlight 
       onPress = {props.onPress}
       style = {props.style}
-      activeOpacity={props.activeOpacity}
-      underlayColor= {props.underlayColor}
+      activeOpacity = {props.activeOpacity}
+      underlayColor = {props.underlayColor}
     >
       {props.children}  
     </TouchableHighlight>
@@ -358,23 +359,23 @@ const InviteUsersTH = props =>{
 }
 const ButtonIconBox = props =>{
   return(
-    <View style = {{height: "15%", bottom: "5%"}}>
+    <View style = {projectCreationStyles.buttonIconBoxView}>
       <ContainerGradient
         style = {props.style}
-        colors={props.colors}
-        start={props.start}
-        end={props.end}
+        colors = {props.colors}
+        start = {props.start}
+        end = {props.end}
       >
           <TouchableHighlight 
             onPress = {props.onPress}
-            activeOpacity= {props.activeOpacity}
-            underlayColor= {props.underlayColor}
-            style = {{borderRadius: 10, height: "100%"}}
+            activeOpacity = {props.activeOpacity}
+            underlayColor = {props.underlayColor}
+            style = {projectCreationStyles.buttonIconBoxTH}
           >
             <Icon
-              name= {props.name}
+              name = {props.name}
               color = {props.color}
-              style={{alignSelf: "center", paddingTop: 17, color: "white", fontSize: 20}}
+              style ={projectCreationStyles.buttonIconBoxDetails}
             >
               {'  '}Create Project
             </Icon>
