@@ -6,31 +6,13 @@
  * @flow strict-local
  */
 
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {
-  Text,
-  useColorScheme,
   View,
-  TouchableHighlight,
-  TextInput,
-  FlatList,
-  DatePickerIOSBase,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
 import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer, useFocusEffect, useIsFocused } from '@react-navigation/native';
-import Icon from "react-native-vector-icons/AntDesign";
-import DatePicker from 'react-native-datepicker'
-import LinearGradient from 'react-native-linear-gradient'
-
+import { NavigationContainer } from '@react-navigation/native';
 
 import {LogIn} from './components/LogIn.js';
 import {CreateAccount} from './components/CreateAccount.js';
@@ -39,7 +21,6 @@ import {ProjectCreation} from './components/ProjectCreation.js';
 import {Settings} from './components/Settings.js';
 import {EditTask} from './components/EditTask.js';
 import {Project} from './components/Project.js';
-import * as styles from './components/styles/styles.js';
 
 /**
  * For Testing Purposes

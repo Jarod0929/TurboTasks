@@ -3,7 +3,8 @@ Using Javascript Docs
 
 /**
  * Description
- * @params {type} description of params
+ * @params name {type} description of params
+           name {type} description of params
  * @return description of returns
  */
 
@@ -11,6 +12,8 @@ Using Javascript Docs
 
 **If Else Statements**
 if (condition){
+  //Code
+} else if (condition2){
   //Code
 } else {
   //Code

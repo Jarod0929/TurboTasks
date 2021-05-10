@@ -1,7 +1,7 @@
 import React from 'react';
 import {render, fireEvent} from '@testing-library/react-native';
 import App from './sum';
-
+import renderer from 'react-test-renderer';
 describe('Testing Button', () => {
   test('Zero Test', () => {
     const {getByA11yLabel} = render(<App />);
@@ -23,5 +23,9 @@ describe('Testing Button', () => {
     const number = getByA11yLabel('Press Count');
 
     expect(number.children[0]).toBe("2");
+  });
+
+  test('Test Create', () => {
+    renderer.create(<App />);
   });
 });
