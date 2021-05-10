@@ -2,11 +2,11 @@
 Using Javascript Docs
 
 /**
- * Description
- * @params name {type} description of params
-           name {type} description of params
- * @return description of returns
- */
+* Description
+* @params name {type} description of params
+*         name {type} description of params
+* @return description of returns
+*/
 
 **Number of Spaces = 2**
 

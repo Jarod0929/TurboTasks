@@ -28,21 +28,26 @@ export function ProjectList({ route, navigation }) {
   const [visibility, changeVisibility] = useState(false);//visibility of the delete project modal
 
   useEffect(() => {
-    if(user != null){
-      database().ref("/Database/Users/" + user).off("value", handleProject);
-    }
-    changeUser(route.params.user);
-    database().ref("/Database/Users/" + route.params.user).on("value", handleProject);
+    getUserProjects();
   }, [route.params.user]);
 
-  /* Takes the users info looking for the users projects */  
-  //Updates projects state variable to be list of ID's of projects the user is in
-  const handleProject = snapshot => {
+  const getUserProjects = () => {
+    if(user != null){
+      database().ref("/Database/Users/" + user).off("value", updateProjectList);
+    }
+    changeUser(route.params.user);
+    database().ref("/Database/Users/" + route.params.user).on("value", updateProjectList);
+  }
+
+  const updateProjectList = snapshot => {
     changeProjects(snapshot.val().projects);
   }
 
-  //Shows the modal for the description and delete page for a project
-  function deletionPage(projID){
+  /**
+  * Shows the Edit/Delete modal for a project
+  * @params projID {string} project ID of the project we want to pull modal for
+  */
+  const deletionPage = projID => {
     changeCurrentProj(projID);    
     changeVisibility(true);
   }
@@ -78,7 +83,7 @@ export function ProjectList({ route, navigation }) {
   );
 }
 
-const UserProjectsFlatlist = (props) => {
+const UserProjectsFlatlist = props => {
   return (
     <View 
       style={styles.projectListMainView}
@@ -110,95 +115,96 @@ const UserProjectsFlatlist = (props) => {
   );
 }
   
-const ProjectModal = (props) => {
+const ProjectModal = props => {
   const [invUsers, changeInvUsers] = useState('');//For the inviteUsers field
   const [checkUser, changeCheckUser] = useState(null);//Used to check if user exists 
   const [title, changeTitle] = useState("");
-  const [description,changeDescription] = useState("");
-
-  let addedUserID;// The user you are trying to adds ID
+  const [description, changeDescription] = useState("");
+  let addedUserID;
  
   useEffect(() => {
-    database().ref(`/Database/Projects/${props.currentProj}`).once('value', snapshot => {
-      changeTitle(snapshot.val().title);
-      changeDescription(snapshot.val().description);
-    });
+    database().ref(`/Database/Projects/${props.currentProj}`).once('value', updateProjectInfo);
   }, [props.currentProj]);
 
-  //adds the username to the project on the databse
-  const addProjectIds = (userId, projectId) => {  
-    const add = database().ref(`/Database/Users/${userId}/projects`).on('value', snap => {
-      if(snap.val() != null){
-        let temp = snap.val();
-        temp.push(projectId);
-        database().ref(`/Database/Users/${userId}`).update({
-          projects: temp,
-        });
-        database().ref(`/Database/Users/${userId}/projects`).off("value", add);
-      } else {
-        database().ref(`/Database/Users/${userId}`).update({
-          projects: [projectId],
-        });
-        database().ref(`/Database/Users/${userId}/projects`).off("value", add);
-      }
-    });
+  const updateProjectInfo = snapshot => {
+    changeTitle(snapshot.val().title);
+    changeDescription(snapshot.val().description);
   }
+
+
   
-  //finds the userID for the added user
   const addUsersToList = () =>{
     database().ref("/Database/Users").orderByChild("Username").equalTo(invUsers).once("value",findAddedUserID);
   };
 
-  // Finds the added userID
-  const findAddedUserID= snapshot=>{
+  const findAddedUserID = snapshot => {
     for(let key in snapshot.val()){
-      addedUserID=key;
+      addedUserID = key;
     }
-    //Validates the user that is being added
     database().ref(`/Database/Projects/${props.currentProj}`).once("value",validateUser);        
   }
 
-  // checks if the user is already in the list
   const validateUser = snapshot => {
     let valid=true;
     let userList=snapshot.val().users;
     for(let i = 0; i < userList.length; i++){
-      if(addedUserID == userList[i]){
-        valid=false;
+      if (addedUserID == userList[i]){
+        valid = false;
       }
     }
     props.changeValidUser(valid);
     changeInvUsers('');
-    if(valid){
-      database().ref(`/Database/Projects/${props.currentProj}`).once("value",addUserToProject);
+    if (valid){
+      database().ref(`/Database/Projects/${props.currentProj}`).once("value", addUserToProject);
     }
   }
 
-  // adds user to the project under the database
   const addUserToProject = snapshot => {
-    if(snapshot.val().users!=null && addedUserID != null){
+    if (snapshot.val().users!=null && addedUserID != null){
       changeCheckUser(true);
       let userList = snapshot.val().users.slice();
-      userList.push(addedUserID);// pushes the new user
-      database().ref(`/Database/Projects/${props.currentProj}`).update({users:userList});
+      userList.push(addedUserID);
+      database().ref(`/Database/Projects/${props.currentProj}`).update(
+        {users:userList
+      });
       addProjectIds(addedUserID, props.currentProj);
     } else {
       changeCheckUser(false);
     }
   }
 
+  const addProjectIds = (userId, projectId) => {  
+    const add = database().ref(`/Database/Users/${userId}/projects`).once('value', snapshot => {
+      if(snapshot.val() != null){
+        let tempProjectList = snapshot.val();
+        tempProjectList.push(projectId);
+        database().ref(`/Database/Users/${userId}`).update({
+          projects: tempProjectList,
+        });
+      } else {
+        database().ref(`/Database/Users/${userId}`).update({
+          projects: [projectId],
+        });
+      }
+    });
+  }
+
   // Deletes the Project from the held Project
-  const deleteProj= ()=>{
+  const deleteProj = () => {
     //Deletes project from the users Projects list
-    database().ref("/Database/Users/" + props.user).once("value",  snapshot=>{
-      const array = snapshot.val().projects.filter(item=> item!= props.currentProj);
-      database().ref("/Database/Users/" + props.user).update({projects:array});  
+    database().ref("/Database/Users/" + props.user).once("value",  snapshot => {
+      const array = snapshot.val().projects.filter(item => item != props.currentProj);
+      database().ref("/Database/Users/" + props.user).update({
+        projects:array
+      });  
     });
     
     // Deletes the current project from Projects
     database().ref("/Database/Projects/" + props.currentProj).once("value",  snapshot=>{
       const array = snapshot.val().users.filter(item => item != props.user);
-      database().ref("/Database/Projects/" + props.currentProj).update({users:array});
+      database().ref("/Database/Projects/" + props.currentProj).update({
+        users:array
+      });
       
       //iff no users in the project 
       //then delete project and all of its tasks
@@ -212,8 +218,10 @@ const ProjectModal = (props) => {
     });
   }
 
-  // Deletes deltaskID and its subtasks for the current project
-  //@param delTaskID is string representing id of task to delete along with its subtasks
+  /** 
+  * Deletes deltaskID and its subtasks for the current project
+  * @param delTaskID is string representing id of task to delete along with its subtasks
+  */
   const deleteTasks = (delTaskID) => {
     database().ref("/Database/Tasks/" + delTaskID).once("value", snapshot => {
       //Recursively calls on each of subtasks
@@ -223,7 +231,7 @@ const ProjectModal = (props) => {
         }
       }
       //Then deletes delTaskID task from database, as well as from its parent's list of subtasks
-      if(snapshot.val().parentTask != 'none'){
+      if(snapshot.val().parentTask != "none"){
         database().ref("/Database/Tasks/" + snapshot.val().parentTask).once("value", snap => {
           const array = snap.val().subTasks.filter(ID => ID != delTaskID);
           database().ref("/Database/Tasks/" + snapshot.val().parentTask).update({
@@ -240,14 +248,18 @@ const ProjectModal = (props) => {
   };
 
   const isTitle = () =>{
-    if(title!=''){
-      database().ref("/Database/Projects/"+ props.currentProj).update({title: title});
+    if(title != ""){
+      database().ref("/Database/Projects/"+ props.currentProj).update({
+        title: title
+      });
     }
   }
 
   const isDescription = () =>{
-    if(description!=''){
-      database().ref("/Database/Projects/"+ props.currentProj).update({description: description});
+    if(description != ""){
+      database().ref("/Database/Projects/"+ props.currentProj).update({
+        description: description
+      });
     }
   }
 
@@ -271,28 +283,26 @@ const ProjectModal = (props) => {
             })()
           }
         >
-        <ScrollView
-         style={{width:"100%"}}
-         contentContainerStyle = {{alignItems:"center"}}
-        >
-          <Text>{title}</Text>
-          <Text>{description}</Text>
-          <TouchableHighlight 
-            onPress={()=>{
-              deleteProj()
-            }}
+          <ScrollView
+          style={{ width:"100%" }}
+          contentContainerStyle = {{ alignItems:"center" }}
           >
-            <Text>
-              Delete
+            <Text>{title}</Text>
+            <Text>{description}</Text>
+            <TouchableHighlight 
+              onPress={()=>{
+                deleteProj()
+              }}
+            >
+              <Text>
+                Delete
+              </Text>
+            </TouchableHighlight>
+            <Text 
+              style = {{ alignSelf: "center" }}
+            >
+              Invite Users
             </Text>
-          </TouchableHighlight>
-          <Text 
-            style = {{alignSelf: "center"}}
-          >
-            Invite Users
-          </Text>
-         
-          
             <TextInput
               autoFocus={true}
               style = {{borderBottomColor: 'gray', borderBottomWidth: 1, width: "75%",height: 50, textAlign: "center", alignSelf: "center", marginBottom: 10}}
@@ -303,17 +313,17 @@ const ProjectModal = (props) => {
             <TouchableHighlight onPress = {addUsersToList}
               style={{alignItems:"center"}}                
             >
-                <Icon
-                stlye={{margin: 2}}
-                  name="addusergroup" 
-                  size = {35} 
-                />
+              <Icon
+              stlye={{margin: 2}}
+                name="addusergroup" 
+                size = {35} 
+              />
             </TouchableHighlight>
             {checkUser == true &&
               <Text style = {{alignSelf: "center"}}>User Successfully Added!</Text>
             }
             {checkUser == false &&
-              <Text style = {{alignSelf: "center"}}>User Not Found</Text>
+              <Text style = {{alignSelf: "center", color: "red"}}>User Not Found</Text>
             }
             <Text>Project Title</Text>
             <TextInputBox
@@ -347,12 +357,7 @@ const ProjectModal = (props) => {
 
 // Each project Box the user has
 const ProjectPanel = (props) => {
-  const [project, changeProject] = useState(null);//The entire project information
-
-  //Updates project state variable to have all the project info
-  const handleProject = snapshot => {
-    changeProject(snapshot.val());
-  }
+  const [project, changeProject] = useState(null);//Contains entire project information
 
   useFocusEffect(
     React.useCallback(() => {
@@ -360,6 +365,9 @@ const ProjectPanel = (props) => {
     }, [project])
   );
 
+  const handleProject = snapshot => {
+    changeProject(snapshot.val());
+  }
   
   return (
     <View>
@@ -393,19 +401,16 @@ const ProjectPanelInfo = (props) => {
     <View
       style = {styles.projectPanelInfoCentering}
     >
-      {/* Project Title */}
       <Text style={{fontSize: 20}}>
         {props.projectTitle}
       </Text>
-      {/* Project tasks count id not 0 */}
+      {/* Project tasks count iff not 0 */}
       <Text>
         {props.projectTaskCount} Task(s)
       </Text>
-      {/* Display due date of project */}
       <Text>
         Due Date: {props.projectDueDate} 
       </Text>
-      {/* Displays number of users in project */}
       <Text>
         {props.projectUserCount} User(s)
       </Text>
