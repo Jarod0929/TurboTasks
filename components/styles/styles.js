@@ -1,3 +1,4 @@
+import { faBorderNone } from '@fortawesome/free-solid-svg-icons';
 import {
     StyleSheet
   } from 'react-native';
@@ -20,7 +21,7 @@ const styles = StyleSheet.create({
   
   },
   projectListModal:{
-    height: "80%", 
+    height: "84%", 
     width: "80%", 
     margin:"10%", 
     alignItems: "center",

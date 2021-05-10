@@ -9,6 +9,8 @@ import {
   TextInput,
   Platform,
   UIManager,
+  KeyboardAvoidingView,
+  ScrollView,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import database from '@react-native-firebase/database';
@@ -122,7 +124,7 @@ const ProjectModal = (props) => {
       changeDescription(snapshot.val().description);
     });
   }, [props.currentProj]);
-  
+
   //adds the username to the project on the databse
   const addProjectIds = (userId, projectId) => {  
     const add = database().ref(`/Database/Users/${userId}/projects`).on('value', snap => {
@@ -260,8 +262,18 @@ const ProjectModal = (props) => {
           props.changeVisibility(false);
         }}
       >
-        <View 
+        <KeyboardAvoidingView 
           style={styles.projectListModal}
+          behavior = "padding"
+          keyboardVerticalOffset={
+            Platform.select({
+              android: () => -1200
+            })()
+          }
+        >
+        <ScrollView
+         style={{width:"100%"}}
+         contentContainerStyle = {{alignItems:"center"}}
         >
           <Text>{title}</Text>
           <Text>{description}</Text>
@@ -279,10 +291,8 @@ const ProjectModal = (props) => {
           >
             Invite Users
           </Text>
-          {/*INVITE USER VIEW (USED TO PUT BUTTON AND INPUT ON ONE LINE)*/ }
-          <View 
-            style = {{marginBottom: 0, height: "20%"}}
-          >
+         
+          
             <TextInput
               autoFocus={true}
               style = {{borderBottomColor: 'gray', borderBottomWidth: 1, width: "75%",height: 50, textAlign: "center", alignSelf: "center", marginBottom: 10}}
@@ -316,7 +326,6 @@ const ProjectModal = (props) => {
               text={"Enter to Change Title"}
               style={basicStyles.buttonContainer}
             />
-            <Text>Project Description</Text>
             <DescriptionTextInputBox
               text = "Project Description"
               style = {styles.editProjectDescriptionInputs}
@@ -328,12 +337,9 @@ const ProjectModal = (props) => {
               text={"Enter to Change Description"}
               style={basicStyles.buttonContainer}
             />
-          </View>
-        </View>
-          
+          </ScrollView>
+        </KeyboardAvoidingView>  
       </TouchableHighlight>
-      
-      
     </Modal>
   );
 }
@@ -491,6 +497,7 @@ const TextInputBox = props => {
         onChangeText = {text => props.changeValue(text)}
         placeholder = {props.text}
         value = {props.value}
+        maxLength = {30}
       />
     </View>
   );
@@ -503,6 +510,7 @@ const DescriptionTextInputBox = props => {
       <TextInput
         multiline
         numberOfLines={4}
+        maxLength = {140}
         onChangeText = {text => props.onChangeText(text)}
         placeholder = {props.text}
         value = {props.value}
