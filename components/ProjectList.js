@@ -10,7 +10,7 @@ import {
   Platform,
   UIManager,
   KeyboardAvoidingView,
-  ScrollView
+  ScrollView,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import database from '@react-native-firebase/database';
@@ -117,6 +117,7 @@ const ProjectModal = (props) => {
   const[description,changeDescription]=useState("");
   const[userEnteredTitle, changeUserEnteredTitle]=useState(title);
   const[userEnteredDescription,changeUserEnteredDescription]=useState(description);
+
   let addedUserID;// The user you are trying to adds ID
  
   useEffect(() => {
@@ -125,15 +126,6 @@ const ProjectModal = (props) => {
       changeDescription(snapshot.val().description);
     });
   }, [props.currentProj]);
-  
-  // const handleDescAndTitle=() => {
-  //    database().ref(`/Database/Projects/${props.currentProj}`).once('value', snapshot => {
-  //     changeTitle(snapshot.val().title);
-  //     changeDescription(snapshot.val().description);
-   
-  //   });
-  // }
-  // useEffect(handleDescAndTitle, [title,description]);
 
   //adds the username to the project on the databse
   const addProjectIds = (userId, projectId) => {  
@@ -273,17 +265,21 @@ const ProjectModal = (props) => {
       <TouchableHighlight 
         onPress = {() => {
           props.changeVisibility(false);
-          console.log("THis is the props "+title);
         }}
       >
         <KeyboardAvoidingView 
           style={styles.projectListModal}
-          behavior = "height"
+          behavior = "padding"
+          keyboardVerticalOffset={
+            Platform.select({
+              android: () => -1200
+            })()
+          }
         >
         <ScrollView
          style={{width:"100%"}}
          contentContainerStyle = {{alignItems:"center"}}
-         >
+        >
           <Text>{title}</Text>
           <Text>{description}</Text>
           <TouchableHighlight 
@@ -300,10 +296,8 @@ const ProjectModal = (props) => {
           >
             Invite Users
           </Text>
-          {/*INVITE USER VIEW (USED TO PUT BUTTON AND INPUT ON ONE LINE)*/ }
-          <View 
-            style = {{marginBottom: 0, height: "20%"}}
-          >
+         
+          
             <TextInput
               autoFocus={true}
               style = {{borderBottomColor: 'gray', borderBottomWidth: 1, width: "75%",height: 50, textAlign: "center", alignSelf: "center", marginBottom: 10}}
@@ -337,7 +331,6 @@ const ProjectModal = (props) => {
               text={"Enter to Change Title"}
               style={basicStyles.buttonContainer}
             />
-            <Text>Project Description</Text>
             <DescriptionTextInputBox
               text = "Project Description"
               style = {styles.editProjectDescriptionInputs}
@@ -349,13 +342,9 @@ const ProjectModal = (props) => {
               text={"Enter to Change Description"}
               style={basicStyles.buttonContainer}
             />
-          </View>
           </ScrollView>
-        </KeyboardAvoidingView>
-          
+        </KeyboardAvoidingView>  
       </TouchableHighlight>
-      
-      
     </Modal>
   );
 }
@@ -513,6 +502,7 @@ const TextInputBox = props => {
         onChangeText = {text => props.changeValue(text)}
         placeholder = {props.text}
         value = {props.value}
+        maxLength = {30}
       />
     </View>
   );
@@ -525,6 +515,7 @@ const DescriptionTextInputBox = props => {
       <TextInput
         multiline
         numberOfLines={4}
+        maxLength = {140}
         onChangeText = {text => props.onChangeText(text)}
         placeholder = {props.text}
         value = {props.value}
