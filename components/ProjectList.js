@@ -20,7 +20,7 @@ import * as basicStyles from './styles/basicStyles.js';
 import * as topBarStyles from './styles/topBarStyles.js';
 import { on } from 'npm';
   
-export function ProjectList ({ route, navigation }) {
+export function ProjectList({ route, navigation }) {
   const [projects, changeProjects] = useState(null);//List of project ID's for user
   const [user, changeUser] = useState(null);//user's ID
   const [currentProj, changeCurrentProj] = useState(null);//ID of the current project showing in the delete modal
@@ -113,10 +113,8 @@ const UserProjectsFlatlist = (props) => {
 const ProjectModal = (props) => {
   const [invUsers, changeInvUsers] = useState('');//For the inviteUsers field
   const [checkUser, changeCheckUser] = useState(null);//Used to check if user exists 
-  const[title, changeTitle]=useState("");
-  const[description,changeDescription]=useState("");
-  const[userEnteredTitle, changeUserEnteredTitle]=useState(title);
-  const[userEnteredDescription,changeUserEnteredDescription]=useState(description);
+  const [title, changeTitle] = useState("");
+  const [description,changeDescription] = useState("");
 
   let addedUserID;// The user you are trying to adds ID
  
@@ -146,8 +144,11 @@ const ProjectModal = (props) => {
     });
   }
   
-  
-  
+  //finds the userID for the added user
+  const addUsersToList = () =>{
+    database().ref("/Database/Users").orderByChild("Username").equalTo(invUsers).once("value",findAddedUserID);
+  };
+
   // Finds the added userID
   const findAddedUserID= snapshot=>{
     for(let key in snapshot.val()){
@@ -156,37 +157,33 @@ const ProjectModal = (props) => {
     //Validates the user that is being added
     database().ref(`/Database/Projects/${props.currentProj}`).once("value",validateUser);        
   }
-  
-  //finds the userID for the added user
-  const addUsersToList = () =>{
-    database().ref("/Database/Users").orderByChild("Username").equalTo(invUsers).once("value",findAddedUserID);
-  };
-
-  // adds user to the project under the database
-  const addUserToProject=snapshot=>{
-   
-    if(snapshot.val().users!=null){
-      let userList = snapshot.val().users.slice();
-      userList.push(addedUserID);// pushes the new user
-      database().ref(`/Database/Projects/${props.currentProj}`).update({users:userList});
-      addProjectIds(addedUserID, props.currentProj);
-    }
-  }
 
   // checks if the user is already in the list
-  const validateUser = snapshot=>{
+  const validateUser = snapshot => {
     let valid=true;
     let userList=snapshot.val().users;
-    for(let i =0;i<userList.length;i++){
-      if(invUsers==userList[i]){
+    for(let i = 0; i < userList.length; i++){
+      if(addedUserID == userList[i]){
         valid=false;
       }
     }
     props.changeValidUser(valid);
-    changeCheckUser(valid);
     changeInvUsers('');
     if(valid){
       database().ref(`/Database/Projects/${props.currentProj}`).once("value",addUserToProject);
+    }
+  }
+
+  // adds user to the project under the database
+  const addUserToProject = snapshot => {
+    if(snapshot.val().users!=null && addedUserID != null){
+      changeCheckUser(true);
+      let userList = snapshot.val().users.slice();
+      userList.push(addedUserID);// pushes the new user
+      database().ref(`/Database/Projects/${props.currentProj}`).update({users:userList});
+      addProjectIds(addedUserID, props.currentProj);
+    } else {
+      changeCheckUser(false);
     }
   }
 
@@ -241,8 +238,6 @@ const ProjectModal = (props) => {
       }
     });    
   };
-
-  
 
   const isTitle = () =>{
     if(title!=''){

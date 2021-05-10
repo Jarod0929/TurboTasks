@@ -49,7 +49,7 @@ export function CreateAccount ({navigation}) {
   };
 
   const isUniqueUsername = snapshot => {
-    if(snapshot.val() !== null || username === '' || password === ''){
+    if(snapshot.val() !== null || username === "" || password === ""){
       changeFailedMessage(true);
     } else {
       createNewAccount();
