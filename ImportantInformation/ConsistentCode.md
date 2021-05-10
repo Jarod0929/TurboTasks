@@ -61,3 +61,8 @@ useEffect(() => {
   functionName();
 },[Something]);
 
+**params**
+({ variable })
+
+**Equals Spacing**
+variable = value

@@ -18,7 +18,7 @@ import * as basicStyles from './styles/basicStyles.js';
 import * as topBarStyles from './styles/topBarStyles.js';
 import { on } from 'npm';
   
-export function ProjectList ({ route, navigation }) {
+export function ProjectList({ route, navigation }) {
   const [projects, changeProjects] = useState(null);//List of project ID's for user
   const [user, changeUser] = useState(null);//user's ID
   const [currentProj, changeCurrentProj] = useState(null);//ID of the current project showing in the delete modal
@@ -111,10 +111,10 @@ const UserProjectsFlatlist = (props) => {
 const ProjectModal = (props) => {
   const [invUsers, changeInvUsers] = useState('');//For the inviteUsers field
   const [checkUser, changeCheckUser] = useState(null);//Used to check if user exists 
-  const[title, changeTitle]=useState("");
-  const[description,changeDescription]=useState("");
-  const[userEnteredTitle, changeUserEnteredTitle]=useState(title);
-  const[userEnteredDescription,changeUserEnteredDescription]=useState(description);
+  const [title, changeTitle] = useState("");
+  const [description,changeDescription] = useState("");
+  const [userEnteredTitle, changeUserEnteredTitle] = useState(title);
+  const [userEnteredDescription,changeUserEnteredDescription] = useState(description);
   let addedUserID;// The user you are trying to adds ID
  
   useEffect(() => {
