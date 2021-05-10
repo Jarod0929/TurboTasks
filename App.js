@@ -62,17 +62,17 @@ const RootScreen = createStackNavigator();
 /**
  * Group of screens before LogIn
  */
-export default function App() {
+export default function App(){
   return (
     <NavigationContainer>
-      <RootScreen.Navigator initialRouteName="LogIn" screenOptions = {{ headerShown: false}}>
-        <RootScreen.Screen name="Main" component={AfterLogin} options={{
+      <RootScreen.Navigator initialRouteName = "LogIn" screenOptions = {{ headerShown: false }}>
+        <RootScreen.Screen name = "Main" component= { AfterLogin } options = {{
                 drawerLabel: () => null,
                 title: null,
                 drawerIcon: () => null }} />
-        <RootScreen.Screen name="LogIn" component={LogIn}/>
-        <RootScreen.Screen name="Test" component={Test}/>
-        <RootScreen.Screen name="CreateAccount" component={CreateAccount}/>
+        <RootScreen.Screen name = "LogIn" component = { LogIn }/>
+        <RootScreen.Screen name = "Test" component = { Test }/>
+        <RootScreen.Screen name = "CreateAccount" component = { CreateAccount }/>
       </RootScreen.Navigator>
     </NavigationContainer>  
   );
@@ -82,15 +82,15 @@ export default function App() {
  * The group of Screens after LogIn
  */
 const SecondDrawer = createStackNavigator();
-function AfterLogin({ route,navigation }){
+function AfterLogin({ route, navigation }){
   return(
     <SecondDrawer.Navigator screenOptions = {{ headerShown: false }}>
-      <SecondDrawer.Screen name = "LogIn" component={LogIn} />
-      <SecondDrawer.Screen name = "ProjectList" component={ProjectList}/>
-      <SecondDrawer.Screen name = "ProjectCreation" component={ProjectCreation}/>
-      <SecondDrawer.Screen name = "Project" component={Project}/>
-      <SecondDrawer.Screen name = "EditTask" component={EditTask}/>
-      <SecondDrawer.Screen name = "Settings" component={Settings}/>
+      <SecondDrawer.Screen name = "LogIn" component = { LogIn } />
+      <SecondDrawer.Screen name = "ProjectList" component={ ProjectList }/>
+      <SecondDrawer.Screen name = "ProjectCreation" component = { ProjectCreation }/>
+      <SecondDrawer.Screen name = "Project" component = { Project }/>
+      <SecondDrawer.Screen name = "EditTask" component = { EditTask }/>
+      <SecondDrawer.Screen name = "Settings" component = { Settings }/>
     </SecondDrawer.Navigator>
   );
 }

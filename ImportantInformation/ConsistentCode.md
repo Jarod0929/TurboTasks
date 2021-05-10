@@ -36,17 +36,17 @@ Functions (Top to Down)
 Return
 
 **Main Component**
-export function MainComponentName (params) {
+export function MainComponentName (params){
   //Code
 }
 
 **Other Component**
-const ComponentName (params) {
+const ComponentName (params){
   //Code
 }
 
 **Functions within Components**
-const functionName = (params) => {
+const functionName = (params, moreParams) => {
   //Code
 };
 
