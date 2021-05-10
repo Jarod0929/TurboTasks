@@ -3,7 +3,8 @@ Using Javascript Docs
 
 /**
  * Description
- * @params {type} description of params
+ * @params name {type} description of params
+           name {type} description of params
  * @return description of returns
  */
 
@@ -11,6 +12,8 @@ Using Javascript Docs
 
 **If Else Statements**
 if (condition){
+  //Code
+} else if (condition2){
   //Code
 } else {
   //Code
@@ -36,17 +39,17 @@ Functions (Top to Down)
 Return
 
 **Main Component**
-export function MainComponentName (params) {
+export function MainComponentName (params){
   //Code
 }
 
 **Other Component**
-const ComponentName (params) {
+const ComponentName (params){
   //Code
 }
 
 **Functions within Components**
-const functionName = (params) => {
+const functionName = (params, moreParams) => {
   //Code
 };
 
@@ -61,3 +64,8 @@ useEffect(() => {
   functionName();
 },[Something]);
 
+**params**
+({ variable })
+
+**Equals Spacing**
+variable = value
