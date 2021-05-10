@@ -6,8 +6,6 @@ import {
   FlatList,
   Modal,
   LayoutAnimation,
-  Platform,
-  UIManager,
 } from 'react-native';
 
 import * as styles from './styles/styles.js';
@@ -24,66 +22,88 @@ export function Project ({ navigation, route }) {
   const isFocused = navigation.isFocused();//Is true whenever the user is on the screen, but it isn't as efficient as it can be
   const [visibility, changeVisibility] = useState(false); //visibility toggle for modal
 
-  console.log(allProjectTasks);
-
   useEffect(() => {
-    if(route.params.taskID == null){
-      database().ref(`/Database/Projects/${route.params.projectID}`).once('value', snapshot => {
-        if(snapshot.val().tasks !== undefined){
-          changeAllProjectTasks(snapshot.val().tasks);
-        }
-      });
-    } else {
-      database().ref(`/Database/Tasks/${route.params.taskID}`).once('value', snapshot => {
-        if(snapshot.val().subTasks !== undefined){
-          changeAllProjectTasks(snapshot.val().subTasks);
-        }
-      });
-    }
-  }, [isFocused]); //[route.params.taskID, route.params.projectID]);
+    findTasks();
+  }, [isFocused]);
 
-  //changes decription modal task and visibility to be visible
-  function changeTaskDescriptor(taskID){
+  const findTasks = () => {
+    if(noParentTask()){
+      findTasksInProjects();
+    } else {
+      findTasksInTasks();
+    }
+  };
+
+  const noParentTask = () => {
+    return route.params.taskID == null;
+  };
+
+  const findTasksInProjects = () => {
+    database().ref(`/Database/Projects/${route.params.projectID}`).once('value', snapshot => {
+      if(snapshot.val().tasks !== undefined){
+        changeAllProjectTasks(snapshot.val().tasks);
+      }
+    });
+  };
+
+  const findTasksInTasks = () => {
+    database().ref(`/Database/Tasks/${route.params.taskID}`).once('value', snapshot => {
+      if(snapshot.val().subTasks !== undefined){
+        changeAllProjectTasks(snapshot.val().subTasks);
+      }
+    });
+  };
+
+  const changeTaskDescriptor = taskID => {
     changeVisibility(true);
     changeCurrentTask(taskID);
   }
 
-  const addTask=()=>{
+  const addNewTask = () => {
     const newTask = database().ref(`/Database/Tasks`).push();
     const newTaskID = newTask.key;
-    let newArray = [];
+    let listOfTasks = [];
+
     if(allProjectTasks != null){
-      newArray = allProjectTasks.slice();
-    }else{
-      newArray = [];
+      listOfTasks = allProjectTasks.slice();
     }
-    newArray.push(newTaskID);
-    changeAllProjectTasks(newArray);
-    if(route.params.taskID == null){
-      database().ref(`/Database/Projects/${route.params.projectID}`).update({
-        tasks: newArray
-      });
-      newTask.set({
-        ID: newTaskID,
-        title: "Task",
-        text: "Description",
-        status: "INCOMPLETE",
-        parentTask: "none",
-      });
+    listOfTasks.push(newTaskID);
+
+    if(noParentTask()){
+      addNewTaskInProjects(newTask, newTaskID, listOfTasks);
     }
     else{
-      database().ref(`/Database/Tasks/${route.params.taskID}`).update({
-        subTasks: newArray,
-      });
-      newTask.set({
-        ID: newTaskID,
-        title: "Task",
-        text: "Description",
-        status: "INCOMPLETE",
-        parentTask: route.params.taskID,
-      });
+      addNewTaskInTasks(newTask, newTaskID, listOfTasks);
     }
+    changeAllProjectTasks(listOfTasks);
   }
+
+  const addNewTaskInProjects = (newTask, newTaskID, listOfTasks) => {
+    database().ref(`/Database/Projects/${route.params.projectID}`).update({
+      tasks: listOfTasks
+    });
+    newTask.set({
+      ID: newTaskID,
+      title: "Task",
+      text: "Description",
+      status: "INCOMPLETE",
+      parentTask: "none",
+    });
+  };
+
+  const addNewTaskInTasks = (newTask, newTaskID, listOfTasks) => {
+    database().ref(`/Database/Tasks/${route.params.taskID}`).update({
+      subTasks: listOfTasks,
+    });
+    newTask.set({
+      ID: newTaskID,
+      title: "Task",
+      text: "Description",
+      status: "INCOMPLETE",
+      parentTask: route.params.taskID,
+    });
+  };
+
   return (
     <TopBar userInfo={route.params.user} navigation={navigation}>
       {/* Main Container */}
@@ -93,14 +113,13 @@ export function Project ({ navigation, route }) {
           visibility={visibility}
           onClick={() => {
             changeVisibility(false);
-            
           }}
           currentTask={currentTask}
         />
         <View style = {styles.projectListMainView}>
           {/* Add task button */}
           <AddTaskButton
-            onClick={addTask}
+            onClick={addNewTask}
             text="Add Task"  
           />
           <TaskList
@@ -116,102 +135,10 @@ export function Project ({ navigation, route }) {
     </TopBar> 
   );
 }
-/*
- userId={route.params.user}
- navigation = {navigation}
- projectID ={route.params.projectID}
 
-
-*/
-
-const TaskPanel = (props) => {
-  const [task, changeTask] = useState(null);//all task information from database
-
-  //Populates state variable 
-  const handleTask = snapshot => {
-    changeTask(snapshot.val());
-  }
-  useFocusEffect(() => {
-    database().ref("/Database/Tasks/" + props.taskID).once("value", handleTask);
-  });
-
-  if(task != null){
-    return (
-      <View style={styles.taskPanel}>
-        {/* Task Title and click to open description modal */}
-        <TouchableHighlight 
-          style={styles.taskPanelLeft}
-          onPress = {() =>{
-            props.changeTaskDescriptor(task.ID);
-          }}
-        >
-          <Text style={styles.defaultText}>
-            {task.title}   
-          </Text>
-        </TouchableHighlight>
-
-        {/* Righte side of task with edit and subtasks buttons */}
-        <View style={{width: '50%'}}>
-          {/* Edit Button */}
-          <TouchableHighlight 
-            style={styles.taskPanelEdit}
-            onPress = {() => {
-            //CHANGE PROPS.PROJECT => PROPS.TASKID
-              props.navigation.navigate("EditTask", {taskID: props.taskID, projectID: props.projectID,user: props.userId, changeAllProjectTasks: props.changeAllProjectTasks});
-            }}
-          >
-            <View style={{alignItems: 'center'}}>
-              <Text style={[styles.defaultText, {fontSize: 20}]}>Edit</Text>
-            </View>
-          </TouchableHighlight>
-          {/* Subtasks Button */}
-          <TouchableHighlight 
-            style={styles.taskPanelSubtasks}
-            onPress = {() => {
-              //CHANGE PROPS.PROJECT => PROPS.TASKID
-              props.navigation.push("Project", {taskID: props.taskID, projectID: props.projectID, user: props.userId});
-            }}
-          >
-            <View style={{alignItems: 'center'}}>
-              <Text style={[styles.defaultText, {fontSize: 20}]}>Subtasks</Text>
-            </View>
-          </TouchableHighlight>
-        </View>
-      </View>
-    );
-  } else {
-    return(
-      // Shows if the task has no information
-      <View style={styles.taskPanelEmpty}>
-        <Text>nothing</Text>
-      </View>
-    );
-  }
-}
-
-const TaskDescriptor = (props) => {
-  const[task, changeTask] = useState(null); //all task information from database
-
-  const handleTask = snapshot => {
-    changeTask(snapshot.val());
-  }
-    
-  useFocusEffect(() => {
-    database().ref("/Database/Tasks/" + props.taskID + "/").once("value", handleTask);
-  });
-    
-  return(
-    // Modal that shows the description of task
-    <View style={styles.taskModal}>
-      <Text>Title: {task?.title}</Text>
-      <Text>Description: {task?.text}</Text>
-    </View>
-  );
-}
-
-
-const TopBar = (props) => {
+const TopBar = props => {
   const [drawer, changeDrawer] = useState(false);
+
   return (
     <View style = {basicStyles.container}>
       <View style = {topBarStyles.topBarContainer}>
@@ -280,7 +207,103 @@ const ButtonBoxForNavigation = props => {
   );
 };
 
-//Modal for any given task
+const TaskPanel = (props) => {
+  const [task, changeTask] = useState(null);//all task information from database
+
+  useFocusEffect(() => {
+    database().ref("/Database/Tasks/" + props.taskID).once("value", handleTask);
+  });
+
+  const handleTask = snapshot => {
+    changeTask(snapshot.val());
+  };
+
+  const goToEditTask = () => {
+    props.navigation.navigate("EditTask", {
+      taskID: props.taskID, 
+      projectID: props.projectID,
+      user: props.userId, 
+      changeAllProjectTasks: props.changeAllProjectTasks
+    });
+  };
+  
+  const goToSubTask = () => {
+    props.navigation.push("Project", {
+      taskID: props.taskID, 
+      projectID: props.projectID, 
+      user: props.userId
+    });
+  };
+
+  const noTasks = () => {
+    return task != null;
+  }
+
+  if(noTasks()){
+    return (
+      <View style={styles.taskPanel}>
+        {/* Task Title and click to open description modal */}
+        <TouchableHighlight 
+          style={styles.taskPanelLeft}
+          onPress = {() =>{
+            props.changeTaskDescriptor(task.ID);
+          }}
+        >
+          <Text style={styles.defaultText}>
+            {task.title}   
+          </Text>
+        </TouchableHighlight>
+        {/* Right side of task with edit and subtasks buttons */}
+        <View style={{width: '50%'}}>
+          {/* Edit Button */}
+          <TouchableHighlight 
+            style={styles.taskPanelEdit}
+            onPress = {goToEditTask}
+          >
+            <View style={{alignItems: 'center'}}>
+              <Text style={[styles.defaultText, {fontSize: 20}]}>Edit</Text>
+            </View>
+          </TouchableHighlight>
+          {/* Subtasks Button */}
+          <TouchableHighlight 
+            style={styles.taskPanelSubtasks}
+            onPress = {goToSubTask}
+          >
+            <View style={{alignItems: 'center'}}>
+              <Text style={[styles.defaultText, {fontSize: 20}]}>Subtasks</Text>
+            </View>
+          </TouchableHighlight>
+        </View>
+      </View>
+    );
+  } else {
+    return(
+      <View style={styles.taskPanelEmpty}>
+        <Text>nothing</Text>
+      </View>
+    );
+  }
+}
+
+const TaskDescriptor = props => {
+  const[task, changeTask] = useState(null);
+
+  useFocusEffect(() => {
+    database().ref("/Database/Tasks/" + props.taskID + "/").once("value", handleTask);
+  });
+
+  const handleTask = snapshot => {
+    changeTask(snapshot.val());
+  }
+    
+  return(
+    <View style={styles.taskModal}>
+      <Text>Title: {task?.title}</Text>
+      <Text>Description: {task?.text}</Text>
+    </View>
+  );
+}
+
 const FullModal = props => {
   return(
     <View>
@@ -301,8 +324,7 @@ const FullModal = props => {
   );
 };
 
-// Button that will add more tasks to the current project
-const AddTaskButton= props=>{
+const AddTaskButton= props => {
   return(
     <TouchableHighlight 
       style={styles.addTaskButton}
@@ -311,12 +333,10 @@ const AddTaskButton= props=>{
       <Text>
         {props.text}
       </Text>
-
     </TouchableHighlight>
-
   )
 }
-//List the task in the current project
+
 const TaskList = props =>{
   return(
     <View>
@@ -341,7 +361,6 @@ const TaskList = props =>{
       <Text>No Tasks</Text>
     }
   </View>
-
   );
 }
 

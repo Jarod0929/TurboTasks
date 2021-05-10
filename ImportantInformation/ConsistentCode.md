@@ -7,6 +7,7 @@ Using Javascript Docs
  * @return description of returns
  */
 
+**Number of Spaces = 2**
 
 **If Else Statements**
 if (condition){
@@ -29,10 +30,34 @@ Other Function
 
 **Format of Components**
 States
+- UseStates
+- UseEffects
 Functions (Top to Down)
 Return
 
-**Number of Spaces = 2**
+**Main Component**
+export function MainComponentName (params) {
+  //Code
+}
 
-**Type of Comments = Javascript Docs**
+**Other Component**
+const ComponentName (params) {
+  //Code
+}
+
+**Functions within Components**
+const functionName = (params) => {
+  //Code
+};
+
+Functions with only one params should be without parenthesis
+const functionName = props => {
+
+};
+
+**UseEffects** 
+//Only one function
+useEffect(() => {
+  functionName();
+},[Something]);
 
