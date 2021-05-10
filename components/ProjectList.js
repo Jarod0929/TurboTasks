@@ -9,6 +9,8 @@ import {
   TextInput,
   Platform,
   UIManager,
+  KeyboardAvoidingView,
+  ScrollView
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import database from '@react-native-firebase/database';
@@ -274,9 +276,14 @@ const ProjectModal = (props) => {
           console.log("THis is the props "+title);
         }}
       >
-        <View 
+        <KeyboardAvoidingView 
           style={styles.projectListModal}
+          behavior = "height"
         >
+        <ScrollView
+         style={{width:"100%"}}
+         contentContainerStyle = {{alignItems:"center"}}
+         >
           <Text>{title}</Text>
           <Text>{description}</Text>
           <TouchableHighlight 
@@ -343,7 +350,8 @@ const ProjectModal = (props) => {
               style={basicStyles.buttonContainer}
             />
           </View>
-        </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
           
       </TouchableHighlight>
       

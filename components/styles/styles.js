@@ -1,3 +1,4 @@
+import { faBorderNone } from '@fortawesome/free-solid-svg-icons';
 import {
     StyleSheet
   } from 'react-native';
