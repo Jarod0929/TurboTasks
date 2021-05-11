@@ -1,15 +1,10 @@
 import React, {useState} from 'react';
 import {
   Text,
-  useColorScheme,
   View,
   TouchableHighlight,
   TextInput,
-  FlatList,
-  Image,
   LayoutAnimation,
-  Platform,
-  UIManager,
   Dimensions,
 } from 'react-native';
 import DatePicker from 'react-native-datepicker'
@@ -21,7 +16,6 @@ import * as basicStyles from './styles/basicStyles.js';
 import * as topBarStyles from './styles/topBarStyles.js';
 import * as projectCreationStyles from './styles/projectCreationStyles.js';
 
-
 /**
  * Establishes the entire container with all the children under the bar
  * 
@@ -29,9 +23,6 @@ import * as projectCreationStyles from './styles/projectCreationStyles.js';
  * @returns Top blue bar with all its children below it
  */
 
-
-
-/*Project creation Page*/
 export function ProjectCreation ({ route, navigation }) { 
   const today = new Date();
   const today_format = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, '0') + "-" + String(today.getDate()).padStart(2, '0');
@@ -43,21 +34,16 @@ export function ProjectCreation ({ route, navigation }) {
   const [date, setDate] = useState(today_format);//Date selector
   const [checkUser, changeCheckUser] = useState(null);//Used to check if user exists
   
-  const addProjectIds = (userId, projectId) => {
-    console.log(userId);
-    //Gets projects[] from user  
-  let add = database().ref(`/Database/Users/${userId}/projects`).on('value', snap => {
-    
-      if(snap.val() != null){
+  const addProjectIds = (userId, projectId) => {  
+    let add = database().ref(`/Database/Users/${userId}/projects`).on('value', snap => {   
+      if (snap.val() != null){
         let temp = snap.val();
         temp.push(projectId);
-        //updates users project[] with newly created project
         database().ref(`/Database/Users/${userId}`).update({
           projects: temp,
         });
         database().ref(`/Database/Users/${userId}/projects`).off("value", add);
-      }
-      else{
+      } else {
         database().ref(`/Database/Users/${userId}`).update({
           projects: [projectId],
         });
@@ -66,27 +52,21 @@ export function ProjectCreation ({ route, navigation }) {
     });
   }
 
-  //Resets all relevant states
   const resetEverything = () => {
     changeProjectName("");
     changeInvUsers("");
     addUsersList([user]);
   };
 
-  //Creates the new Project using the previous states
   const createNewProject = () => {
-    //Creates Base Task
     const baseTask = database().ref("/Database/Tasks").push({
       parentTask: "none",
       title: "Click Me to Edit!",
       text: "Add a description..."
     });
-    //baseTask ID
     const taskKey = baseTask.key;
-    //Sets base Task ID
     baseTask.update({ID: taskKey});
-    if(projectName != ""){
-      //Initializes the new project
+    if (projectName != ""){
       const newData = database().ref("/Database/Projects").push({
         title: projectName,
         descripton: "Enter a description",
@@ -94,44 +74,35 @@ export function ProjectCreation ({ route, navigation }) {
         tasks: [taskKey],
         dueDate: date 
       });
-      //Project ID
       const newDataKey = newData.key;
-      //Sets project ID
       newData.update({ID: newDataKey});
-      //Loops through users in invUsersList and adds project: id 
-      
       invUsersList.forEach(element => addProjectIds(element, newDataKey));
       changeProjectName("");
       addUsersList([user]);
       navigation.navigate("ProjectList", {user: route.params.user, changed: newDataKey});
     }
   };
-  //Adds users to list state to be used in createNewProject()
+
   const addUsersToList = () =>{
     let userID = "";
-    //Checks if users exist
     let something = database().ref("/Database/Users").orderByChild("Username").equalTo(invUsers).on("value", snapshot => {
       for(let key in snapshot.val()){
         userID = key;
       }
-      //IFF user exists adds them to list
       if(invUsers != "" && userID != ""){
         let list = invUsersList.slice();
         list.push(userID);
         addUsersList(list);
         changeCheckUser(true)
-      }
-      //Displays user does not exist
-      else{
+      } else{
         changeCheckUser(false);
       }
       database().ref("/Database/Users").orderByChild("Username").equalTo(invUsers).off("value", something);
     });
-    //Resets field for invUsers
     changeInvUsers("");
   };
     
-  return (// TopBar is supposed to handle the Drawer and don't forget about it
+  return (
     <TopBar navigation = {navigation} reset = {resetEverything} userInfo = {route.params.user}>
       <View style = {projectCreationStyles.container}>
         <TopGradient
