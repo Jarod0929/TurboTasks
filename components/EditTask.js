@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import { TopBar } from './utilityComponents/TopBar.js';
+import { ButtonBox } from './utilityComponents/ButtonBox.js';
 
 import database from '@react-native-firebase/database';
 
@@ -99,29 +100,20 @@ export function EditTask ({ navigation, route }){
       <ButtonBox
         onClick = { saveChanges }
         text = "Save Changes"
-        buttonStyle = { [styles.editTaskBottomBar, { right: 0 }] }
+        containerStyle = { null }
+        buttonStyle = {[ styles.editTaskBottomBar, { right: 0 }]}
+        textStyle = { styles.editTaskBottomBarButtons }
       />
       <ButtonBox
         onClick = { deleteThisTask }
         text = "Delete Task"
+        containerStyle = { null }
         buttonStyle = { styles.editTaskBottomBar }
+        textStyle = { styles.editTaskBottomBarButtons }
       />
     </TopBar>
   );
 }
-
-
-const ButtonBox = props => {
-  return(
-      <TouchableHighlight 
-        style = { props.buttonStyle }
-        onPress = { props.onClick }
-      >
-        <Text style = { styles.editTaskBottomBarButtons }>{ props.text }</Text>
-      </TouchableHighlight>
-  );
-};
-
 
 const TitleTextInputBox = props => {
   return (

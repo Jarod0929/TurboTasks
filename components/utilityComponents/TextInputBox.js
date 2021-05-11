@@ -8,7 +8,7 @@ import {
 export function TextInputBox( props ){
   return (
   <View 
-    style = { props.innerViewStyle }
+    style = { props.outerViewStyle }
   >
     <Text 
       style = { props.textStyle }
@@ -16,10 +16,10 @@ export function TextInputBox( props ){
       { props.text }
     </Text>
       <View 
-        style = { props.outerViewStyle }
+        style = { props.innerViewStyle }
       >
         <TextInput
-          onChangeText = {text => props.changeValue(text)}
+          onChangeText = { text => props.changeValue(text) }
           placeholder = { props.text }
           value = { props.value }
         />
