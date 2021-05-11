@@ -60,33 +60,33 @@ export function LogIn({ navigation }){
   };
     
   return(
-    <TopBar navigation={navigation}> 
+    <TopBar navigation = { navigation }> 
       
-      <View style = {basicStyles.flexAlignContainer}>
-        <View style = {basicStyles.titleContainer}>
-          <Text style = {basicStyles.titleText}>Sign In</Text>
+      <View style = { basicStyles.flexAlignContainer }>
+        <View style = { basicStyles.titleContainer }>
+          <Text style = { basicStyles.titleText }>Sign In</Text>
         </View>
         <TextInputBox
-          changeValue = {changeUsername}
-          text = {"Username"}
-          value = {username}
+          changeValue = { changeUsername }
+          text = { "Username" }
+          value = { username }
         />
         <TextInputBox
-            changeValue = {changePassword}
-            text = {"Password"}
-            value = {password}
+            changeValue = { changePassword }
+            text = { "Password" }
+            value = { password }
         />
         <ButtonBox
-          onClick = {isUsername}
+          onClick = { isUsername }
           text = "Sign In"
         />
         {failedMessage &&
-          <View style = {basicStyles.failedContainer}>
-            <Text style = {basicStyles.failedText}>Username does not exist or Password is false</Text>
+          <View style = { basicStyles.failedContainer }>
+            <Text style = { basicStyles.failedText }>Username does not exist or Password is false</Text>
           </View>
         }
         <ButtonBox
-          onClick = {goToCreateAccount}
+          onClick = { goToCreateAccount }
           text = "Sign Up"
         />
       </View>
@@ -97,50 +97,50 @@ export function LogIn({ navigation }){
 const TopBar = (props) => {
   const [drawer, changeDrawer] = useState(false);
   return (
-    <View style = {basicStyles.container}>
-      <View style = {topBarStyles.topBarContainer}>
-        <View style = {topBarStyles.openContainer}>
+    <View style = { basicStyles.container }>
+      <View style = { topBarStyles.topBarContainer }>
+        <View style = { topBarStyles.openContainer }>
         <ButtonBoxForNavigation
-          onClick={() => {
+          onClick = {() => {
             changeDrawer(!drawer);
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
           }}
-          text={"Open"}
-          style={topBarStyles.openAndDrawerButton}
+          text = { "Open" }
+          style = { topBarStyles.openAndDrawerButton}
         />
           
         </View>
       </View>
-      <View style = {[topBarStyles.drawerContainer, drawer? undefined: {width: 0}]}>
+      <View style = { [topBarStyles.drawerContainer, drawer? undefined: {width: 0}] }>
         <ButtonBoxForNavigation
-          onClick={()=>
+          onClick = {()=>
             changeDrawer(!drawer)
           }
-          text={"Close"}
-          style={topBarStyles.navigationButtons}
+          text = { "Close" }
+          style = { topBarStyles.navigationButtons }
         />
         <ButtonBoxForNavigation
-          onClick={()=>
+          onClick = {()=>
             props.navigation.navigate("CreateAccount")
           }
-          text={"Create an Account"}
-          style={topBarStyles.navigationButtons}
+          text = { "Create an Account" }
+          style = { topBarStyles.navigationButtons }
         />  
       </View>
-      {props.children}
+      { props.children }
     </View>
   )
 };
 
 const TextInputBox = props => {
   return (
-  <View style = {basicStyles.textAreaContainer}>
-    <Text style = {basicStyles.defaultText}>{props.text}</Text>
-      <View style = {basicStyles.textInputContainer}>
+  <View style = { basicStyles.textAreaContainer }>
+    <Text style = { basicStyles.defaultText }>{ props.text }</Text>
+      <View style = { basicStyles.textInputContainer }>
         <TextInput
           onChangeText = {text => props.changeValue(text)}
-          placeholder = {props.text}
-          value = {props.value}
+          placeholder = { props.text }
+          value = { props.value }
         />
     </View>
   </View>
@@ -149,12 +149,12 @@ const TextInputBox = props => {
 
 const ButtonBox = props => {
   return(
-  <View style = {basicStyles.buttonContainer}>
+  <View style = { basicStyles.buttonContainer }>
     <TouchableHighlight 
-      style = {basicStyles.button}
-      onPress = {props.onClick}
+      style = { basicStyles.button }
+      onPress = { props.onClick }
     >
-      <Text style = {basicStyles.buttonText}>{props.text}</Text>
+      <Text style = { basicStyles.buttonText }>{ props.text }</Text>
     </TouchableHighlight>
   </View>
   );
@@ -163,10 +163,10 @@ const ButtonBox = props => {
 const ButtonBoxForNavigation = props => {
   return(
     <TouchableHighlight 
-      style = {props.style}
-      onPress = {props.onClick}
+      style = { props.style }
+      onPress = { props.onClick }
     >
-      <Text style = {topBarStyles.buttonText}>{props.text}</Text>
+      <Text style = { topBarStyles.buttonText }>{ props.text }</Text>
     </TouchableHighlight>
   );
 };
