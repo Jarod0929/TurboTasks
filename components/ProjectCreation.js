@@ -7,13 +7,14 @@ import {
   LayoutAnimation,
   Dimensions,
 } from 'react-native';
+
+import { TopBar } from './utilityComponents/TopBar.js';
+
 import DatePicker from 'react-native-datepicker'
 import database from '@react-native-firebase/database';
 import Icon from "react-native-vector-icons/AntDesign";
 import LinearGradient from 'react-native-linear-gradient'
 
-import * as basicStyles from './styles/basicStyles.js';
-import * as topBarStyles from './styles/topBarStyles.js';
 import * as projectCreationStyles from './styles/projectCreationStyles.js';
 
 /**
@@ -103,7 +104,11 @@ export function ProjectCreation ({ route, navigation }) {
   };
     
   return (
-    <TopBar navigation = { navigation } reset = { resetEverything } userInfo = { route.params.user }>
+    <TopBar 
+      navigation = { navigation } 
+      userInfo = { route.params.user }
+      listNavigation = {[ "ProjectList" ]}
+    >
       <View style = { projectCreationStyles.container }>
         <TopGradient
           colors = { ["#187bcd", '#2a9df4', '#1167b1'] }
@@ -164,60 +169,6 @@ export function ProjectCreation ({ route, navigation }) {
   );
 }
 
-const TopBar = (props) => {
-  const [drawer, changeDrawer] = useState(false);
-  return (
-    <View style = { basicStyles.container }>
-      <View style = { topBarStyles.topBarContainer }>
-        <View style = { topBarStyles.openContainer }>
-          <ButtonBoxForNavigation
-            onClick = { () => {
-              changeDrawer(!drawer);
-              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-            }}
-            text = { "Open" }
-            style = { topBarStyles.openAndDrawerButton }
-          />
-           
-        </View>
-      </View>
-      <View style = { [topBarStyles.drawerContainer, drawer? undefined: { width: 0 }] }>
-        <ButtonBoxForNavigation
-          onClick = { () => 
-            changeDrawer(!drawer)
-          } 
-          text = { "Close" }
-          style = { topBarStyles.navigationButtons }
-        />
-        <ButtonBoxForNavigation
-          onClick = { () =>{
-            props.navigation.goBack();
-          } }
-          text = { "Go Back" }
-          style = { topBarStyles.navigationButtons }
-        />
-        <ButtonBoxForNavigation
-          onClick = {() =>
-            props.navigation.navigate("ProjectList", { user:props.userInfo })
-          } 
-          text = { "ProjectList" }
-          style = { topBarStyles.navigationButtons }
-        />
-      </View>
-      { props.children }
-    </View>
-  )
-};
-const ButtonBoxForNavigation = props => {
-  return(
-    <TouchableHighlight 
-      style = { props.style }
-      onPress = { props.onClick }
-    >
-      <Text style = { topBarStyles.buttonText }>{ props.text }</Text>
-    </TouchableHighlight>
-  );
-};
 const TopGradient = props =>{
   return(
     <LinearGradient
