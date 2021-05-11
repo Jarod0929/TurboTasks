@@ -50,7 +50,7 @@ const basicStyles = StyleSheet.create({
         height: 60,
         marginBottom: 15,
         marginTop: 15,
-        zIndex: 30,
+        zIndex: 30
       },
       button: {
         flex: 1,

@@ -114,11 +114,12 @@ const styles = StyleSheet.create({
   },
 
   editProjectDescriptionInputs:{
-    width: "100%", 
+    width: "65%",
     borderWidth: 2, 
     borderColor: "black", 
     borderRadius: 4,
-    backgroundColor: "white"
+    backgroundColor: "white",
+    maxHeight: 95,
   },
 
   editTaskBottomBar:{

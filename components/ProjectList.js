@@ -397,7 +397,7 @@ const TitleDescriptionDelete = props => {
 
 const InviteUsersInput = props => {
   return (
-    <View>
+    <View style = { {width: "100%"} }>
       <Text 
         style = {{ alignSelf: "center" }}
       >
@@ -475,7 +475,7 @@ const ProjectTitleEdit = props => {
 const ProjectDescriptionEdit = props => {
   return (
     <View
-      style = { styles.centerChildren }
+      style = { styles.centerChildren, {width: "100%"} }
     >
       <DescriptionTextInputBox
         text = "Project Description"
@@ -483,11 +483,13 @@ const ProjectDescriptionEdit = props => {
         onChangeText = { props.changeDescription }
         value = { props.description }
       />
-      <ButtonBox
-        onClick = {() => props.isDescription()}
-        text = { "Change Description" }
-        style = { basicStyles.buttonContainer }
-      />
+      <View>
+        <ButtonBox
+          onClick = {() => props.isDescription()}
+          text = { "Change Description" }
+          style = {[ basicStyles.buttonContainer, {alignSelf: "center"} ]}
+        />
+      </View>
     </View>
   );
 }
