@@ -266,11 +266,6 @@ const ProjectModal = props => {
       transparent = { true }
       visible = { props.visibility }
     > 
-      <TouchableHighlight 
-        onPress = {() => {
-          props.changeVisibility(false);
-        }}
-      >
         <KeyboardAvoidingView 
           style = { styles.projectListModal }
           behavior = "padding"
@@ -281,9 +276,20 @@ const ProjectModal = props => {
           }
         >
           <ScrollView
-            style = {{ width: "100%" }}
+            style = {{ width: "100%", paddingTop: 10 }}
             contentContainerStyle = {{ alignItems: "center" }}
           >
+            <TouchableHighlight
+              style = {{position: "absolute", right: "3.5%", borderRadius: 20}}
+              onPress = {() => {
+                  props.changeVisibility(false);
+              }}
+            >
+              <Icon
+                name = "close"
+                size = { 25 }
+              />
+            </TouchableHighlight>
             <TitleDescriptionDelete
               title = { title }
               description = { description }
@@ -310,7 +316,6 @@ const ProjectModal = props => {
             />
           </ScrollView>
         </KeyboardAvoidingView>  
-      </TouchableHighlight>
     </Modal>
   );
 }
@@ -624,8 +629,9 @@ const DescriptionTextInputBox = props => {
         multiline
         numberOfLines = { 4 }
         maxLength = { 140 }
-        onChangeText = {text => props.onChangeText(text)}
+        onChangeText = { text => props.onChangeText(text) }
         placeholder = { props.text }
+        blurOnSubmit = { true }
         value = { props.value }
         style = { props.style }
       />
