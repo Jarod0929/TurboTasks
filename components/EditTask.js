@@ -59,7 +59,7 @@ export function EditTask ({ navigation, route }){
   
   //updates the information of the task in the database
   const handleText = () => {
-    database().ref(`/Database/Tasks/${route.params.taskID}`).update({
+    database().ref(`/Database/Tasks/${ route.params.taskID }`).update({
       title: title,
       text: description,
     });
@@ -79,33 +79,33 @@ export function EditTask ({ navigation, route }){
 
   return(
     <TopBar  
-      userInfo={route.params.user} 
-      navigation={navigation}
+      userInfo = { route.params.user } 
+      navigation = { navigation }
     >
       {/* Editable Options */}
-      <View style={styles.editTaskMainView}>
+      <View style = { styles.editTaskMainView }>
         <TitleTextInputBox
           text = "Task Title"
-          style = {styles.editTaskInputs}
-          onChangeText = {changeTitle}
-          value = {title}
+          style = { styles.editTaskInputs }
+          onChangeText = { changeTitle }
+          value = { title }
         />
         <DescriptionTextInputBox
           text = "Task Description"
-          style = {styles.editTaskInputs}
-          onChangeText = {changeDescription}
-          value = {description}
+          style = { styles.editTaskInputs }
+          onChangeText = { changeDescription }
+          value = { description }
         />
       </View>
       <ButtonBox
-        onClick = {saveChanges}
+        onClick = { saveChanges }
         text = "Save Changes"
-        buttonStyle = {[styles.editTaskBottomBar, {right: 0}]}
+        buttonStyle = { [styles.editTaskBottomBar, { right: 0 }] }
       />
       <ButtonBox
-        onClick = {deleteThisTask}
+        onClick = { deleteThisTask }
         text = "Delete Task"
-        buttonStyle = {styles.editTaskBottomBar}
+        buttonStyle = { styles.editTaskBottomBar }
       />
     </TopBar>
   );
@@ -115,10 +115,10 @@ export function EditTask ({ navigation, route }){
 const ButtonBox = props => {
   return(
       <TouchableHighlight 
-        style = {props.buttonStyle}
-        onPress = {props.onClick}
+        style = { props.buttonStyle }
+        onPress = { props.onClick }
       >
-        <Text style = {styles.editTaskBottomBarButtons}>{props.text}</Text>
+        <Text style = { styles.editTaskBottomBarButtons }>{ props.text }</Text>
       </TouchableHighlight>
   );
 };
@@ -126,13 +126,13 @@ const ButtonBox = props => {
 
 const TitleTextInputBox = props => {
   return (
-    <View style = {styles.editTaskTitleInput}>
-      <Text style = {basicStyles.defaultText}>{props.text}</Text>
+    <View style = { styles.editTaskTitleInput }>
+      <Text style = { basicStyles.defaultText }>{ props.text }</Text>
       <TextInput
         onChangeText = {text => props.onChangeText(text)}
-        placeholder = {props.text}
-        value = {props.value}
-        style = {props.style}
+        placeholder = { props.text }
+        value = { props.value }
+        style = { props.style }
       />
     </View>
   );
@@ -141,15 +141,15 @@ const TitleTextInputBox = props => {
 
 const DescriptionTextInputBox = props => {
   return (
-    <View style = {styles.editTaskTitleInput}>
-      <Text style = {basicStyles.defaultText}>{props.text}</Text>
+    <View style = { styles.editTaskTitleInput }>
+      <Text style = { basicStyles.defaultText }>{ props.text }</Text>
       <TextInput
         multiline
-        numberOfLines={4}
+        numberOfLines = { 4 }
         onChangeText = {text => props.onChangeText(text)}
-        placeholder = {props.text}
-        value = {props.value}
-        style = {props.style}
+        placeholder = { props.text }
+        value = { props.value }
+        style = { props.style }
       />
     </View>
   );
@@ -158,17 +158,17 @@ const DescriptionTextInputBox = props => {
 
 const TopBar = (props) => {
   return (
-    <View style = {basicStyles.container}>
-      <View style = {topBarStyles.topBarContainer}>
+    <View style = { basicStyles.container }>
+      <View style = { topBarStyles.topBarContainer }>
         <ButtonBoxForNavigation
-          onClick={()=>{
+          onClick = {()=>{
             props.navigation.goBack();
           }}
-          text={"Go Back"}
-          style={basicStyles.navigationButtons}
+          text = { "Go Back" }
+          style = { basicStyles.navigationButtons }
         />
       </View>
-      {props.children}
+      { props.children }
     </View>
   )
 };
@@ -176,10 +176,10 @@ const TopBar = (props) => {
 const ButtonBoxForNavigation = props => {
   return(
     <TouchableHighlight 
-      style = {props.style}
-      onPress = {props.onClick}
+      style = { props.style }
+      onPress = { props.onClick }
     >
-      <Text style = {topBarStyles.buttonText}>{props.text}</Text>
+      <Text style = { topBarStyles.buttonText }>{ props.text }</Text>
     </TouchableHighlight>
   );
 };
