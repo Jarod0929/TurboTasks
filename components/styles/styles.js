@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   
   },
   projectListModal:{
-    height: "84%", 
+    height: "85.5%", 
     width: "80%", 
     margin: "10%", 
     alignItems: "center",
