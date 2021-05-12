@@ -384,9 +384,9 @@ const ProjectPanelInfo = props => {
 
 const TitleDescriptionDelete = props => {
   return (
-    <View style = {{maxWidth: "75%", marginBottom: "3%"}}>
+    <View style = {styles.titleView}>
       <Text
-        style = {[ styles.centerSelf, {fontWeight: "bold", fontSize: 20, textAlign: "center"} ]}
+        style = {styles.titleText}
       >
         { props.title } Details
       </Text>
@@ -396,9 +396,9 @@ const TitleDescriptionDelete = props => {
 
 const InviteUsersInput = props => {
   return (
-    <View style = { {width: "100%"} }>
+    <View style = { styles.fullWidth }>
       <Text 
-        style = {{ marginLeft: "10%", fontWeight: "bold", fontSize: 18}}
+        style = {styles.inputHeader}
       >
         Invite Users
       </Text>
@@ -411,7 +411,7 @@ const InviteUsersInput = props => {
       />
       <TouchableHighlight 
         onPress = { props.addUsersToList }
-        style = {{ position: "absolute", left: "77%", top:  "28%", borderRadius: 15 }}                
+        style = {styles.inviteUserIcon}                
       >
         <Icon
           stlye = {{ margin: 2 }}
@@ -433,14 +433,14 @@ const ValidUserFeedback = props => {
     <View>
       {props.checkUser == true &&
         <Text 
-          style = {{ alignSelf: "center" }}
+          style = {styles.centerSelf}
         >
           User Successfully Added!
         </Text>
       }
       {props.checkUser == false &&
         <Text 
-          style = {{ alignSelf: "center", color: "red" }}
+          style = {[styles.centerSelf, {color: "red" }]}
         >
           User Not Found
         </Text>
@@ -451,9 +451,9 @@ const ValidUserFeedback = props => {
 
 const ProjectTitleEdit = props => {
   return (
-    <View style = { {width: "100%"} }>
+    <View style = { styles.fullWidth }>
       <Text
-        style = {{ marginLeft: "10%", fontWeight: "bold", fontSize: 18}}
+        style = {styles.inputHeader}
       >
         Edit Project Title
       </Text>
@@ -466,12 +466,12 @@ const ProjectTitleEdit = props => {
         onChangeText = { props.changeTitle }
         maxLength = { 30 }
       />
-      <Text style = {{color: "gray", left: "12%", bottom: "6%"}}>
+      <Text style = {styles.titleCharCount}>
         {props.title.length}/30
       </Text>
       {props.title.length < 30 &&
         <Icon
-          style = {{ position: "absolute", left: "79%", top:  "32%", borderRadius: 15}}
+          style = {styles.titleCheckIcon}
           name = "check" 
           size = { 30 }
           color = "green" 
@@ -479,7 +479,7 @@ const ProjectTitleEdit = props => {
       }
       {props.title.length == 30 &&
         <Icon
-          style = {{ position: "absolute", left: "79%", top:  "32%", borderRadius: 15}}
+          style = {styles.titleXIcon}
           name = "close" 
           size = { 30 }
           color = "red" 
@@ -492,7 +492,7 @@ const ProjectTitleEdit = props => {
 const ProjectDescriptionEdit = props => {
   return (
     <View
-      style = { styles.centerChildren, {width: "100%"} }
+      style = { styles.centerChildren, styles.fullWidth }
     >
       <DescriptionTextInputBox
         text = "Edit Description"
@@ -500,7 +500,7 @@ const ProjectDescriptionEdit = props => {
         onChangeText = { props.changeDescription }
         value = { props.description }
       />
-      <Text style = {{color: "gray", left: "12%"}}>
+      <Text style = {styles.descriptionCharCount}>
         {props.description.length}/140
       </Text>
     </View>
@@ -592,9 +592,9 @@ const ButtonBoxForNavigation = props => {
 
 const DescriptionTextInputBox = props => {
   return (
-    <View style = { {width: "100%"} }>
+    <View style = { styles.fullWidth }>
       <Text 
-        style = {{marginLeft: "10%", fontWeight: "bold", fontSize: 18, marginBottom: "5%"}} 
+        style = {styles.descriptionHeader} 
       >
         { props.text }
       </Text>
@@ -614,7 +614,7 @@ const DescriptionTextInputBox = props => {
 const CloseButton = props => {
   return(
     <TouchableHighlight
-      style = {{position: "absolute", right: "5%", borderRadius: 20}}
+      style = {styles.closeIcon}
       onPress = {() => {
           props.changeVisibility(false);
       }}
@@ -628,22 +628,22 @@ const CloseButton = props => {
 }
 const SaveOrCancelButtons = props => {
   return(
-    <View style = {{width: "100%",  borderTopWidth: 1, borderTopColor: "lightgray", height: 85, marginTop:"5%", flexDirection: "row-reverse"}}>
+    <View style = {styles.saveOrCancelView}>
         <TouchableHighlight
-          style = {{width: "25%", marginLeft: "5%", marginTop: "5%", marginRight: "5%", height: "75%", backgroundColor: "#7AE0FF", justifyContent: 'center', alignItems: 'center', borderRadius: 13}}
+          style = {styles.saveButton}
           onPress = {() => {
             props.isTitle();
             props.isDescription();
           }}
         >
-          <Text style = {{color: "#F4FCFF", fontWeight: "bold", fontSize: 17}}>Save</Text>
+          <Text style = {styles.saveButtonText}>Save</Text>
         </TouchableHighlight>
 
         <TouchableHighlight
-          style = {{width: "30%", marginTop: "5%", height: "75%", backgroundColor: "#E3E3E3", justifyContent: 'center', alignItems: 'center', borderRadius: 13}}
+          style = {styles.cancelButton}
           onPress = {props.changeVisibility}
         >
-          <Text style = {{color: "black", fontWeight: "bold", fontSize: 17}}>Cancel</Text>
+          <Text style = {styles.cancelButtonText}>Cancel</Text>
         </TouchableHighlight>
     </View>
   );

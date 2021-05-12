@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     width: "75%",
     borderWidth: 2, 
     borderColor: "black", 
-    borderRadius: 5,
+    borderRadius: 8,
     backgroundColor: "white",
     maxHeight: 95,
     marginLeft: "10%"
@@ -178,6 +178,100 @@ const styles = StyleSheet.create({
     marginLeft: "10%", 
     marginBottom: 15
   },
+  titleView:{
+    maxWidth: "75%", 
+    marginBottom: "3%"
+  },
+  titleText:{
+    fontWeight: "bold", 
+    fontSize: 20, 
+    textAlign: "center",
+    alignSelf: "center",
+  },
+  fullWidth:{
+    width: "100%"
+  },
+  inputHeader:{
+    marginLeft: "10%", 
+    fontWeight: "bold", 
+    fontSize: 18
+  },
+  inviteUserIcon:{
+    position: "absolute", 
+    left: "77%", 
+    top: "28%", 
+    borderRadius: 15
+  },
+  titleCharCount:{
+    color: "gray", 
+    left: "12%", 
+    bottom: "6%"
+  },
+  titleCheckIcon:{
+    position: "absolute", 
+    left: "79%", 
+    top:  "32%", 
+    borderRadius: 15
+  },
+  titleXIcon:{
+    position: "absolute", 
+    left: "79%", 
+    top:  "32%", 
+    borderRadius: 15
+  },
+  descriptionCharCount:{
+    color: "gray", 
+    left: "12%"
+  },
+  descriptionHeader:{
+    marginLeft: "10%", 
+    fontWeight: "bold", 
+    fontSize: 18, 
+    marginBottom: "5%"
+  },
+  closeIcon:{
+    position: "absolute", 
+    right: "5%", 
+    borderRadius: 20
+  },
+  saveOrCancelView:{
+    width: "100%",  
+    borderTopWidth: 1, 
+    borderTopColor: "lightgray", 
+    height: 85, 
+    marginTop:"5%", 
+    flexDirection: "row-reverse"
+  },
+  saveButton:{
+    width: "25%", 
+    marginLeft: "5%", 
+    marginTop: "5%", 
+    marginRight: "5%", 
+    height: "75%", 
+    backgroundColor: "#7AE0FF", 
+    justifyContent: 'center', 
+    alignItems: 'center', borderRadius: 13
+  },
+  saveButtonText:{
+    color: "#F4FCFF", 
+    fontWeight: "bold", 
+    fontSize: 17
+  },
+  cancelButton:{
+    width: "30%", 
+    marginTop: "5%", 
+    height: "75%", 
+    backgroundColor: "#E3E3E3", 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    borderRadius: 13
+  },
+  cancelButtonText:{
+    color: "black", 
+    fontWeight: "bold", 
+    fontSize: 17
+  }
+
 });
 
 module.exports = styles;
