@@ -22,21 +22,20 @@ const styles = StyleSheet.create({
   },
   projectListModal:{
     height: "85.5%", 
-    width: "80%", 
-    margin: "10%", 
-    alignItems: "center",
+    width: "90%", 
+    margin: "5%", 
     zIndex: 1,
-    backgroundColor: "#66ccff",
-    borderWidth: 5,
+    borderWidth: 4,
     borderRadius: 15,
+    backgroundColor: "white",
+    paddingTop: 15
   },
   inviteUserTextInput: {
     borderBottomColor: "gray", 
     borderBottomWidth: 1, 
     width: "75%",
-    height: 50, 
-    textAlign: "center", 
-    alignSelf: "center", 
+    height: 45,
+    marginLeft: "10%", 
     marginBottom: 10
   },
   projectCreationPlusPosition:{
@@ -114,12 +113,13 @@ const styles = StyleSheet.create({
   },
 
   editProjectDescriptionInputs:{
-    width: "65%",
+    width: "75%",
     borderWidth: 2, 
     borderColor: "black", 
-    borderRadius: 4,
+    borderRadius: 5,
     backgroundColor: "white",
     maxHeight: 95,
+    marginLeft: "10%"
   },
 
   editTaskBottomBar:{
@@ -167,10 +167,17 @@ const styles = StyleSheet.create({
     borderColor: "darkred",
     width: "75%",
     marginBottom: 15,
-    marginTop: 15,
+    marginTop: "8%",
     zIndex: 30,
   },
-
+  editTitleTextInput: {
+    borderBottomColor: "gray", 
+    borderBottomWidth: 1, 
+    width: "75%",
+    height: 50,
+    marginLeft: "10%", 
+    marginBottom: 15
+  },
 });
 
 module.exports = styles;

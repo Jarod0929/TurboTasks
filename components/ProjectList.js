@@ -15,6 +15,8 @@ import {
 import { useFocusEffect } from '@react-navigation/native';
 import database from '@react-native-firebase/database';
 import Icon from "react-native-vector-icons/AntDesign";
+import LinearGradient from 'react-native-linear-gradient'
+
 import * as styles from './styles/styles.js';
 import * as basicStyles from './styles/basicStyles.js';
 import * as topBarStyles from './styles/topBarStyles.js';
@@ -118,7 +120,7 @@ const ProjectModal = props => {
   const [invUsers, changeInvUsers] = useState('');//For the inviteUsers field
   const [checkUser, changeCheckUser] = useState(null);//Used to check if user exists 
   const [title, changeTitle] = useState("");
-  const [description, changeDescription] = useState("");
+  const [description, changeDescription] = useState("hello");
   let addedUserID;
  
   useEffect(() => {
@@ -276,44 +278,41 @@ const ProjectModal = props => {
           }
         >
           <ScrollView
-            style = {{ width: "100%", paddingTop: 10 }}
+            style = {{ width: "100%"}}
             contentContainerStyle = {{ alignItems: "center" }}
           >
-            <TouchableHighlight
-              style = {{position: "absolute", right: "3.5%", borderRadius: 20}}
-              onPress = {() => {
-                  props.changeVisibility(false);
-              }}
-            >
-              <Icon
-                name = "close"
-                size = { 25 }
+              <CloseButton
+                changeVisibility = {props.changeVisibility}
               />
-            </TouchableHighlight>
-            <TitleDescriptionDelete
-              title = { title }
-              description = { description }
-            />
-            <InviteUsersInput
-              changeInvUsers = { changeInvUsers }
-              inputValue = { invUsers }
-              addUsersToList = { addUsersToList }
-              checkUser = { checkUser }
-            />
-            <ProjectTitleEdit
-              changeTitle = { changeTitle }
-              title = { title }
-              isTitle = { isTitle }
-            />
-            <ProjectDescriptionEdit
-              changeDescription = { changeDescription }
-              description = { description }
-              isDescription = { isDescription }
-            />
-            <DeleteProjectButton
-              deleteButtonText = { "Delete Project" }
-              deleteProjectFunction = { deleteProj }
-            />
+              <TitleDescriptionDelete
+                title = { title }
+                description = { description }
+              />
+              <InviteUsersInput
+                changeInvUsers = { changeInvUsers }
+                inputValue = { invUsers }
+                addUsersToList = { addUsersToList }
+                checkUser = { checkUser }
+              />
+              <ProjectTitleEdit
+                changeTitle = { changeTitle }
+                title = { title }
+                isTitle = { isTitle }
+              />
+              <ProjectDescriptionEdit
+                changeDescription = { changeDescription }
+                description = { description }
+                isDescription = { isDescription }
+              />
+              <DeleteProjectButton
+                deleteButtonText = { "Delete Project" }
+                deleteProjectFunction = { deleteProj }
+              />
+              <SaveOrCancelButtons
+                isTitle = {isTitle}
+                isDescription = {isDescription}
+                changeVisibility = {props.changeVisibility}
+              />
           </ScrollView>
         </KeyboardAvoidingView>  
     </Modal>
@@ -343,7 +342,7 @@ const ProjectPanel = props => {
           onPress = {() => {
             props.navigation.navigate("Project", { taskID: null, projectID: project.ID, user: props.user });
           }}
-          onLongPress = {() => { props.deletionPage(project.ID) }}
+          onLongPress = {() => { props.deletionPage(project.ID)}}
           delayLongPress = {1000}
           style = { styles.projectListPanel }
         >
@@ -385,16 +384,11 @@ const ProjectPanelInfo = props => {
 
 const TitleDescriptionDelete = props => {
   return (
-    <View>
+    <View style = {{maxWidth: "75%", marginBottom: "3%"}}>
       <Text
-        style = { styles.centerSelf }
+        style = {[ styles.centerSelf, {fontWeight: "bold", fontSize: 20, textAlign: "center"} ]}
       >
-        { props.title }
-      </Text>
-      <Text
-        style = { styles.centerSelf }
-      >      
-        { props.description }
+        { props.title } Details
       </Text>
     </View>
   );
@@ -404,7 +398,7 @@ const InviteUsersInput = props => {
   return (
     <View style = { {width: "100%"} }>
       <Text 
-        style = {{ alignSelf: "center" }}
+        style = {{ marginLeft: "10%", fontWeight: "bold", fontSize: 18}}
       >
         Invite Users
       </Text>
@@ -417,7 +411,7 @@ const InviteUsersInput = props => {
       />
       <TouchableHighlight 
         onPress = { props.addUsersToList }
-        style = {{ alignItems:"center" }}                
+        style = {{ position: "absolute", left: "77%", top:  "28%", borderRadius: 15 }}                
       >
         <Icon
           stlye = {{ margin: 2 }}
@@ -425,9 +419,11 @@ const InviteUsersInput = props => {
           size = { 35 } 
         />
       </TouchableHighlight>
-      <ValidUserFeedback
-        checkUser = { props.checkUser }
-      />
+      <View style = {{height: 20}}>
+        <ValidUserFeedback
+          checkUser = { props.checkUser }
+        />
+      </View>
     </View>
   );
 }
@@ -455,24 +451,40 @@ const ValidUserFeedback = props => {
 
 const ProjectTitleEdit = props => {
   return (
-    <View
-      style = { styles.centerChildren }
-    >
+    <View style = { {width: "100%"} }>
       <Text
-        style = { styles.centerSelf }
+        style = {{ marginLeft: "10%", fontWeight: "bold", fontSize: 18}}
       >
-        Project Title
+        Edit Project Title
       </Text>
-      <TextInputBox
-        changeValue = { props.changeTitle }
-        text = { props.title }
+      <TextInput
+        autoFocus = { true }
+        style = { styles.editTitleTextInput }
+        placeholder = "Title"
+        onChangeText = {text => props.changeInvUsers(text)}
         value = { props.title }
+        onChangeText = { props.changeTitle }
+        maxLength = { 30 }
       />
-      <ButtonBox
-        onClick = {() => props.isTitle()}
-        text = { "Change Title" }
-        style = { basicStyles.buttonContainer }
-      />
+      <Text style = {{color: "gray", left: "12%", bottom: "6%"}}>
+        {props.title.length}/30
+      </Text>
+      {props.title.length < 30 &&
+        <Icon
+          style = {{ position: "absolute", left: "79%", top:  "32%", borderRadius: 15}}
+          name = "check" 
+          size = { 30 }
+          color = "green" 
+        />
+      }
+      {props.title.length == 30 &&
+        <Icon
+          style = {{ position: "absolute", left: "79%", top:  "32%", borderRadius: 15}}
+          name = "close" 
+          size = { 30 }
+          color = "red" 
+        />
+      }
     </View>
   );
 }
@@ -483,18 +495,14 @@ const ProjectDescriptionEdit = props => {
       style = { styles.centerChildren, {width: "100%"} }
     >
       <DescriptionTextInputBox
-        text = "Project Description"
-        style = {[ styles.editProjectDescriptionInputs, styles.centerSelf ]}
+        text = "Edit Description"
+        style = { styles.editProjectDescriptionInputs }
         onChangeText = { props.changeDescription }
         value = { props.description }
       />
-      <View>
-        <ButtonBox
-          onClick = {() => props.isDescription()}
-          text = { "Change Description" }
-          style = {[ basicStyles.buttonContainer, {alignSelf: "center"} ]}
-        />
-      </View>
+      <Text style = {{color: "gray", left: "12%"}}>
+        {props.description.length}/140
+      </Text>
     </View>
   );
 }
@@ -582,46 +590,11 @@ const ButtonBoxForNavigation = props => {
   );
 };
 
-const ButtonBox = props => {
-  return(
-    <View 
-      style = { props.style }
-    >
-      <TouchableHighlight 
-        style = { basicStyles.button }
-        onPress = { props.onClick }
-      >
-        <Text 
-          style = { topBarStyles.buttonText }
-        >
-          { props.text }
-        </Text>
-      </TouchableHighlight>
-    </View>
-  );
-};
-
-const TextInputBox = props => {
-  return (
-    <View 
-      style = {[ basicStyles.textInputContainer, styles.centerSelf ]}
-    >
-      <TextInput 
-        onChangeText = {text => props.changeValue(text)}
-        placeholder = { props.text }
-        value = { props.value }
-        maxLength = { 30 }
-        style = { styles.centerSelf }
-      />
-    </View>
-  );
-};
-
 const DescriptionTextInputBox = props => {
   return (
-    <View>
+    <View style = { {width: "100%"} }>
       <Text 
-        style = {[ basicStyles.defaultText, styles.centerSelf ]} 
+        style = {{marginLeft: "10%", fontWeight: "bold", fontSize: 18, marginBottom: "5%"}} 
       >
         { props.text }
       </Text>
@@ -634,7 +607,44 @@ const DescriptionTextInputBox = props => {
         blurOnSubmit = { true }
         value = { props.value }
         style = { props.style }
-      />
+      /> 
     </View>
   );
 };
+const CloseButton = props => {
+  return(
+    <TouchableHighlight
+      style = {{position: "absolute", right: "5%", borderRadius: 20}}
+      onPress = {() => {
+          props.changeVisibility(false);
+      }}
+    >
+      <Icon
+        name = "close"
+        size = { 25 }
+      />
+    </TouchableHighlight>
+  );
+}
+const SaveOrCancelButtons = props => {
+  return(
+    <View style = {{width: "100%",  borderTopWidth: 1, borderTopColor: "lightgray", height: 85, marginTop:"5%", flexDirection: "row-reverse"}}>
+        <TouchableHighlight
+          style = {{width: "25%", marginLeft: "5%", marginTop: "5%", marginRight: "5%", height: "75%", backgroundColor: "#7AE0FF", justifyContent: 'center', alignItems: 'center', borderRadius: 13}}
+          onPress = {() => {
+            props.isTitle();
+            props.isDescription();
+          }}
+        >
+          <Text style = {{color: "#F4FCFF", fontWeight: "bold", fontSize: 17}}>Save</Text>
+        </TouchableHighlight>
+
+        <TouchableHighlight
+          style = {{width: "30%", marginTop: "5%", height: "75%", backgroundColor: "#E3E3E3", justifyContent: 'center', alignItems: 'center', borderRadius: 13}}
+          onPress = {props.changeVisibility}
+        >
+          <Text style = {{color: "black", fontWeight: "bold", fontSize: 17}}>Cancel</Text>
+        </TouchableHighlight>
+    </View>
+  );
+}
