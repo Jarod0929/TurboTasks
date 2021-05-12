@@ -70,7 +70,7 @@ export function ProjectCreation ({ route, navigation }) {
     if (projectName != ""){
       const newData = database().ref("/Database/Projects").push({
         title: projectName,
-        descripton: "Enter a description",
+        description: "Enter a description",
         users: invUsersList,
         tasks: [taskKey],
         dueDate: date 
