@@ -2,17 +2,16 @@ import React, {useState} from 'react';
 import {
   Text,
   View,
-  TouchableHighlight,
-  TextInput,
-  LayoutAnimation,
-  Platform,
-  UIManager,
 } from 'react-native';
+
+import { TopBar } from './utilityComponents/TopBar.js';
+import { ButtonBox } from  './utilityComponents/ButtonBox.js';
+import { TextInputBox } from  './utilityComponents/TextInputBox.js';
+
 import database from '@react-native-firebase/database';
+
 import * as styles from './styles/styles.js';
 import * as basicStyles from './styles/basicStyles.js';
-import * as topBarStyles from './styles/topBarStyles.js';
-import { create } from 'eslint/lib/rules/*';
 
 /**
  * Establishes the entire container with all the children under the bar
@@ -73,114 +72,67 @@ export function CreateAccount ({navigation}) {
   };
   
   return (
-    <TopBar navigation={navigation}>
-      
-      <View style = {styles.flexAlignContainer}>
-        <View style = {styles.titleContainer}>
-          <Text style = {styles.titleText}>Sign Up</Text>
+    <TopBar 
+      navigation = { navigation }
+      userInfo = { null }
+      listNavigation = {[ "LogIn" ]}
+    >
+      <View style = { styles.flexAlignContainer }>
+        <View style = {styles.titleContainer }>
+          <Text style = { styles.titleText }>Sign Up</Text>
         </View>
         {failedMessage &&
-          <View style = {styles.redFailedContainer}>
-            <Text style = {styles.redFailedText}>Username Already Exists</Text>
+          <View style = { styles.redFailedContainer }>
+            <Text style = { styles.redFailedText }>Username Already Exists</Text>
           </View>
         }
       <TextInputBox
-          changeValue = {changeUsername}
-          text = {"Username"}
-          value = {username}
+        changeValue = { changeUsername }
+        text = { "Username" }
+        value = { username }
+        outerViewStyle = { basicStyles.textAreaContainer }
+        textStyle = { basicStyles.defaultText }
+        innerViewStyle = { basicStyles.textInputContainer }
       />
       <TextInputBox
-          changeValue = {changePassword}
-          text = {"Password"}
-          value = {password}
+        changeValue = { changePassword }
+        text = { "Password" }
+        value = { password }
+        outerViewStyle = { basicStyles.textAreaContainer }
+        textStyle = { basicStyles.defaultText }
+        innerViewStyle = { basicStyles.textInputContainer }
       />
       <ButtonBox
-        onClick = {attemptCreateAccount}
+        onClick = { attemptCreateAccount }
         text = "Sign Up"
+        containerStyle = { basicStyles.buttonContainer }
+        buttonStyle = { basicStyles.button }
+        textStyle = { basicStyles.buttonText }
       />
       <ButtonBox
-        onClick = {goToLogIn}
+        onClick = { goToLogIn }
         text = "Sign In"
+        containerStyle = { basicStyles.buttonContainer }
+        buttonStyle = { basicStyles.button }
+        textStyle = { basicStyles.buttonText }
       />
     </View>
   </TopBar>
   );
 }
 
-const TopBar = (props) => {
-  const [drawer, changeDrawer] = useState(false);
-  return (
-    <View style = {basicStyles.container}>
-      <View style = {topBarStyles.topBarContainer}>
-        <View style = {topBarStyles.openContainer}>
-          <ButtonBoxForNavigation
-           onClick = {() => {
-            changeDrawer(!drawer);
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-           }}
-           text="Open"
-           style={topBarStyles.openAndDrawerButton}
-          />
-        </View>
-      </View>
-      <View style = {[topBarStyles.drawerContainer, drawer? undefined: {width: 0}]}>
-        <ButtonBoxForNavigation
-          onClick={() => {
-            changeDrawer(!drawer);
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-          }}
-          text={"Close"}
-          style={topBarStyles.navigationButtons}
-        />
-        <ButtonBoxForNavigation
-          onClick={()=>
-            props.navigation.navigate("LogIn")
-          }
-          text={"LogIn"}
-          style={topBarStyles.navigationButtons}
-        />
-      </View>
-      {props.children}
-    </View>
-  )
-};
 
-
-const TextInputBox = props => {
-  return (
-  <View style = {basicStyles.textAreaContainer}>
-    <Text style = {basicStyles.defaultText}>{props.text}</Text>
-      <View style = {basicStyles.textInputContainer}>
-        <TextInput
-          onChangeText = {text => props.changeValue(text)}
-          placeholder = {props.text}
-          value = {props.value}
-        />
-    </View>
-  </View>
-  );
-};
-
-const ButtonBox = props => {
-  return(
-  <View style = {basicStyles.buttonContainer}>
-    <TouchableHighlight 
-      style = {basicStyles.button}
-      onPress = {props.onClick}
-    >
-      <Text style = {basicStyles.buttonText}>{props.text}</Text>
-    </TouchableHighlight>
-  </View>
-  );
-};
-
-const ButtonBoxForNavigation = props => {
-  return(
-    <TouchableHighlight 
-      style = {props.style}
-      onPress = {props.onClick}
-    >
-      <Text style = {topBarStyles.buttonText}>{props.text}</Text>
-    </TouchableHighlight>
-  );
-};
+// const TextInputBox = props => {
+//   return (
+//   <View style = { basicStyles.textAreaContainer }>
+//     <Text style = { basicStyles.defaultText }>{ props.text }</Text>
+//       <View style = { basicStyles.textInputContainer }>
+//         <TextInput
+//           onChangeText = {text => props.changeValue(text)}
+//           placeholder = { props.text }
+//           value = { props.value }
+//         />
+//     </View>
+//   </View>
+//   );
+// };

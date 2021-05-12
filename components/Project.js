@@ -8,6 +8,8 @@ import {
   LayoutAnimation,
 } from 'react-native';
 
+import { TopBar } from './utilityComponents/TopBar.js';
+
 import * as styles from './styles/styles.js';
 import * as basicStyles from './styles/basicStyles.js';
 import * as topBarStyles from './styles/topBarStyles.js';
@@ -105,107 +107,40 @@ export function Project ({ navigation, route }) {
   };
 
   return (
-    <TopBar userInfo={route.params.user} navigation={navigation}>
+    <TopBar 
+      navigation = { navigation }
+      userInfo = { route.params.user }
+      listNavigation = {[ "ProjectList", "ProjectCreation", "Settings" ]}
+    >
       {/* Main Container */}
-      <View style={styles.projectTaskListConatiner}>
+      <View style = { styles.projectTaskListConatiner }>
         {/* Modal for showing task information */}
         <FullModal
-          visibility={visibility}
-          onClick={() => {
+          visibility = { visibility }
+          onClick = {() => {
             changeVisibility(false);
           }}
-          currentTask={currentTask}
+          currentTask = { currentTask }
         />
-        <View style = {styles.projectListMainView}>
+        <View style = { styles.projectListMainView }>
           {/* Add task button */}
           <AddTaskButton
-            onClick={addNewTask}
-            text="Add Task"  
+            onClick = { addNewTask }
+            text = "Add Task"  
           />
           <TaskList
-            user={route.params.user}
-            navigation={navigation}
-            projectID={route.params.projectID}
-            changeTaskDescriptor={changeTaskDescriptor}
-            allProjectTasks={allProjectTasks}
-            changeAllProjectTasks = {changeAllProjectTasks}
+            user = { route.params.user }
+            navigation = { navigation }
+            projectID = { route.params.projectID }
+            changeTaskDescriptor = { changeTaskDescriptor }
+            allProjectTasks = { allProjectTasks }
+            changeAllProjectTasks = { changeAllProjectTasks }
           />        
         </View>
       </View>       
     </TopBar> 
   );
 }
-
-const TopBar = props => {
-  const [drawer, changeDrawer] = useState(false);
-
-  return (
-    <View style = {basicStyles.container}>
-      <View style = {topBarStyles.topBarContainer}>
-        <View style = {topBarStyles.openContainer}>
-            <ButtonBoxForNavigation
-              onClick={() => {
-                changeDrawer(!drawer);
-                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-              }}
-          text={"Open"}
-          style={topBarStyles.openAndDrawerButton}
-        />
-           
-        </View>
-      </View>
-      <View style = {[topBarStyles.drawerContainer, drawer? undefined: {width: 0}]}>
-        <ButtonBoxForNavigation
-          onClick={()=> 
-            changeDrawer(!drawer)
-          } 
-          text={"Close"}
-          style={topBarStyles.navigationButtons}
-        />
-        <ButtonBoxForNavigation
-          onClick={()=>{
-            props.navigation.goBack();
-          }}
-          text={"Go Back"}
-          style={topBarStyles.navigationButtons}
-        />
-        <ButtonBoxForNavigation
-          onClick={()=>
-            props.navigation.navigate("ProjectList", {user:props.userInfo})
-          } 
-          text={"ProjectList"}
-          style={topBarStyles.navigationButtons}
-        />
-        <ButtonBoxForNavigation
-          onClick={()=>
-            props.navigation.navigate("ProjectCreation", {user:props.userInfo})
-          } 
-          text={"ProjectCreation"}
-          style={topBarStyles.navigationButtons}
-        />
-        <ButtonBoxForNavigation
-          onClick={()=>
-            props.navigation.navigate("Settings", {user:props.userInfo})
-          } 
-          text={"Settings⚙️"}
-          style={topBarStyles.navigationButtons}
-        />
-      </View>
-      {props.children}
-    </View>
-  )
-};
-
-const ButtonBoxForNavigation = props => {
-  return(
-    <TouchableHighlight 
-      style = {props.style}
-      onPress = {props.onClick}
-    >
-      <Text style = {topBarStyles.buttonText}>{props.text}</Text>
-    </TouchableHighlight>
-  );
-};
 
 const TaskPanel = (props) => {
   const [task, changeTask] = useState(null);//all task information from database
@@ -241,36 +176,36 @@ const TaskPanel = (props) => {
 
   if(noTasks()){
     return (
-      <View style={styles.taskPanel}>
+      <View style = { styles.taskPanel }>
         {/* Task Title and click to open description modal */}
         <TouchableHighlight 
-          style={styles.taskPanelLeft}
+          style = { styles.taskPanelLeft }
           onPress = {() =>{
             props.changeTaskDescriptor(task.ID);
           }}
         >
-          <Text style={styles.defaultText}>
-            {task.title}   
+          <Text style = { styles.defaultText }>
+            { task.title }   
           </Text>
         </TouchableHighlight>
         {/* Right side of task with edit and subtasks buttons */}
-        <View style={{width: '50%'}}>
+        <View style = { { width: '50%' } }>
           {/* Edit Button */}
           <TouchableHighlight 
-            style={styles.taskPanelEdit}
-            onPress = {goToEditTask}
+            style = { styles.taskPanelEdit }
+            onPress = { goToEditTask }
           >
-            <View style={{alignItems: 'center'}}>
-              <Text style={[styles.defaultText, {fontSize: 20}]}>Edit</Text>
+            <View style = { { alignItems: 'center' } }>
+              <Text style = { [styles.defaultText, { fontSize: 20 }] }>Edit</Text>
             </View>
           </TouchableHighlight>
           {/* Subtasks Button */}
           <TouchableHighlight 
-            style={styles.taskPanelSubtasks}
-            onPress = {goToSubTask}
+            style = { styles.taskPanelSubtasks }
+            onPress = { goToSubTask }
           >
-            <View style={{alignItems: 'center'}}>
-              <Text style={[styles.defaultText, {fontSize: 20}]}>Subtasks</Text>
+            <View style = { { alignItems: 'center' } }>
+              <Text style = { [styles.defaultText, { fontSize: 20 }] }>Subtasks</Text>
             </View>
           </TouchableHighlight>
         </View>
@@ -278,7 +213,7 @@ const TaskPanel = (props) => {
     );
   } else {
     return(
-      <View style={styles.taskPanelEmpty}>
+      <View style = { styles.taskPanelEmpty }>
         <Text>nothing</Text>
       </View>
     );
@@ -297,9 +232,9 @@ const TaskDescriptor = props => {
   }
     
   return(
-    <View style={styles.taskModal}>
-      <Text>Title: {task?.title}</Text>
-      <Text>Description: {task?.text}</Text>
+    <View style = { styles.taskModal }>
+      <Text>Title: { task?.title }</Text>
+      <Text>Description: { task?.text }</Text>
     </View>
   );
 }
@@ -308,14 +243,14 @@ const FullModal = props => {
   return(
     <View>
       <Modal
-        animationType="slide"
-        transparent={true}
-        visible={props.visibility}
+        animationType = "slide"
+        transparent = {true}
+        visible = { props.visibility }
       >
-        <TouchableHighlight onPress = {props.onClick}
+        <TouchableHighlight onPress = { props.onClick }
         >
-          <View style={styles.projectListModal}>
-            <TaskDescriptor taskID = {props.currentTask} />
+          <View style = { styles.projectListModal }>
+            <TaskDescriptor taskID = { props.currentTask } />
           </View>
         </TouchableHighlight>
       </Modal>
@@ -327,11 +262,11 @@ const FullModal = props => {
 const AddTaskButton= props => {
   return(
     <TouchableHighlight 
-      style={styles.addTaskButton}
-      onPress={props.onClick}
+      style = { styles.addTaskButton }
+      onPress = { props.onClick }
     >
       <Text>
-        {props.text}
+        { props.text }
       </Text>
     </TouchableHighlight>
   )
@@ -341,23 +276,23 @@ const TaskList = props =>{
   return(
     <View>
     <FlatList
-    style = {{width: "75%"}}
-    data={props.allProjectTasks}
-    renderItem={({item}) => 
+    style = { { width: "75%" } }
+    data = { props.allProjectTasks }
+    renderItem = { ({item}) => 
     <React.StrictMode>
       <TaskPanel
-        taskID = {item}
-        navigation = {props.navigation}
-        projectID ={props.projectID}
-        userId={props.user}
-        changeTaskDescriptor = {props.changeTaskDescriptor}
-        changeAllProjectTasks = {props.changeAllProjectTasks}
+        taskID = { item }
+        navigation = { props.navigation }
+        projectID = { props.projectID }
+        userId = { props.user }
+        changeTaskDescriptor = { props.changeTaskDescriptor }
+        changeAllProjectTasks = { props.changeAllProjectTasks }
       />
     </React.StrictMode>
     }
-    keyExtractor={item => item}
+    keyExtractor = { item => item }
   />
-    {(props.allProjectTasks == null) &&
+    { (props.allProjectTasks == null) &&
       <Text>No Tasks</Text>
     }
   </View>

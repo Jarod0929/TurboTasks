@@ -9,8 +9,11 @@ import {
   Platform,
   UIManager,
 } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+
+import { TopBar } from './utilityComponents/TopBar.js';
+
 import database from '@react-native-firebase/database';
+
 import * as styles from './styles/styles.js';
 import * as basicStyles from './styles/basicStyles.js';
 import * as topBarStyles from './styles/topBarStyles.js';
@@ -20,7 +23,6 @@ import * as topBarStyles from './styles/topBarStyles.js';
 //route, user- this is the usersID
 //navigation
 export function Settings({ route, navigation }) {
-  
   const [userEnteredPassword,changeUserEnteredPassword]=useState('');//password the user nters into the change password box
   const [userEnteredPasswordForUsername,changeUserEnteredPasswordForUsername]=useState('');//password the user enters into the change username box
   const [password,changePassword]=useState('');//pulled database password
@@ -37,16 +39,14 @@ export function Settings({ route, navigation }) {
   //finds the password of the current logged in user
   const handlePassword = snapshot => {
       changePassword(snapshot.val());
-     
   }
   
   //test to see if the typed in password is the correct one
   const isPassword = () =>{
-  
     //if the user entered the correct password and they have typed in a new password and hit enter
     //then their password will be changed
-    if(Accepted=='True'){
-      if(userEnteredPassword != ''){
+    if (Accepted=='True'){
+      if (userEnteredPassword != ''){
         database().ref("/Database/Users/" + route.params.user).update({Password: userEnteredPassword});
       
         changePassword(userEnteredPassword);
@@ -60,8 +60,7 @@ export function Settings({ route, navigation }) {
       }    
 
     // If it its the correct password then the user will enter in their new desired password
-    } else if(userEnteredPassword==password){
-      
+    } else if (userEnteredPassword==password){
       changeUserEnteredPassword('');
       changeAccepted('True');
       changeinputTextForPassword("Enter New Password");
@@ -74,26 +73,28 @@ export function Settings({ route, navigation }) {
   //changes the users username
   const changeUsername=()=>{
     //if the user entered the valid password then empty the text field and ask for their desired username
-    if(userEnteredPasswordForUsername==password){
+    if (userEnteredPasswordForUsername==password){
       changeUserEnteredPasswordForUsername('');
       changeUsernameValidity('True');
       changeinputTextForUsername("Enter New Username");
     
     //if the user entered the correct password and a new username update their username
-    }else if(usernameChangeValid=='True'){
+    } else if (usernameChangeValid=='True'){
       // if they did not try to enter an empty username
-      if(userEnteredPasswordForUsername != ''){
-        database().ref("/Database/Users/" + route.params.user).update({Username: userEnteredPasswordForUsername});
+      if (userEnteredPasswordForUsername != ''){
+        database().ref("/Database/Users/" + route.params.user).update({
+          Username: userEnteredPasswordForUsername
+        });
         changeUser(userEnteredPasswordForUsername);
         changeUserEnteredPasswordForUsername('');
         changeUsernameValidity('False');
         changeinputTextForUsername('Enter your password');
        
-      }else{
+      } else {
         changeUserEnteredPassword('');
         changeinputTextForUsername("Something Went Wrong");
       }   
-    }else{
+    } else {
       console.log("wrong password try again");
     }
   }
@@ -108,33 +109,37 @@ export function Settings({ route, navigation }) {
   }
 
   return(
-    <TopBar navigation = {navigation} userInfo={route.params.user}>
-      <View style={styles.settingsPage}>
-        <View style={styles.innerSettingsPage}>
-          <View style = {basicStyles.flexAlignContainer}>
-            <Text>Hello {username} Welcome to your Settings</Text> 
+    <TopBar 
+      navigation = { navigation } 
+      userInfo = { route.params.user }
+      listNavigation = {[ "ProjectList", "ProjectCreation" ]}  
+    >
+      <View style = { styles.settingsPage }>
+        <View style = { styles.innerSettingsPage }>
+          <View style = { basicStyles.flexAlignContainer }>
+            <Text>Hello { username } Welcome to your Settings</Text> 
             <Text>Enter your password to Change Your Username</Text>
             <TextInputBox 
-              changeValue={changeUserEnteredPasswordForUsername}
-              text={inputTextForUsername}
-              value={userEnteredPasswordForUsername}
+              changeValue = { changeUserEnteredPasswordForUsername }
+              text = { inputTextForUsername }
+              value = { userEnteredPasswordForUsername }
             />
             <ButtonBox 
-              onClick={()=>changeUsername()}
-              text={"Enter"}
-              style={basicStyles.buttonContainer}
+              onClick = {()=>changeUsername()}
+              text = { "Enter" }
+              style = { basicStyles.buttonContainer }
               
             />
             <Text>Enter your password to Change Your password</Text>
             <TextInputBox 
-              changeValue={changeUserEnteredPassword}
-              text={inputTextForPassword}
-              value={userEnteredPassword}
+              changeValue = { changeUserEnteredPassword }
+              text = { inputTextForPassword }
+              value = { userEnteredPassword }
             />
             <ButtonBox
-              onClick={()=>isPassword()}
-              text={"Enter"}
-              style={basicStyles.buttonContainer}
+              onClick = { () => isPassword() }
+              text = { "Enter" }
+              style = { basicStyles.buttonContainer }
             />
           </View>
         </View>
@@ -143,75 +148,13 @@ export function Settings({ route, navigation }) {
   );
 }
 
-const TopBar = (props) => {
-  const [drawer, changeDrawer] = useState(false);
-  return (
-    <View style = {basicStyles.container}>
-      <View style = {topBarStyles.topBarContainer}>
-        <View style = {topBarStyles.openContainer}>
-          <ButtonBoxForNavigation
-            onClick={() => {
-              changeDrawer(!drawer);
-              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-            }}
-            text={"Open"}
-            style={topBarStyles.openAndDrawerButton}
-          />
-        </View>
-      </View>
-      <View style = {[topBarStyles.drawerContainer, drawer? undefined: {width: 0}]}>
-        <ButtonBoxForNavigation
-          onClick={()=> 
-            changeDrawer(!drawer)
-          } 
-          text={"Close"}
-          style={topBarStyles.navigationButtons}
-        />
-        <ButtonBoxForNavigation
-          onClick={()=>{
-            props.navigation.goBack();
-          }}
-          text={"Go Back"}
-          style={topBarStyles.navigationButtons}
-        />
-        <ButtonBoxForNavigation
-          onClick={()=>
-            props.navigation.navigate("ProjectList", {user:props.userInfo})
-          } 
-          text={"ProjectList"}
-          style={topBarStyles.navigationButtons}
-        />
-        <ButtonBoxForNavigation
-          onClick={()=>
-            props.navigation.navigate("ProjectCreation", {user:props.userInfo})
-          } 
-          text={"ProjectCreation"}
-          style={topBarStyles.navigationButtons}
-        />
-      </View>
-      {props.children}
-    </View>
-  )
-};
-
-const ButtonBoxForNavigation = props => {
-  return(
-    <TouchableHighlight 
-      style = {props.style}
-      onPress = {props.onClick}
-    >
-      <Text style = {topBarStyles.buttonText}>{props.text}</Text>
-    </TouchableHighlight>
-  );
-};
-
 const TextInputBox = props => {
   return (
-    <View style = {basicStyles.textInputContainer}>
+    <View style = { basicStyles.textInputContainer }>
       <TextInput 
         onChangeText = {text => props.changeValue(text)}
-        placeholder = {props.text}
-        value = {props.value}
+        placeholder = { props.text }
+        value = { props.value }
       />
     </View>
   );
@@ -219,12 +162,12 @@ const TextInputBox = props => {
 
 const ButtonBox = props => {
   return(
-    <View style = {props.style}>
+    <View style = { props.style }>
       <TouchableHighlight 
-        style = {basicStyles.button}
-        onPress = {props.onClick}
+        style = { basicStyles.button }
+        onPress = { props.onClick }
       >
-        <Text style = {topBarStyles.buttonText}>{props.text}</Text>
+        <Text style = { topBarStyles.buttonText }>{ props.text }</Text>
       </TouchableHighlight>
     </View>
   );
