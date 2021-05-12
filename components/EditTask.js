@@ -6,14 +6,13 @@ import {
   TextInput,
 } from 'react-native';
 
+import { TopBar } from './utilityComponents/TopBar.js';
+import { ButtonBox } from './utilityComponents/ButtonBox.js';
+
 import database from '@react-native-firebase/database';
 
 import * as styles from './styles/styles.js';
 import * as basicStyles from './styles/basicStyles.js';
-import * as topBarStyles from './styles/topBarStyles.js';
-import Moment from 'moment';
-
-
 
 export function EditTask ({ navigation, route }){
   const [title, changeTitle] = useState(null); //title of the task
@@ -79,8 +78,9 @@ export function EditTask ({ navigation, route }){
 
   return(
     <TopBar  
-      userInfo = { route.params.user } 
       navigation = { navigation }
+      userInfo = { route.params.user }
+      listNavigation = { null }
     >
       {/* Editable Options */}
       <View style = { styles.editTaskMainView }>
@@ -100,29 +100,20 @@ export function EditTask ({ navigation, route }){
       <ButtonBox
         onClick = { saveChanges }
         text = "Save Changes"
-        buttonStyle = { [styles.editTaskBottomBar, { right: 0 }] }
+        containerStyle = { null }
+        buttonStyle = {[ styles.editTaskBottomBar, { right: 0 }]}
+        textStyle = { styles.editTaskBottomBarButtons }
       />
       <ButtonBox
         onClick = { deleteThisTask }
         text = "Delete Task"
+        containerStyle = { null }
         buttonStyle = { styles.editTaskBottomBar }
+        textStyle = { styles.editTaskBottomBarButtons }
       />
     </TopBar>
   );
 }
-
-
-const ButtonBox = props => {
-  return(
-      <TouchableHighlight 
-        style = { props.buttonStyle }
-        onPress = { props.onClick }
-      >
-        <Text style = { styles.editTaskBottomBarButtons }>{ props.text }</Text>
-      </TouchableHighlight>
-  );
-};
-
 
 const TitleTextInputBox = props => {
   return (
@@ -156,30 +147,3 @@ const DescriptionTextInputBox = props => {
 };
 
 
-const TopBar = (props) => {
-  return (
-    <View style = { basicStyles.container }>
-      <View style = { topBarStyles.topBarContainer }>
-        <ButtonBoxForNavigation
-          onClick = {()=>{
-            props.navigation.goBack();
-          }}
-          text = { "Go Back" }
-          style = { basicStyles.navigationButtons }
-        />
-      </View>
-      { props.children }
-    </View>
-  )
-};
-
-const ButtonBoxForNavigation = props => {
-  return(
-    <TouchableHighlight 
-      style = { props.style }
-      onPress = { props.onClick }
-    >
-      <Text style = { topBarStyles.buttonText }>{ props.text }</Text>
-    </TouchableHighlight>
-  );
-};

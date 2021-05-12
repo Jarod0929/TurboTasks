@@ -5,6 +5,12 @@ import {
 let spiroDiscoBall = '#19d9ff';
 
 const topBarStyles = StyleSheet.create({
+  container: {
+    width: "100%",
+    height: "100%",
+    backgroundColor: "white",
+    zIndex: 0,
+  },
   topBarContainer: {
     backgroundColor: "cyan",
     borderWidth: 2,

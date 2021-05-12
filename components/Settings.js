@@ -9,8 +9,11 @@ import {
   Platform,
   UIManager,
 } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+
+import { TopBar } from './utilityComponents/TopBar.js';
+
 import database from '@react-native-firebase/database';
+
 import * as styles from './styles/styles.js';
 import * as basicStyles from './styles/basicStyles.js';
 import * as topBarStyles from './styles/topBarStyles.js';
@@ -106,7 +109,11 @@ export function Settings({ route, navigation }) {
   }
 
   return(
-    <TopBar navigation = { navigation } userInfo={ route.params.user }>
+    <TopBar 
+      navigation = { navigation } 
+      userInfo = { route.params.user }
+      listNavigation = {[ "ProjectList", "ProjectCreation" ]}  
+    >
       <View style = { styles.settingsPage }>
         <View style = { styles.innerSettingsPage }>
           <View style = { basicStyles.flexAlignContainer }>
@@ -130,7 +137,7 @@ export function Settings({ route, navigation }) {
               value = { userEnteredPassword }
             />
             <ButtonBox
-              onClick = {()=>isPassword()}
+              onClick = { () => isPassword() }
               text = { "Enter" }
               style = { basicStyles.buttonContainer }
             />
@@ -140,68 +147,6 @@ export function Settings({ route, navigation }) {
     </TopBar>
   );
 }
-
-const TopBar = (props) => {
-  const [drawer, changeDrawer] = useState(false);
-  return (
-    <View style = { basicStyles.container }>
-      <View style = { topBarStyles.topBarContainer }>
-        <View style = { topBarStyles.openContainer }>
-          <ButtonBoxForNavigation
-            onClick = {() => {
-              changeDrawer(!drawer);
-              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-            }}
-            text = { "Open" }
-            style = { topBarStyles.openAndDrawerButton }
-          />
-        </View>
-      </View>
-      <View style = { [topBarStyles.drawerContainer, drawer? undefined: {width: 0}] }>
-        <ButtonBoxForNavigation
-          onClick = {()=> 
-            changeDrawer(!drawer)
-          } 
-          text = { "Close" }
-          style = { topBarStyles.navigationButtons }
-        />
-        <ButtonBoxForNavigation
-          onClick = {()=>{
-            props.navigation.goBack();
-          }}
-          text = { "Go Back" }
-          style = { topBarStyles.navigationButtons }
-        />
-        <ButtonBoxForNavigation
-          onClick = {()=>
-            props.navigation.navigate("ProjectList", { user:props.userInfo })
-          } 
-          text = { "ProjectList" }
-          style = { topBarStyles.navigationButtons }
-        />
-        <ButtonBoxForNavigation
-          onClick = {()=>
-            props.navigation.navigate("ProjectCreation", { user:props.userInfo })
-          } 
-          text = { "ProjectCreation" }
-          style = { topBarStyles.navigationButtons }
-        />
-      </View>
-      { props.children }
-    </View>
-  )
-};
-
-const ButtonBoxForNavigation = props => {
-  return(
-    <TouchableHighlight 
-      style = { props.style }
-      onPress = { props.onClick }
-    >
-      <Text style = { topBarStyles.buttonText }>{ props.text }</Text>
-    </TouchableHighlight>
-  );
-};
 
 const TextInputBox = props => {
   return (
