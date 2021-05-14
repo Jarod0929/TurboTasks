@@ -8,7 +8,6 @@ import {
   TouchableHighlight,
   Text,
 } from 'react-native';
-import AntIcon from "react-native-vector-icons/AntDesign";
 import EntIcon from "react-native-vector-icons/Entypo";
 
 import { ButtonBox } from './ButtonBox.js';

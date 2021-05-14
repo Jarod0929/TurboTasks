@@ -2,8 +2,6 @@ import {
   StyleSheet
 } from 'react-native';
 
-let spiroDiscoBall = '#19d9ff';
-
 const topBarStyles = StyleSheet.create({
   container: {
     width: "100%",

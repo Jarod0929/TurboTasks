@@ -5,7 +5,6 @@ import {
   TouchableHighlight,
 } from 'react-native';
 
-import { baseProps } from 'react-native-gesture-handler/lib/typescript/handlers/gestureHandlers';
 import EntIcon from "react-native-vector-icons/Entypo";
 import FeatherIcon from "react-native-vector-icons/Feather";
 

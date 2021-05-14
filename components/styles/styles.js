@@ -1,9 +1,7 @@
-import { faBorderNone } from '@fortawesome/free-solid-svg-icons';
 import {
     StyleSheet
   } from 'react-native';
   
-
 let spiroDiscoBall = "#19d9ff";
 
 const styles = StyleSheet.create({
