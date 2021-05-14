@@ -5,18 +5,14 @@ import {
   TouchableHighlight,
   FlatList,
   Modal,
-  LayoutAnimation,
 } from 'react-native';
 
 import { TopBar } from './utilityComponents/TopBar.js';
 
 import * as styles from './styles/styles.js';
-import * as basicStyles from './styles/basicStyles.js';
-import * as topBarStyles from './styles/topBarStyles.js';
 
 import database from '@react-native-firebase/database';
-import {  useFocusEffect, useIsFocused } from '@react-navigation/native';
-import { faRoute } from '@fortawesome/free-solid-svg-icons';
+import {  useFocusEffect } from '@react-navigation/native';
  
 export function Project ({ navigation, route }) { 
   const [allProjectTasks, changeAllProjectTasks] = useState([]); //ID's of all tasks for this project

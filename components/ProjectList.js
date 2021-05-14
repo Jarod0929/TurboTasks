@@ -18,7 +18,6 @@ import { TopBar } from './utilityComponents/TopBar.js';
 import { useFocusEffect, useRoute } from '@react-navigation/native';
 import database from '@react-native-firebase/database';
 import Icon from "react-native-vector-icons/AntDesign";
-import LinearGradient from 'react-native-linear-gradient'
 
 
 import * as styles from './styles/styles.js';

@@ -3,11 +3,7 @@ import {
   Text,
   View,
   TouchableHighlight,
-  FlatList,
   TextInput,
-  LayoutAnimation,
-  Platform,
-  UIManager,
 } from 'react-native';
 
 import { TopBar } from './utilityComponents/TopBar.js';

@@ -4,7 +4,6 @@ import {
   View,
   TouchableHighlight,
   TextInput,
-  LayoutAnimation,
   Dimensions,
 } from 'react-native';
 
