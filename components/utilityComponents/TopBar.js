@@ -43,9 +43,9 @@ export function TopBar( props ){
       </View>
 
       <View style = {[ topBarStyles.drawerContainer, drawer? undefined: {width: 0} ]}>
-        <View style = {{width: "100%", flexDirection: "row", backgroundColor: "#5CA9D2",height: "15%", paddingTop: "4%",}}>
+        <View style = {topBarStyles.logoContainer}>
           <View style = {{width: "50%"}}>
-            <Text style = {{fontSize:30, fontWeight: "bold", left: "5%", color: "#F4FCFF"}}>Turbo Task</Text>
+            <Text style = {topBarStyles.logoText}>Turbo Task</Text>
           </View>
           <EntIcon
             style = {{top: "7%", right: "65%"}}

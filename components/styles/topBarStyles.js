@@ -61,13 +61,19 @@ const topBarStyles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: "#356178"
   },
-  current:{
-    paddingLeft: "5%",
-    marginBottom: 20,
-    height: 50,
-    justifyContent: "center",
-    backgroundColor: "red"
-  }
+  logoContainer:{
+    width: "100%", 
+    flexDirection: "row", 
+    backgroundColor: "#5CA9D2",
+    height: "15%", 
+    paddingTop: "4%",
+  },
+  logoText:{
+    fontSize:30, 
+    fontWeight: "bold", 
+    left: "5%", 
+    color: "#F4FCFF"
+  },
 });
 
 module.exports = topBarStyles;

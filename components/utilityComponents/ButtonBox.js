@@ -80,8 +80,7 @@ export function ButtonBox( props ){
           </FeatherIcon>
         </TouchableHighlight>
       }
-    </View>
-    
+    </View>  
   ); 
 
   if(iconName != null){

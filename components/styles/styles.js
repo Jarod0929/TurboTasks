@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
     fontSize: 22, 
     fontWeight: "700", 
     top: "2%"
-  }
+  },
 });
 
 module.exports = styles;
