@@ -20,6 +20,9 @@ const basicStyles = StyleSheet.create({
         top: 10,
         paddingBottom: 30,
         zIndex: 30,
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
       },
       titleText: {
         color: 'black',
@@ -34,7 +37,8 @@ const basicStyles = StyleSheet.create({
         zIndex: 30,
       },
       textAreaContainer: {
-        paddingBottom: 30,
+        paddingTop: 15,
+        paddingBottom: 15,
         zIndex: 30,
       },
       defaultText: {
