@@ -12,6 +12,7 @@ import { HidePasswordButton } from './utilityComponents/HidePasswordButton.js';
 import database from '@react-native-firebase/database';
 import LinearGradient from 'react-native-linear-gradient';
 
+import * as styles from './styles/styles.js';
 import * as basicStyles from './styles/basicStyles.js';
 
 /**
@@ -74,16 +75,8 @@ export function CreateAccount ({navigation}) {
     >
       <Text style = {styles.topBarTitle}>Create Account</Text>
       <LinearGradient
-        colors = {["#187bcd", '#2a9df4', '#1167b1']}
-        style = {{ width: "100%", height: "15%" }}
-      >
-        <View style = { basicStyles.titleContainer }>
-          <Text style = { basicStyles.titleText }>Sign Up</Text>
-        </View>
-      </LinearGradient>
-      <LinearGradient
         colors = {["#F6F6F6", "#CCCCCC"]}
-        style = {{ width: "100%", height: "85%" }}
+        style = {{ width: "100%", height: "100%" }}
       >
         <View style = { basicStyles.flexAlignContainer }>
           <TextInputBox
