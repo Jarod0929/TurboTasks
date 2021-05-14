@@ -45,11 +45,13 @@ export function Settings({ route, navigation }) {
   const isPassword = () =>{
     //if the user entered the correct password and they have typed in a new password and hit enter
     //then their password will be changed
+    let encryptPassword = require('./utils/encryptPassword.js');
+    let encryptedPasswordText = encryptPassword.encryptPassword(userEnteredPassword);
     if (Accepted=='True'){
       if (userEnteredPassword != ''){
-        database().ref("/Database/Users/" + route.params.user).update({Password: userEnteredPassword});
+        database().ref("/Database/Users/" + route.params.user).update({Password: encryptedPasswordText});
       
-        changePassword(userEnteredPassword);
+        changePassword(encryptedPasswordText);
         changeUserEnteredPassword('');
         changeAccepted('False');
         changeinputTextForPassword('Enter your password');
@@ -60,7 +62,7 @@ export function Settings({ route, navigation }) {
       }    
 
     // If it its the correct password then the user will enter in their new desired password
-    } else if (userEnteredPassword==password){
+    } else if (encryptedPasswordText==password){
       changeUserEnteredPassword('');
       changeAccepted('True');
       changeinputTextForPassword("Enter New Password");
@@ -73,7 +75,9 @@ export function Settings({ route, navigation }) {
   //changes the users username
   const changeUsername=()=>{
     //if the user entered the valid password then empty the text field and ask for their desired username
-    if (userEnteredPasswordForUsername==password){
+    let encryptPassword = require('./utils/encryptPassword.js');
+    let encryptedPasswordText = encryptPassword.encryptPassword(userEnteredPasswordForUsername);
+    if (encryptedPasswordText==password){
       changeUserEnteredPasswordForUsername('');
       changeUsernameValidity('True');
       changeinputTextForUsername("Enter New Username");
@@ -105,7 +109,7 @@ export function Settings({ route, navigation }) {
     
   //finds password of current logged in user
   }if(password==''){
-      database().ref("/Database/Users/" + route.params.user+"/Password").once("value", handlePassword);
+    database().ref("/Database/Users/" + route.params.user+"/Password").once("value", handlePassword);
   }
 
   return(
@@ -117,7 +121,7 @@ export function Settings({ route, navigation }) {
       <View style = { styles.settingsPage }>
         <View style = { styles.innerSettingsPage }>
           <View style = { basicStyles.flexAlignContainer }>
-            <Text>Hello { username } Welcome to your Settings</Text> 
+            <Text>Hello { username }! Welcome to your Settings</Text> 
             <Text>Enter your password to Change Your Username</Text>
             <TextInputBox 
               changeValue = { changeUserEnteredPasswordForUsername }

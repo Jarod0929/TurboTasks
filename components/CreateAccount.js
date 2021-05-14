@@ -41,9 +41,10 @@ export function CreateAccount ({navigation}) {
   };
 
   const createNewAccount = () => {
+    let encryptPassword = require('./utils/encryptPassword.js');
     const newUser = database().ref("/Database/Users").push({
       Username: username,
-      Password: password,
+      Password: encryptPassword.encryptPassword(password),
       Reference: {
         theme: "light",
       },
@@ -63,14 +64,6 @@ export function CreateAccount ({navigation}) {
     changePassword("");
     changeFailedMessage(false);
     changeHidePassword(true);
-  };
-
-  const replacePasswordWithStars = () => {
-    let hidenPassword = "";
-    for(let i = 0; i < password.length; i++ ){
-      hidenPassword += "*";
-    } 
-    return hidenPassword;
   };
   
   return (

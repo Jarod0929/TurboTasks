@@ -8,6 +8,7 @@ import { TopBar } from './utilityComponents/TopBar.js';
 import { ButtonBox } from  './utilityComponents/ButtonBox.js';
 import { TextInputBox } from  './utilityComponents/TextInputBox.js';
 import { HidePasswordButton } from './utilityComponents/HidePasswordButton.js';
+import { encryptPassword } from './utils/encryptPassword.js';
 
 import database from '@react-native-firebase/database';
 import LinearGradient from 'react-native-linear-gradient';
@@ -37,13 +38,14 @@ export function LogIn({ navigation }){
   };  
 
   const isPassword = snapshot => { 
-    if(snapshot.val() != null && snapshot.val().Password === password){
+    let encryptPassword = require('./utils/encryptPassword.js');
+    if(snapshot.val() != null && snapshot.val().Password === encryptPassword.encryptPassword(password)){
       resetAllStates();
       navigation.navigate("Main",{screen: 'ProjectList', params: { user: snapshot.val().ID }});
     } 
     database().ref("/Database/Users").orderByChild("Username").equalTo(username).off("child_added", isPassword); 
   };
-
+  
   const goToCreateAccount = () => {
     resetAllStates();
     navigation.navigate("CreateAccount");
