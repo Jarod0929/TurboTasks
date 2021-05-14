@@ -55,14 +55,6 @@ export function LogIn({ navigation }){
     changeFailedMessage(false);
   };
 
-  const replacePasswordWithStars = () => {
-    let hidenPassword = "";
-    for(let i = 0; i < password.length; i++ ){
-      hidenPassword += "*";
-    } 
-    return hidenPassword;
-  };
-
   return(
     <TopBar 
       navigation = { navigation }
@@ -89,14 +81,16 @@ export function LogIn({ navigation }){
             outerViewStyle = { basicStyles.textAreaContainer }
             textStyle = { basicStyles.defaultText }
             innerViewStyle = { basicStyles.textInputContainer }
+            secureTextEntry = { false }
           />
           <TextInputBox
             changeValue = { changePassword }
             text = { "Password" }
-            value = { hidePassword? replacePasswordWithStars() : password }
+            value = { password }
             outerViewStyle = { basicStyles.textAreaContainer }
             textStyle = { basicStyles.defaultText }
             innerViewStyle = { basicStyles.textInputContainer }
+            secureTextEntry = { hidePassword }
           />
           <HidePasswordButton
             changeHidePassword = { changeHidePassword }

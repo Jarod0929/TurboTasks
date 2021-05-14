@@ -99,14 +99,16 @@ export function CreateAccount ({navigation}) {
             outerViewStyle = { basicStyles.textAreaContainer }
             textStyle = { basicStyles.defaultText }
             innerViewStyle = { basicStyles.textInputContainer }
+            secureTextEntry = { false }
           />
           <TextInputBox
             changeValue = { changePassword }
             text = { "Password" }
-            value = { hidePassword? replacePasswordWithStars() : password }
+            value = { password }
             outerViewStyle = { basicStyles.textAreaContainer }
             textStyle = { basicStyles.defaultText }
             innerViewStyle = { basicStyles.textInputContainer }
+            secureTextEntry = { hidePassword }
           >
           </TextInputBox>
           <HidePasswordButton
