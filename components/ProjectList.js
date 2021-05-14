@@ -534,41 +534,6 @@ const DeleteProjectButton = props => {
   );
 }
 
-const ButtonBox = props => {
-  return(
-    <View 
-      style = { props.style }
-    >
-      <TouchableHighlight 
-        style = { basicStyles.button }
-        onPress = { props.onClick }
-      >
-        <Text 
-          style = { topBarStyles.buttonText }
-        >
-          { props.text }
-        </Text>
-      </TouchableHighlight>
-    </View>
-  );
-};
-
-const TextInputBox = props => {
-  return (
-    <View 
-      style = {[ basicStyles.textInputContainer, styles.centerSelf ]}
-    >
-      <TextInput 
-        onChangeText = {text => props.changeValue(text)}
-        placeholder = { props.text }
-        value = { props.value }
-        maxLength = { 30 }
-        style = { styles.centerSelf }
-      />
-    </View>
-  );
-};
-
 const DescriptionTextInputBox = props => {
   return (
     <View style = { styles.fullWidth }>

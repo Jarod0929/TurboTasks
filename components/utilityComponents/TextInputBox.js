@@ -23,6 +23,7 @@ export function TextInputBox( props ){
           placeholder = { props.text }
           value = { props.value }
         />
+        { props.children }
     </View>
   </View>
   );
