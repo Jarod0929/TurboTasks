@@ -56,7 +56,7 @@ export function ButtonBox( props ){
             name = {iconName}
             size = {props.iconSize}
             color = {props.iconColor}
-            style = {{fontSize: 29, paddingBottom: 2}}
+            style = {{fontSize: 24, paddingBottom: 2}}
           >
             {" "}{text}
           </EntIcon>
@@ -73,7 +73,7 @@ export function ButtonBox( props ){
             name = {iconName}
             size = {props.iconSize}
             color = {props.iconColor}
-            style = {{fontSize: 29, paddingBottom: 2}}
+            style = {{fontSize: 24, paddingBottom: 2}}
           >
             {" "}{props.text}
           </FeatherIcon>
