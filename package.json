@@ -19,6 +19,7 @@
     "@react-navigation/drawer": "^5.12.5",
     "@react-navigation/native": "^5.9.4",
     "@react-navigation/stack": "^5.14.4",
+    "aes-js": "^3.1.2",
     "install": "^0.13.0",
     "moment": "^2.29.1",
     "npm": "^7.11.1",
