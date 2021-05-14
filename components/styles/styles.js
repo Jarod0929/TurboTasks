@@ -1,9 +1,7 @@
-import { faBorderNone } from '@fortawesome/free-solid-svg-icons';
 import {
     StyleSheet
   } from 'react-native';
   
-
 let spiroDiscoBall = "#19d9ff";
 
 const styles = StyleSheet.create({
@@ -40,14 +38,16 @@ const styles = StyleSheet.create({
   },
   projectCreationPlusPosition:{
     width: "15%",
-    left: "88%", 
-    top: "-1%", 
+    left: "85%", 
+    top: "1%", 
     position: "absolute", 
-    zIndex: 200
+    zIndex: 200,
+    borderRadius: 150
   },
   projectCreationPlusDesign:{
-    color: "blue",
-    fontSize: 50
+    color: "#F4FCFF",
+    fontSize: 50,
+    alignSelf: "center"
   },
   projectListMainView:{
     backgroundColor: "white",
@@ -270,8 +270,16 @@ const styles = StyleSheet.create({
     color: "black", 
     fontWeight: "bold", 
     fontSize: 17
-  }
-
+  },
+  topBarTitle: {
+    position: "absolute", 
+    zIndex: 200, 
+    alignSelf: "center", 
+    color: '#F4FCFF',
+    fontSize: 22, 
+    fontWeight: "700", 
+    top: "2%"
+  },
 });
 
 module.exports = styles;

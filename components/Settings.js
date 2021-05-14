@@ -3,11 +3,7 @@ import {
   Text,
   View,
   TouchableHighlight,
-  FlatList,
   TextInput,
-  LayoutAnimation,
-  Platform,
-  UIManager,
 } from 'react-native';
 
 import { TopBar } from './utilityComponents/TopBar.js';
@@ -118,6 +114,7 @@ export function Settings({ route, navigation }) {
       userInfo = { route.params.user }
       listNavigation = {[ "ProjectList", "ProjectCreation" ]}  
     >
+      <Text style = {styles.topBarTitle}>Settings</Text>
       <View style = { styles.settingsPage }>
         <View style = { styles.innerSettingsPage }>
           <View style = { basicStyles.flexAlignContainer }>

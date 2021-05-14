@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     },
     buttonIconBoxView:{
         height: "15%", 
-        bottom: "5%"
+        bottom: "7%"
     },
     buttonIconBoxTH:{
         borderRadius: 10, 

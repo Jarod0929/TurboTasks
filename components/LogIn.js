@@ -13,6 +13,7 @@ import { encryptPassword } from './utils/encryptPassword.js';
 import database from '@react-native-firebase/database';
 import LinearGradient from 'react-native-linear-gradient';
 
+import * as styles from './styles/styles.js';
 import * as basicStyles from './styles/basicStyles.js';
 
 /**
@@ -63,12 +64,12 @@ export function LogIn({ navigation }){
       userInfo = { null }
       listNavigation = {[ "CreateAccount" ]}  
     > 
+      <Text style = {styles.topBarTitle}>Log In</Text>
       <LinearGradient
         colors = { [ "#0DE5EB", "#15E0E6", "#0A8C90" ] }
         style = { { width: "100%", height: "15%" } }
       >
         <View style = { basicStyles.titleContainer }>
-          <Text style = { basicStyles.titleText }>Sign In</Text>
         </View>
       </LinearGradient>
       <LinearGradient

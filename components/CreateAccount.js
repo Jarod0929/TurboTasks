@@ -72,6 +72,7 @@ export function CreateAccount ({navigation}) {
       userInfo = { null }
       listNavigation = {[ "LogIn" ]}
     >
+      <Text style = {styles.topBarTitle}>Create Account</Text>
       <LinearGradient
         colors = {["#187bcd", '#2a9df4', '#1167b1']}
         style = {{ width: "100%", height: "15%" }}

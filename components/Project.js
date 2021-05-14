@@ -5,18 +5,14 @@ import {
   TouchableHighlight,
   FlatList,
   Modal,
-  LayoutAnimation,
 } from 'react-native';
 
 import { TopBar } from './utilityComponents/TopBar.js';
 
 import * as styles from './styles/styles.js';
-import * as basicStyles from './styles/basicStyles.js';
-import * as topBarStyles from './styles/topBarStyles.js';
 
 import database from '@react-native-firebase/database';
-import {  useFocusEffect, useIsFocused } from '@react-navigation/native';
-import { faRoute } from '@fortawesome/free-solid-svg-icons';
+import {  useFocusEffect } from '@react-navigation/native';
  
 export function Project ({ navigation, route }) { 
   const [allProjectTasks, changeAllProjectTasks] = useState([]); //ID's of all tasks for this project
@@ -112,6 +108,7 @@ export function Project ({ navigation, route }) {
       userInfo = { route.params.user }
       listNavigation = {[ "ProjectList", "ProjectCreation", "Settings" ]}
     >
+      <Text style = {styles.topBarTitle}>{route.params.projectTitle}</Text>
       {/* Main Container */}
       <View style = { styles.projectTaskListConatiner }>
         {/* Modal for showing task information */}
@@ -166,7 +163,8 @@ const TaskPanel = (props) => {
     props.navigation.push("Project", {
       taskID: props.taskID, 
       projectID: props.projectID, 
-      user: props.userId
+      user: props.userId,
+      projectTitle: props.projectTitle
     });
   };
 

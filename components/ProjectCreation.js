@@ -14,6 +14,7 @@ import database from '@react-native-firebase/database';
 import Icon from "react-native-vector-icons/AntDesign";
 import LinearGradient from 'react-native-linear-gradient'
 
+import * as styles from './styles/styles.js';
 import * as projectCreationStyles from './styles/projectCreationStyles.js';
 
 /**
@@ -106,8 +107,9 @@ export function ProjectCreation ({ route, navigation }) {
     <TopBar 
       navigation = { navigation } 
       userInfo = { route.params.user }
-      listNavigation = {[ "ProjectList" ]}
+      listNavigation = {[ "ProjectList", "Settings" ]}
     >
+      <Text style = {styles.topBarTitle}>Project Creation</Text>
       <View style = { projectCreationStyles.container }>
         <TopGradient
           colors = { ["#187bcd", '#2a9df4', '#1167b1'] }
@@ -117,8 +119,8 @@ export function ProjectCreation ({ route, navigation }) {
         >
           <TopIcon
             iconName = "addfolder"
-            iconColor = "blue"
-            iconSize = { 100 }
+            iconColor = "#F4FCFF"
+            iconSize = { 120 }
           />
         </TopGradient>
         <ContainerGradient
@@ -176,12 +178,6 @@ const TopGradient = props =>{
         start = { props.start }
         end = { props.end }
     >
-      <Text
-      //FONTSIZE INLINE STYLE IS FOR RESPONSIVE TEXT SIZE
-        style = { [projectCreationStyles.topText, { fontSize: 35 * (Dimensions.get("screen").height/780) }] }
-      >
-        { props.text }
-      </Text>
       { props.children }
     </LinearGradient>
   );

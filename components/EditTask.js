@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import {
   Text,
   View,
-  TouchableHighlight,
   TextInput,
 } from 'react-native';
 

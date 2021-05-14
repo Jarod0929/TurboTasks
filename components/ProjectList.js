@@ -15,10 +15,9 @@ import {
 
 import { TopBar } from './utilityComponents/TopBar.js';
 
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useRoute } from '@react-navigation/native';
 import database from '@react-native-firebase/database';
 import Icon from "react-native-vector-icons/AntDesign";
-import LinearGradient from 'react-native-linear-gradient'
 
 
 import * as styles from './styles/styles.js';
@@ -62,6 +61,7 @@ export function ProjectList({ route, navigation }) {
       userInfo={ route.params.user }
       listNavigation = {[ "ProjectCreation", "Settings" ]}
       >
+      <Text style = {styles.topBarTitle}>Project List</Text>
       {/* Description and Delete modal for Project */}
       <ProjectModal
         changeVisibility = { changeVisibility }
@@ -73,12 +73,17 @@ export function ProjectList({ route, navigation }) {
       {/* Plus button that takes you to creating a new project */}
       <TouchableHighlight 
         style={ styles.projectCreationPlusPosition }
+        activeOpacity = {0.6}
+        underlayColor = "#427996"
         onPress={() => {
           navigation.navigate("ProjectCreation", { user: route.params.user });
         }}
       >
         <View>
-          <Text style={ styles.projectCreationPlusDesign }>+</Text>
+          <Icon
+            style={ styles.projectCreationPlusDesign }
+            name = "pluscircleo"
+          />
         </View> 
       </TouchableHighlight>
       <UserProjectsFlatlist
@@ -347,7 +352,7 @@ const ProjectPanel = props => {
         //Entire panel is touchable, hold for 1 second to pull up decription and delete page, press to view tasks 
         <TouchableHighlight
           onPress = {() => {
-            props.navigation.navigate("Project", { taskID: null, projectID: project.ID, user: props.user });
+            props.navigation.navigate("Project", { taskID: null, projectID: project.ID, user: props.user, projectTitle: project.title });
           }}
           onLongPress = {() => { props.deletionPage(project.ID)}}
           delayLongPress = {1000}
