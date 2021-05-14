@@ -22,7 +22,9 @@ export function TextInputBox( props ){
           onChangeText = { text => props.changeValue(text) }
           placeholder = { props.text }
           value = { props.value }
+          secureTextEntry = { props.secureTextEntry }
         />
+        { props.children }
     </View>
   </View>
   );

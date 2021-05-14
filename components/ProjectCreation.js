@@ -146,10 +146,10 @@ export function ProjectCreation ({ route, navigation }) {
                 activeOpacity = { 0.6 }
                 underlayColor = "#00181"
               >
-              <Icon
-                name = "addusergroup" 
-                size = { 35 } 
-              />
+                <Icon
+                  name = "addusergroup" 
+                  size = { 35 } 
+                />
               </InviteUsersTH>
             </CreationBox>              
             <ButtonIconBox 
@@ -182,6 +182,7 @@ const TopGradient = props =>{
     </LinearGradient>
   );
 }
+
 const TopIcon = props =>{
   return(
     <Icon 
