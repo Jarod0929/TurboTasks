@@ -63,11 +63,10 @@ export function TopBar( props ){
               }
               text={ item }
               containerStyle = { null }
-              buttonStyle ={ topBarStyles.navigationButtons }
+              buttonStyle ={ [topBarStyles.navigationButtons] }
               textStyle = { topBarStyles.buttonText }
               activeOpacity = {0.6}
               underlayColor = "#427996"
-              iconSize = {35}
               iconColor = "#F4FCFF"
             />
           }
@@ -79,12 +78,11 @@ export function TopBar( props ){
           }}
           text={"Go Back"}
           containerStyle = { null }
-          buttonStyle ={ topBarStyles.navigationButtons }
-          textStyle = { topBarStyles.buttonIconText }
+          buttonStyle ={ topBarStyles.goBackButton }
+          textStyle = { topBarStyles.buttonText }
           activeOpacity = {0.6}
           underlayColor = "#427996"
           iconName = "back"
-          iconSize = {35}
           iconColor = "#F4FCFF"
         />
         <ButtonBox
@@ -99,7 +97,6 @@ export function TopBar( props ){
           activeOpacity = {0.6}
           underlayColor = "#427996"
           iconName = "chevron-with-circle-left"
-          iconSize = {35}
           iconColor = "#F4FCFF"
         />
       </View>

@@ -270,8 +270,16 @@ const styles = StyleSheet.create({
     color: "black", 
     fontWeight: "bold", 
     fontSize: 17
+  },
+  topBarTitle: {
+    position: "absolute", 
+    zIndex: 200, 
+    alignSelf: "center", 
+    color: '#F4FCFF',
+    fontSize: 22, 
+    fontWeight: "700", 
+    top: "2%"
   }
-
 });
 
 module.exports = styles;

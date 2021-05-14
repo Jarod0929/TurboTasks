@@ -77,6 +77,7 @@ export function CreateAccount ({navigation}) {
       userInfo = { null }
       listNavigation = {[ "LogIn" ]}
     >
+      <Text style = {styles.topBarTitle}>Create Account</Text>
       <View style = { styles.flexAlignContainer }>
         <View style = {styles.titleContainer }>
           <Text style = { styles.titleText }>Sign Up</Text>

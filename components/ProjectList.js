@@ -15,7 +15,7 @@ import {
 
 import { TopBar } from './utilityComponents/TopBar.js';
 
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useRoute } from '@react-navigation/native';
 import database from '@react-native-firebase/database';
 import Icon from "react-native-vector-icons/AntDesign";
 import LinearGradient from 'react-native-linear-gradient'
@@ -62,6 +62,7 @@ export function ProjectList({ route, navigation }) {
       userInfo={ route.params.user }
       listNavigation = {[ "ProjectCreation", "Settings" ]}
       >
+      <Text style = {styles.topBarTitle}>Project List</Text>
       {/* Description and Delete modal for Project */}
       <ProjectModal
         changeVisibility = { changeVisibility }
@@ -347,7 +348,7 @@ const ProjectPanel = props => {
         //Entire panel is touchable, hold for 1 second to pull up decription and delete page, press to view tasks 
         <TouchableHighlight
           onPress = {() => {
-            props.navigation.navigate("Project", { taskID: null, projectID: project.ID, user: props.user });
+            props.navigation.navigate("Project", { taskID: null, projectID: project.ID, user: props.user, projectTitle: project.title });
           }}
           onLongPress = {() => { props.deletionPage(project.ID)}}
           delayLongPress = {1000}

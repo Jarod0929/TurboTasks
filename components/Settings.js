@@ -114,6 +114,7 @@ export function Settings({ route, navigation }) {
       userInfo = { route.params.user }
       listNavigation = {[ "ProjectList", "ProjectCreation" ]}  
     >
+      <Text style = {styles.topBarTitle}>Settings</Text>
       <View style = { styles.settingsPage }>
         <View style = { styles.innerSettingsPage }>
           <View style = { basicStyles.flexAlignContainer }>

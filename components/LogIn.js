@@ -11,6 +11,7 @@ import { TextInputBox } from  './utilityComponents/TextInputBox.js';
 import database from '@react-native-firebase/database';
 import LinearGradient from 'react-native-linear-gradient';
 
+import * as styles from './styles/styles.js';
 import * as basicStyles from './styles/basicStyles.js';
 
 /**
@@ -59,10 +60,9 @@ export function LogIn({ navigation }){
       userInfo = { null }
       listNavigation = {[ "CreateAccount" ]}  
     > 
-      
+      <Text style = {styles.topBarTitle}>Log In</Text>
       <View style = { basicStyles.flexAlignContainer }>
         <View style = { basicStyles.titleContainer }>
-          <Text style = { basicStyles.titleText }>Sign In</Text>
         </View>
         <TextInputBox
           changeValue = { changeUsername }

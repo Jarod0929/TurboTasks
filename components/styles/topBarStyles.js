@@ -30,14 +30,12 @@ const topBarStyles = StyleSheet.create({
     height: '100%',
     backgroundColor: "#69C1F0",
     position: 'absolute',
-    flex:2,
-    zIndex: 200,
+    zIndex: 300,
     borderRightWidth: 2,
     borderTopWidth: 2,
   },
   navigationButtons:{
     paddingLeft: "5%",
-    borderWidth: 0,
     marginBottom: 20,
     height: 50,
     justifyContent: "center",
@@ -45,7 +43,6 @@ const topBarStyles = StyleSheet.create({
   buttonText: {
     color: '#F4FCFF',
     fontSize: 22,
-    marginLeft: "5%",
     zIndex: 30,
     fontWeight: "700"
   },
@@ -55,6 +52,22 @@ const topBarStyles = StyleSheet.create({
     zIndex: 30,
     fontWeight: "700",
   },
+  goBackButton:{
+    paddingLeft: "5%",
+    borderWidth: 0,
+    marginBottom: 20,
+    height: 50,
+    justifyContent: "center",
+    borderTopWidth: 1,
+    borderColor: "#356178"
+  },
+  current:{
+    paddingLeft: "5%",
+    marginBottom: 20,
+    height: 50,
+    justifyContent: "center",
+    backgroundColor: "red"
+  }
 });
 
 module.exports = topBarStyles;

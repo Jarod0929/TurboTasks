@@ -112,6 +112,7 @@ export function Project ({ navigation, route }) {
       userInfo = { route.params.user }
       listNavigation = {[ "ProjectList", "ProjectCreation", "Settings" ]}
     >
+      <Text style = {styles.topBarTitle}>{route.params.projectTitle}</Text>
       {/* Main Container */}
       <View style = { styles.projectTaskListConatiner }>
         {/* Modal for showing task information */}
@@ -166,7 +167,8 @@ const TaskPanel = (props) => {
     props.navigation.push("Project", {
       taskID: props.taskID, 
       projectID: props.projectID, 
-      user: props.userId
+      user: props.userId,
+      projectTitle: props.projectTitle
     });
   };
 
