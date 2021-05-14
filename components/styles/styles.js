@@ -40,14 +40,16 @@ const styles = StyleSheet.create({
   },
   projectCreationPlusPosition:{
     width: "15%",
-    left: "88%", 
-    top: "-1%", 
+    left: "85%", 
+    top: "1%", 
     position: "absolute", 
-    zIndex: 200
+    zIndex: 200,
+    borderRadius: 150
   },
   projectCreationPlusDesign:{
-    color: "blue",
-    fontSize: 50
+    color: "#F4FCFF",
+    fontSize: 50,
+    alignSelf: "center"
   },
   projectListMainView:{
     backgroundColor: "white",

@@ -108,7 +108,7 @@ export function ProjectCreation ({ route, navigation }) {
     <TopBar 
       navigation = { navigation } 
       userInfo = { route.params.user }
-      listNavigation = {[ "ProjectList" ]}
+      listNavigation = {[ "ProjectList", "Settings" ]}
     >
       <Text style = {styles.topBarTitle}>Project Creation</Text>
       <View style = { projectCreationStyles.container }>

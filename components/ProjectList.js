@@ -74,12 +74,17 @@ export function ProjectList({ route, navigation }) {
       {/* Plus button that takes you to creating a new project */}
       <TouchableHighlight 
         style={ styles.projectCreationPlusPosition }
+        activeOpacity = {0.6}
+        underlayColor = "#427996"
         onPress={() => {
           navigation.navigate("ProjectCreation", { user: route.params.user });
         }}
       >
         <View>
-          <Text style={ styles.projectCreationPlusDesign }>+</Text>
+          <Icon
+            style={ styles.projectCreationPlusDesign }
+            name = "pluscircleo"
+          />
         </View> 
       </TouchableHighlight>
       <UserProjectsFlatlist
