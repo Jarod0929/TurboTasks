@@ -5,7 +5,11 @@ import {
   LayoutAnimation,
   Platform,
   UIManager,
+  TouchableHighlight,
+  Text,
 } from 'react-native';
+import AntIcon from "react-native-vector-icons/AntDesign";
+import EntIcon from "react-native-vector-icons/Entypo";
 
 import { ButtonBox } from './ButtonBox.js';
 
@@ -23,37 +27,33 @@ export function TopBar( props ){
     <View style = { topBarStyles.container }>
       <View style = { topBarStyles.topBarContainer }>
         <View style = { topBarStyles.openContainer }>
-          <ButtonBox
-            onClick={() => {
+          <TouchableHighlight
+            onPress={() => {
               changeDrawer(!drawer);
               LayoutAnimation.configureNext( LayoutAnimation.Presets.easeInEaseOut );
             }}
-            text = { "Open" }
-            containerStyle = { null }
-            buttonStyle = { topBarStyles.openAndDrawerButton }
-            textStyle = { topBarStyles.buttonText }
-          />
+          >
+            <EntIcon
+              name= "menu"
+              size = {45}
+              color = "#F4FCFF"
+            />
+          </TouchableHighlight>
         </View>
       </View>
+
       <View style = {[ topBarStyles.drawerContainer, drawer? undefined: {width: 0} ]}>
-        <ButtonBox
-          onClick={()=> 
-            changeDrawer(!drawer)
-          } 
-          text = { "Close" }
-          containerStyle = { null }
-          buttonStyle = { topBarStyles.navigationButtons }
-          textStyle = { topBarStyles.buttonText }
-        />
-        <ButtonBox
-          onClick={() => {
-            props.navigation.goBack();
-          }}
-          text={"Go Back"}
-          containerStyle = { null }
-          buttonStyle ={ topBarStyles.navigationButtons }
-          textStyle = { topBarStyles.buttonText }
-        />
+        <View style = {{width: "100%", flexDirection: "row", backgroundColor: "#5CA9D2",height: "15%", paddingTop: "4%",}}>
+          <View style = {{width: "50%"}}>
+            <Text style = {{fontSize:30, fontWeight: "bold", left: "5%", color: "#F4FCFF"}}>Turbo Task</Text>
+          </View>
+          <EntIcon
+            style = {{top: "7%", right: "65%"}}
+            name = "pencil"
+            size = {50}
+            color = "#356178"
+          />
+        </View>
         <FlatList
           data = { props.listNavigation }
           renderItem = {({ item }) => 
@@ -65,9 +65,42 @@ export function TopBar( props ){
               containerStyle = { null }
               buttonStyle ={ topBarStyles.navigationButtons }
               textStyle = { topBarStyles.buttonText }
+              activeOpacity = {0.6}
+              underlayColor = "#427996"
+              iconSize = {35}
+              iconColor = "#F4FCFF"
             />
           }
           keyExtractor = { item => item }
+        />
+        <ButtonBox
+          onClick={() => {
+            props.navigation.goBack();
+          }}
+          text={"Go Back"}
+          containerStyle = { null }
+          buttonStyle ={ topBarStyles.navigationButtons }
+          textStyle = { topBarStyles.buttonIconText }
+          activeOpacity = {0.6}
+          underlayColor = "#427996"
+          iconName = "back"
+          iconSize = {35}
+          iconColor = "#F4FCFF"
+        />
+        <ButtonBox
+          onClick={()=> {
+            changeDrawer(!drawer);
+            LayoutAnimation.configureNext( LayoutAnimation.Presets.easeInEaseOut );
+          }}
+          text = { "Close" }
+          containerStyle = { null }
+          buttonStyle = { topBarStyles.navigationButtons }
+          textStyle = { topBarStyles.buttonText }
+          activeOpacity = {0.6}
+          underlayColor = "#427996"
+          iconName = "chevron-with-circle-left"
+          iconSize = {35}
+          iconColor = "#F4FCFF"
         />
       </View>
       { props.children }
