@@ -69,7 +69,7 @@ export function LogIn({ navigation }){
         colors = {["#F6F6F6", "#CCCCCC"]}
         style = {{ width: "100%", height: "100%" }}
       >
-        <View style = { basicStyles.flexAlignContainer }>
+        <View style = { [ basicStyles.flexAlignContainer, { paddingTop: "5%" } ] }>
           <TextInputBox
             changeValue = { changeUsername }
             text = { "Username" }
