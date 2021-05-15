@@ -19,24 +19,27 @@ import * as topBarStyles from './styles/topBarStyles.js';
 //route, user- this is the usersID
 //navigation
 export function Settings({ route, navigation }){
-  const [userEnteredPassword,changeUserEnteredPassword] = useState('');//password the user nters into the change password box
-  const [userEnteredPasswordForUsername,changeUserEnteredPasswordForUsername] = useState('');//password the user enters into the change username box
-  const [password,changePass] = useState('');//pulled database password
-  const [username,changeUser] = useState('');//pulled databse username
-  const [inputTextForPassword,changeInputTextForPassword] = useState('Password');//background text for change password box
-  const [inputTextForUsername,changeInputTextForUsername] = useState('Password');//background text for change username box
-  const [Accepted,changeAccepted] = useState("False");//variable for password validation it is a string: true/false
-  const [usernameChangeValid,changeUsernameValidity] = useState("False");//variable for username validation it is a string: true/false
+  const [userEnteredPassword, changeUserEnteredPassword] = useState('');//password the user nters into the change password box
+  const [userEnteredPasswordForUsername, changeUserEnteredPasswordForUsername] = useState('');//password the user enters into the change username box
+ 
+  const [password, changePass] = useState('');//pulled database password
+  const [username, changeUser] = useState('');//pulled databse username
+  
+  const [inputTextForPassword, changeInputTextForPassword] = useState('Password');//background text for change password box
+  const [inputTextForUsername, changeInputTextForUsername] = useState('Password');//background text for change username box
+ 
+  const [accepted, changeAccepted] = useState("False");//variable for password validation it is a string: true/false
+  const [usernameChangeValid, changeUsernameValidity] = useState("False");//variable for username validation it is a string: true/false
 
   //finds the username of the current logged in user
   const handleUsername = snapshot => {
     changeUser(snapshot.val().Username);
-  }
+  };
 
   //finds the password of the current logged in user
   const handlePassword = snapshot => {
     changePass(snapshot.val());
-  }
+  };
 
   // For Password Change updates password to new password
   const acceptedPasswordEqualTrue = encryptedPasswordText => {
@@ -52,22 +55,21 @@ export function Settings({ route, navigation }){
       changeAccepted('False');
       changeInputTextForPassword("Something Went Wrong");
     }    
-  }
+  };
 
   //For Password Change lets the user enter their desired password
   const encryptedEqualPassword = () => {
     changeUserEnteredPassword('');
     changeAccepted('True');
     changeInputTextForPassword("Enter New Password");
-  }
+  };
   
-  //Funtction to change the users password
   const changePassword = () => {
     //if the user entered the correct password and they have typed in a new password and hit enter
     //then their password will be changed
     let encryptPassword = require('./utils/encryptPassword.js');
     let encryptedPasswordText = encryptPassword.encryptPassword(userEnteredPassword);
-    if (Accepted == 'True'){
+    if (accepted == 'True'){
       acceptedPasswordEqualTrue(encryptedPasswordText);
     } else if (encryptedPasswordText == password){
       encryptedEqualPassword();
@@ -75,13 +77,13 @@ export function Settings({ route, navigation }){
       changeUserEnteredPassword('');
       changeInputTextForPassword("wrong try again");
     }
-  }
+  };
 
   const encrpytedEqualPasswordForUsername = () => {
     changeUserEnteredPasswordForUsername('');
     changeUsernameValidity('True');
     changeInputTextForUsername("Enter New Username");
-  }
+  };
   
   const acceptedPasswordEqualTrueForUsername = () => {
     if (userEnteredPasswordForUsername != ''){
@@ -98,11 +100,9 @@ export function Settings({ route, navigation }){
       changeInputTextForUsername("Something Went Wrong");
     }   
    
-  }
+  };
 
-  //changes the users username
   const changeUsername = () =>{
-    //if the user entered the valid password then empty the text field and ask for their desired username
     let encryptPassword = require('./utils/encryptPassword.js');
     let encryptedPasswordText = encryptPassword.encryptPassword(userEnteredPasswordForUsername);
     if (encryptedPasswordText == password){
@@ -113,7 +113,7 @@ export function Settings({ route, navigation }){
       changeUserEnteredPasswordForUsername('');
       changeInputTextForUsername("wrong try again");
     }
-  }
+  };
   
   // finds username of current logged in user
   if(username == ''){
