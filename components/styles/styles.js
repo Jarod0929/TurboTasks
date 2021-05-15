@@ -16,7 +16,6 @@ const styles = StyleSheet.create({
     backgroundColor:  "white",
     width: "80%",
     height: "100%",
-  
   },
   projectListModal:{
     height: "85.5%", 
