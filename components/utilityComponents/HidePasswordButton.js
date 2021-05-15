@@ -11,7 +11,7 @@ export function HidePasswordButton ( props ) {
   return(
     <TouchableHighlight
       onPress = {() => {
-        props.changeHidePassword(!props.hidePassword);
+        props.changeHidePassword( !props.hidePassword );
       }}
       style = { [basicStyles.button, {position: "absolute", right: "12%", top: "30%", zIndex: 100}] }
     >

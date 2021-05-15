@@ -5,10 +5,8 @@ import {
   TouchableHighlight,
   FlatList,
   Modal,
-  LayoutAnimation,
   TextInput,
   Platform,
-  UIManager,
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
@@ -124,6 +122,67 @@ const UserProjectsFlatlist = props => {
         }
         keyExtractor={item => item.ID}
       />
+    </View>
+  );
+}
+
+const ProjectPanel = props => {
+  const [project, changeProject] = useState(null);//Contains entire project information
+
+  useFocusEffect(
+    React.useCallback(() => {
+      database().ref("/Database/Projects/" + props.project).once("value", handleProject);
+    }, [project])
+  );
+
+  const handleProject = snapshot => {
+    changeProject(snapshot.val());
+  }
+  
+  return (
+    <View>
+      {project != null && 
+        //Entire panel is touchable, hold for 1 second to pull up decription and delete page, press to view tasks 
+        <TouchableHighlight
+          onPress = {() => {
+            props.navigation.navigate("Project", { taskID: null, projectID: project.ID, user: props.user, projectTitle: project.title });
+          }}
+          onLongPress = {() => { props.deletionPage(project.ID)}}
+          delayLongPress = {1000}
+          style = { styles.projectListPanel }
+        >
+          <View>
+            <ProjectPanelInfo
+              projectTitle = { project?.title }
+              projectTaskCount = {( project?.tasks != null ? project.tasks.length : 0 )}
+              projectDueDate = { project?.dueDate }
+              projectUserCount = { project?.users.length }
+            />
+          </View>
+        </TouchableHighlight>
+      }
+    </View>
+  );
+}
+
+const ProjectPanelInfo = props => {
+  return (
+    <View
+      style = { styles.projectPanelInfoCentering }
+    >
+      <Text style={{ fontSize: 20 }}>
+        { props.projectTitle }
+      </Text>
+      {/* Project tasks count iff not 0 */}
+      <Text>
+        { props.projectTaskCount } Task(s)
+      </Text>
+      <Text>
+        Due Date: { props.projectDueDate } 
+      </Text>
+      <Text>
+        { props.projectUserCount } User(s)
+      </Text>
     </View>
   );
 }
@@ -328,69 +387,6 @@ const ProjectModal = props => {
           </ScrollView>
         </KeyboardAvoidingView>  
     </Modal>
-  );
-}
-
-
-// Each project Box the user has
-const ProjectPanel = props => {
-  const [project, changeProject] = useState(null);//Contains entire project information
-
-  useFocusEffect(
-    React.useCallback(() => {
-      database().ref("/Database/Projects/" + props.project).once("value", handleProject);
-    }, [project])
-  );
-
-  const handleProject = snapshot => {
-    changeProject(snapshot.val());
-  }
-  
-  return (
-    <View>
-      {project != null && 
-        //Entire panel is touchable, hold for 1 second to pull up decription and delete page, press to view tasks 
-        <TouchableHighlight
-          onPress = {() => {
-            props.navigation.navigate("Project", { taskID: null, projectID: project.ID, user: props.user, projectTitle: project.title });
-          }}
-          onLongPress = {() => { props.deletionPage(project.ID)}}
-          delayLongPress = {1000}
-          style = { styles.projectListPanel }
-        >
-          <View>
-            <ProjectPanelInfo
-              projectTitle = { project?.title }
-              projectTaskCount = {( project?.tasks != null ? project.tasks.length : 0 )}
-              projectDueDate = { project?.dueDate }
-              projectUserCount = { project?.users.length }
-            />
-          </View>
-        </TouchableHighlight>
-      }
-    </View>
-  );
-}
-
-const ProjectPanelInfo = props => {
-  return (
-    <View
-      style = { styles.projectPanelInfoCentering }
-    >
-      <Text style={{ fontSize: 20 }}>
-        { props.projectTitle }
-      </Text>
-      {/* Project tasks count iff not 0 */}
-      <Text>
-        { props.projectTaskCount } Task(s)
-      </Text>
-      <Text>
-        Due Date: { props.projectDueDate } 
-      </Text>
-      <Text>
-        { props.projectUserCount } User(s)
-      </Text>
-    </View>
   );
 }
 
