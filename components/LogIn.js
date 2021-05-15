@@ -8,7 +8,6 @@ import { TopBar } from './utilityComponents/TopBar.js';
 import { ButtonBox } from  './utilityComponents/ButtonBox.js';
 import { TextInputBox } from  './utilityComponents/TextInputBox.js';
 import { HidePasswordButton } from './utilityComponents/HidePasswordButton.js';
-import { encryptPassword } from './utils/encryptPassword.js';
 
 import database from '@react-native-firebase/database';
 import LinearGradient from 'react-native-linear-gradient';

@@ -1,8 +1,8 @@
 # HierarchicalTasks
 
-The main navigation should be in App.js
+The main navigation should be in App.js\
 
-All the components should be in the components file Including...
+All the components should be in the components file Including...\
 
 - CreateAccount.js
 - EditTask.js
@@ -12,7 +12,7 @@ All the components should be in the components file Including...
 - ProjectList.js
 - Settings.js
 - styles.js
-Navigation defaults to LogIn
+Navigation defaults to LogIn\
 
 LogIn
 
@@ -60,31 +60,36 @@ Packages Used
 - Firebase
 - datapicker
 - Modal
-Description of App Idea 
-**Idea: Scheduling App.** 
-Group Timeline Management Project A Scheduling App which the user can divide tasks into manageable pieces and can be displayed either as a timer, a date to be done by, a static time limit, or none. This can be done solo or in a group. Simplified UI 
-**Why**
+- LinearGradients
+- AES-js
 
-Good for groups to come together and make a project or task
-Good for Ease of Use and to chat with more functionality 
+Description of App Idea \
+**Idea: Scheduling App.** \
+Group Timeline Management Project A Scheduling App which the user can divide tasks into manageable pieces and can be displayed either as a timer, a date to be done by, a static time limit, or none. This can be done solo or in a group. Simplified UI \
+
+**Why**
+- Good for groups to come together and make a project or task
+- Good for Ease of Use and to chat with more functionality \
+
 **Core Features** 
-Let n = 20
-A Task System Like Reddit (hierarchical)
-Limit n
-Multiple Rooms for every Group of Users (Database needs to be added for every new group) 
+- A Task System Like Reddit (hierarchical)
+- Multiple Rooms for every Group of Users (Database needs to be added for every new group) 
 
 **Optional Features**
-Time Table to Discussion Table
-Home Screen/Chat Room
-Chat Room
-Ease of Use (Good UI)
-Whitelist and Black list (prob going with a username/password system)
-Personal Assistant
-Send Images or Videos
-Change Name within Project
-Color
-Notifications Note Querying User outside the App
-Efficiency (Hash Tables) (Keys)
-Continuously drains your battery life by mining bitcoins in the back
-Self Destruct Button
-Ads
+- Basic Security
+- Good Efficiency
+- Limit n
+- Time Table to Discussion Table
+- Home Screen/Chat Room
+- Chat Room
+- Ease of Use (Good UI)
+- Whitelist and Black list (prob going with a username/password system)
+- Personal Assistant
+- Send Images or Videos
+- Change Name within Project
+- Color
+- Notifications Note Querying User outside the App
+- Efficiency (Hash Tables) (Keys)
+- Continuously drains your battery life by mining bitcoins in the back
+- Self Destruct Button
+- Ads
