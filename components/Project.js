@@ -21,9 +21,8 @@ import Icon from "react-native-vector-icons/AntDesign";
 export function Project ({ navigation, route }) { 
   const [allProjectTasks, changeAllProjectTasks] = useState([]); //ID's of all tasks for this project
   const [currentTask, changeCurrentTask] = useState(null); //ID of task being displayed in modal
-  const isFocused = navigation.isFocused();//Is true whenever the user is on the screen, but it isn't as efficient as it can be
+  let isFocused = navigation.isFocused();//Is true whenever the user is on the screen, but it isn't as efficient as it can be
   const [visibility, changeVisibility] = useState(false); //visibility toggle for modal
-
   useEffect(() => {
     findTasks();
   }, [isFocused]);
@@ -41,17 +40,17 @@ export function Project ({ navigation, route }) {
   };
 
   const findTasksInProjects = () => {
-    database().ref(`/Database/Projects/${route.params.projectID}`).once('value', snapshot => {
-      if(snapshot.val().tasks !== undefined){
-        changeAllProjectTasks(snapshot.val().tasks);
+    database().ref(`/Database/Projects/${route.params.projectID}`).on('value', snapshot => {
+      if(snapshot?.val()?.tasks != undefined){
+        changeAllProjectTasks(snapshot?.val()?.tasks);
       }
     });
   };
 
   const findTasksInTasks = () => {
-    database().ref(`/Database/Tasks/${route.params.taskID}`).once('value', snapshot => {
-      if(snapshot.val().subTasks !== undefined){
-        changeAllProjectTasks(snapshot.val().subTasks);
+    database().ref(`/Database/Tasks/${route.params.taskID}`).on('value', snapshot => {
+      if(snapshot?.val()?.subTasks != undefined){
+        changeAllProjectTasks(snapshot?.val()?.subTasks);
       }
     });
   };
@@ -106,6 +105,10 @@ export function Project ({ navigation, route }) {
     });
   };
 
+  const updateDeletedTasks = array => {
+    changeAllProjectTasks(array);
+  };
+
   return (
     <TopBar 
       navigation = { navigation }
@@ -116,19 +119,12 @@ export function Project ({ navigation, route }) {
       {/* Main Container */}
       <View style = { styles.projectTaskListConatiner }>
         {/* Modal for showing task information */}
-        {/* <FullModal
-          visibility = { visibility }
-          onClick = {() => {
-            changeVisibility(false);
-          }}
-          currentTask = { currentTask }
-        /> */}
         <TaskModal
           currentTask = { currentTask }
           currentProj = { route.params.projectID }
           visibility = { visibility }
           changeVisibility = { changeVisibility }
-          changeAllProjectTasks = { changeAllProjectTasks }
+          updateDeletedTasks = { updateDeletedTasks }
         />
         <View style = { styles.projectListMainView }>
           {/* Add task button */}
@@ -160,15 +156,6 @@ const TaskPanel = (props) => {
   const handleTask = snapshot => {
     changeTask(snapshot.val());
   };
-
-  const goToEditTask = () => {
-    props.navigation.navigate("EditTask", {
-      taskID: props.taskID, 
-      projectID: props.projectID,
-      user: props.userId, 
-      changeAllProjectTasks: props.changeAllProjectTasks
-    });
-  };
   
   const goToSubTask = () => {
     props.navigation.push("Project", {
@@ -187,22 +174,21 @@ const TaskPanel = (props) => {
     return (
       <View style = { styles.taskPanel }>
         {/* Task Title and click to open description modal */}
-        <TouchableHighlight 
+        <View 
           style = { styles.taskPanelLeft }
-          onPress = {() =>{
-            props.changeTaskDescriptor(task.ID);
-          }}
         >
           <Text style = { styles.defaultText }>
             { task.title }   
           </Text>
-        </TouchableHighlight>
+        </View>
         {/* Right side of task with edit and subtasks buttons */}
         <View style = { { width: '50%' } }>
           {/* Edit Button */}
           <TouchableHighlight 
             style = { styles.taskPanelEdit }
-            onPress = { goToEditTask }
+            onPress = { () => {
+              props.changeTaskDescriptor(task.ID);
+            }}
           >
             <View style = { { alignItems: 'center' } }>
               <Text style = { [styles.defaultText, { fontSize: 20 }] }>Edit</Text>
@@ -229,53 +215,6 @@ const TaskPanel = (props) => {
   }
 }
 
-const TaskDescriptor = props => {
-  const[task, changeTask] = useState(null);
-
-  useFocusEffect(() => {
-    database().ref("/Database/Tasks/" + props.taskID + "/").once("value", handleTask);
-  });
-
-  const handleTask = snapshot => {
-    changeTask(snapshot.val());
-  }
-    
-  return(
-    <View style = { styles.taskModal }>
-      <Text
-        style = {[ styles.centerSelf, styles.headerText ]}
-      >
-        { task?.title }
-      </Text>
-      <Text
-        style = { styles.centerSelf }
-      >
-        { task?.text }
-      </Text>
-    </View>
-  );
-}
-
-const FullModal = props => {
-  return(
-    <View>
-      <Modal
-        animationType = "slide"
-        transparent = {true}
-        visible = { props.visibility }
-      >
-        <TouchableHighlight onPress = { props.onClick }
-        >
-          <View style = { styles.projectModal }>
-            <TaskDescriptor taskID = { props.currentTask } />
-          </View>
-        </TouchableHighlight>
-      </Modal>
-
-    </View>
-  );
-};
-
 const AddTaskButton= props => {
   return(
     <TouchableHighlight 
@@ -290,6 +229,7 @@ const AddTaskButton= props => {
 }
 
 const TaskList = props =>{
+
   return(
     <View>
     <FlatList
@@ -342,9 +282,9 @@ const TaskModal = props => {
   const deleteTasks = delTaskID => {
     database().ref("/Database/Tasks/" + delTaskID).once("value", snapshot => {
       //Recursively calls on each of subtasks
-      if (snapshot.val().subTasks != undefined){
-        for(let i = 0; i < snapshot.val().subTasks.length; i++){
-          deleteTasks(snapshot.val().subTasks[i]);
+      if (snapshot?.val()?.subTasks != undefined){
+        for(let i = 0; i < snapshot?.val()?.subTasks.length; i++){
+          deleteTasks(snapshot?.val()?.subTasks[i]);
         }
       }
       //Then deletes delTaskID task from database, as well as from its parent's list of subtasks
@@ -354,7 +294,6 @@ const TaskModal = props => {
           database().ref("/Database/Tasks/" + snapshot.val().parentTask).update({
             subTasks: array,
           });
-          props.changeAllProjectTasks(array);
         });
         database().ref("/Database/Tasks/" + delTaskID).remove();
       } else {
@@ -364,7 +303,6 @@ const TaskModal = props => {
             tasks: array,
           });
           database().ref("/Database/Tasks/" + delTaskID).remove();
-          props.changeAllProjectTasks(array);;
         });
       }
     });    
@@ -455,7 +393,7 @@ const ProjectTitleEdit = props => {
       <Text
         style = {styles.inputHeader}
       >
-        Edit Project Title
+        Edit Task Title
       </Text>
       <TextInput
         autoFocus = { true }

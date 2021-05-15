@@ -19,7 +19,6 @@ import {CreateAccount} from './components/CreateAccount.js';
 import {ProjectList} from './components/ProjectList.js';
 import {ProjectCreation} from './components/ProjectCreation.js';
 import {Settings} from './components/Settings.js';
-import {EditTask} from './components/EditTask.js';
 import {Project} from './components/Project.js';
 
 /**
@@ -70,7 +69,6 @@ function AfterLogin({ route, navigation }){
       <SecondDrawer.Screen name = "ProjectList" component={ ProjectList }/>
       <SecondDrawer.Screen name = "ProjectCreation" component = { ProjectCreation }/>
       <SecondDrawer.Screen name = "Project" component = { Project }/>
-      <SecondDrawer.Screen name = "EditTask" component = { EditTask }/>
       <SecondDrawer.Screen name = "Settings" component = { Settings }/>
     </SecondDrawer.Navigator>
   );

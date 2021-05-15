@@ -76,6 +76,7 @@ Group Timeline Management Project A Scheduling App which the user can divide tas
 - Multiple Rooms for every Group of Users (Database needs to be added for every new group) 
 
 **Optional Features**
+- Cool Feature where it puts spacing where you delete tasks
 - Basic Security
 - Good Efficiency
 - Limit n
