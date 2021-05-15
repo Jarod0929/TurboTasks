@@ -39,11 +39,11 @@ export function ProjectList({ route, navigation }) {
     }
     changeUser(route.params.user);
     database().ref("/Database/Users/" + route.params.user).on("value", updateProjectList);
-  }
+  };
 
   const updateProjectList = snapshot => {
     changeProjects(snapshot.val().projects);
-  }
+  };
 
   /**
   * Shows the Edit/Delete modal for a project
@@ -52,7 +52,7 @@ export function ProjectList({ route, navigation }) {
   const deletionPage = projID => {
     changeCurrentProj(projID);    
     changeVisibility(true);
-  }
+  };
   return (
     <TopBar 
       navigation = { navigation } 
@@ -201,7 +201,7 @@ const ProjectModal = props => {
   const updateProjectInfo = snapshot => {
     changeTitle(snapshot.val().title);
     changeDescription(snapshot.val().description);
-  }
+  };
 
   const addUsersToList = () =>{
     database().ref("/Database/Users").orderByChild("Username").equalTo(invUsers).once("value",findAddedUserID);
@@ -212,7 +212,7 @@ const ProjectModal = props => {
       addedUserID = key;
     }
     database().ref(`/Database/Projects/${props.currentProj}`).once("value",validateUser);        
-  }
+  };
 
   const validateUser = snapshot => {
     let valid=true;
@@ -227,7 +227,7 @@ const ProjectModal = props => {
     if (valid){
       database().ref(`/Database/Projects/${props.currentProj}`).once("value", addUserToProject);
     }
-  }
+  };
 
   const addUserToProject = snapshot => {
     if (snapshot.val().users != null && addedUserID != null){
@@ -241,7 +241,7 @@ const ProjectModal = props => {
     } else {
       changeCheckUser(false);
     }
-  }
+  };
 
   const addProjectIds = (userId, projectId) => {  
     const add = database().ref(`/Database/Users/${userId}/projects`).once("value", snapshot => {
@@ -257,7 +257,7 @@ const ProjectModal = props => {
         });
       }
     });
-  }
+  };
 
   // Deletes the Project from the held Project
   const deleteProj = () => {
@@ -323,7 +323,7 @@ const ProjectModal = props => {
         title: title
       });
     }
-  }
+  };
 
   const isDescription = () => {
     if (description != ""){
@@ -331,7 +331,7 @@ const ProjectModal = props => {
         description: description
       });
     }
-  }
+  };
 
   return (
     <Modal 

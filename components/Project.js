@@ -58,7 +58,7 @@ export function Project ({ navigation, route }) {
   const changeTaskDescriptor = taskID => {
     changeVisibility(true);
     changeCurrentTask(taskID);
-  }
+  };
 
   const addNewTask = () => {
     const newTask = database().ref(`/Database/Tasks`).push();
@@ -77,7 +77,7 @@ export function Project ({ navigation, route }) {
       addNewTaskInTasks(newTask, newTaskID, listOfTasks);
     }
     changeAllProjectTasks(listOfTasks);
-  }
+  };
 
   const addNewTaskInProjects = (newTask, newTaskID, listOfTasks) => {
     database().ref(`/Database/Projects/${route.params.projectID}`).update({
@@ -168,7 +168,7 @@ const TaskPanel = (props) => {
 
   const noTasks = () => {
     return task != null;
-  }
+  };
 
   if(noTasks()){
     return (
@@ -225,7 +225,7 @@ const AddTaskButton= props => {
         { props.text }
       </Text>
     </TouchableHighlight>
-  )
+  );
 }
 
 const TaskList = props =>{
