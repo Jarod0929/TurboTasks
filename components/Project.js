@@ -231,8 +231,16 @@ const TaskDescriptor = props => {
     
   return(
     <View style = { styles.taskModal }>
-      <Text>Title: { task?.title }</Text>
-      <Text>Description: { task?.text }</Text>
+      <Text
+        style = {[ styles.centerSelf, styles.headerText ]}
+      >
+        { task?.title }
+      </Text>
+      <Text
+        style = { styles.centerSelf }
+      >
+        { task?.text }
+      </Text>
     </View>
   );
 }
@@ -247,7 +255,7 @@ const FullModal = props => {
       >
         <TouchableHighlight onPress = { props.onClick }
         >
-          <View style = { styles.projectListModal }>
+          <View style = { styles.projectModal }>
             <TaskDescriptor taskID = { props.currentTask } />
           </View>
         </TouchableHighlight>

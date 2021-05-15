@@ -62,7 +62,7 @@ export function ButtonBox( props ){
           </EntIcon>
         </TouchableHighlight>
       }
-      {props.text == "Settings"&&
+      {props.text == "Settings" &&
         <TouchableHighlight 
           style = { props.buttonStyle }
           onPress = { props.onClick }
