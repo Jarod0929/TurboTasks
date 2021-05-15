@@ -30,22 +30,34 @@ export function LogIn({ navigation }){
 
 
   const isUsername = () => { 
-    database().ref("/Database/Users").orderByChild("Username").equalTo(username).on("child_added", isPassword);
-    if(username != "" && password != ""){
-      changeFailedMessage(true); 
-      changePassword("");
-    }
+    let checkAccount = database().ref("/Database/Users").orderByChild("Username").equalTo(username).on("value", snapshot => {
+      if(snapshot.val() == null){
+        userFailed();
+      } else {
+        console.log(Object.keys(snapshot.val())[0]);
+        isPassword(snapshot);
+      }
+      database().ref("/Database/Users").orderByChild("Username").equalTo(username).off("value", checkAccount);
+    });
   };  
 
   const isPassword = snapshot => { 
     let encryptPassword = require('./utils/encryptPassword.js');
-    if(snapshot.val() != null && snapshot.val().Password === encryptPassword.encryptPassword(password)){
+    let userKey = Object.keys(snapshot.val())[0];
+    if(snapshot.val()[userKey].Password == encryptPassword.encryptPassword(password)){
       resetAllStates();
-      navigation.navigate("Main",{screen: 'ProjectList', params: { user: snapshot.val().ID }});
+      navigation.navigate("Main",{screen: 'ProjectList', params: { user: snapshot.val()[userKey].ID }});
     } 
-    database().ref("/Database/Users").orderByChild("Username").equalTo(username).off("child_added", isPassword); 
+    else{
+      userFailed();
+    }
   };
   
+  const userFailed = () => {
+    changeFailedMessage(true); 
+    changePassword("");
+  };
+
   const goToCreateAccount = () => {
     resetAllStates();
     navigation.navigate("CreateAccount");
