@@ -13,7 +13,7 @@ export function HidePasswordButton ( props ) {
       onPress = {() => {
         props.changeHidePassword(!props.hidePassword);
       }}
-      style = { [basicStyles.button, {position: "absolute", right: "12%", top: "30%", zIndex: 100}] }
+      style = { [basicStyles.button, {position: "absolute", right: "-15%", top: "40%", zIndex: 100}] }
     >
       <Icon
         name = {props.hidePassword? "eye-with-line" : "eye"}

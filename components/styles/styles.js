@@ -28,6 +28,14 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     paddingTop: 15
   },
+  projectModal:{
+    height: "85.5%", 
+    width: "90%", 
+    margin: "5%", 
+    zIndex: 1,
+    borderWidth: 4,
+    borderRadius: 15,
+  },
   inviteUserTextInput: {
     borderBottomColor: "gray", 
     borderBottomWidth: 1, 
@@ -46,7 +54,7 @@ const styles = StyleSheet.create({
   },
   projectCreationPlusDesign:{
     color: "#F4FCFF",
-    fontSize: 50,
+    fontSize: 40,
     alignSelf: "center"
   },
   projectListMainView:{
@@ -69,7 +77,8 @@ const styles = StyleSheet.create({
   taskPanel: {
     width: "100%",
     flexDirection: "row",
-    marginBottom: "2%"
+    marginBottom: "2%",
+    marginTop: "2%",
   },
   taskPanelLeft: {
     padding: "5%",
@@ -249,8 +258,9 @@ const styles = StyleSheet.create({
     marginRight: "5%", 
     height: "75%", 
     backgroundColor: "#7AE0FF", 
-    justifyContent: 'center', 
-    alignItems: 'center', borderRadius: 13
+    justifyContent: "center", 
+    alignItems: "center",
+    borderRadius: 13
   },
   saveButtonText:{
     color: "#F4FCFF", 
@@ -262,8 +272,8 @@ const styles = StyleSheet.create({
     marginTop: "5%", 
     height: "75%", 
     backgroundColor: "#E3E3E3", 
-    justifyContent: 'center', 
-    alignItems: 'center', 
+    justifyContent: "center", 
+    alignItems: "center", 
     borderRadius: 13
   },
   cancelButtonText:{
@@ -275,11 +285,14 @@ const styles = StyleSheet.create({
     position: "absolute", 
     zIndex: 200, 
     alignSelf: "center", 
-    color: '#F4FCFF',
+    color: "#F4FCFF",
     fontSize: 22, 
     fontWeight: "700", 
     top: "2%"
   },
+  headerText: {
+    fontSize: 20
+  }
 });
 
 module.exports = styles;

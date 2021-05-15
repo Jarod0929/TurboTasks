@@ -79,19 +79,21 @@ export function LogIn({ navigation }){
             innerViewStyle = { basicStyles.textInputContainer }
             secureTextEntry = { false }
           />
-          <TextInputBox
-            changeValue = { changePassword }
-            text = { "Password" }
-            value = { password }
-            outerViewStyle = { basicStyles.textAreaContainer }
-            textStyle = { basicStyles.defaultText }
-            innerViewStyle = { basicStyles.textInputContainer }
-            secureTextEntry = { hidePassword }
-          />
-          <HidePasswordButton
-            changeHidePassword = { changeHidePassword }
-            hidePassword = { hidePassword }
-          />
+          <View>
+            <TextInputBox
+              changeValue = { changePassword }
+              text = { "Password" }
+              value = { password }
+              outerViewStyle = { basicStyles.textAreaContainer }
+              textStyle = { basicStyles.defaultText }
+              innerViewStyle = { basicStyles.textInputContainer }
+              secureTextEntry = { hidePassword }
+            />
+            <HidePasswordButton
+              changeHidePassword = { changeHidePassword }
+              hidePassword = { hidePassword }
+            />
+          </View>
           <ButtonBox
             onClick = { isUsername }
             text = "Sign In"
