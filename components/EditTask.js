@@ -61,19 +61,19 @@ export function EditTask ({ navigation, route }){
       title: title,
       text: description,
     });
-  }
+  };
 
   const saveChanges = () => {
     handleText();
     changeTitle(null);
     changeDescription(null);
     navigation.navigate('Project');
-  }
+  };
 
   const deleteThisTask = () => {
     deleteTasks(route.params.taskID, route.params.projectID);
     navigation.navigate('Project');
-  }
+  };
 
   return(
     <TopBar  

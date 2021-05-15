@@ -28,12 +28,12 @@ export function ProjectCreation ({ route, navigation }) {
   const today = new Date();
   const today_format = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, '0') + "-" + String(today.getDate()).padStart(2, '0');
 
-  const user = route.params.user;//Current User
-  const [projectName, changeProjectName] = useState('');//For the projectName field
-  const [invUsers, changeInvUsers] = useState('');//For the inviteUsers field
-  const [invUsersList, addUsersList] = useState([user]);//For the inviteUsers button
-  const [date, setDate] = useState(today_format);//Date selector
-  const [checkUser, changeCheckUser] = useState(null);//Used to check if user exists
+  const user = route.params.user;
+  const [projectName, changeProjectName] = useState('');
+  const [invUsers, changeInvUsers] = useState('');
+  const [invUsersList, addUsersList] = useState([user]);
+  const [date, setDate] = useState(today_format);
+  const [checkUser, changeCheckUser] = useState(null);
   
   const addProjectIds = (userId, projectId) => {  
     let add = database().ref(`/Database/Users/${userId}/projects`).on('value', snap => {   
@@ -51,7 +51,7 @@ export function ProjectCreation ({ route, navigation }) {
         database().ref(`/Database/Users/${userId}/projects`).off("value", add);
       }
     });
-  }
+  };
 
   const resetEverything = () => {
     changeProjectName("");

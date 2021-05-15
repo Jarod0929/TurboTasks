@@ -126,19 +126,3 @@ export function CreateAccount ({navigation}) {
     </TopBar>
   );
 }
-
-
-// const TextInputBox = props => {
-//   return (
-//   <View style = { basicStyles.textAreaContainer }>
-//     <Text style = { basicStyles.defaultText }>{ props.text }</Text>
-//       <View style = { basicStyles.textInputContainer }>
-//         <TextInput
-//           onChangeText = {text => props.changeValue(text)}
-//           placeholder = { props.text }
-//           value = { props.value }
-//         />
-//     </View>
-//   </View>
-//   );
-// };
