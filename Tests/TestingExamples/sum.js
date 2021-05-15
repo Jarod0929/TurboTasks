@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, Button, TouchableHighlight } from 'react-native';
+import { Text, View, TouchableHighlight } from 'react-native';
 
 export default function App() {
   const [cnt, setCnt] = useState(0);

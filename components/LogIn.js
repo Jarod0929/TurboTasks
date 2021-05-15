@@ -2,60 +2,18 @@ import React, {useState} from 'react';
 import {
   Text,
   View,
-  TouchableHighlight,
-  TextInput,
-  LayoutAnimation,
-  Platform,
-  UIManager,
 } from 'react-native';
+
+import { TopBar } from './utilityComponents/TopBar.js';
+import { ButtonBox } from  './utilityComponents/ButtonBox.js';
+import { TextInputBox } from  './utilityComponents/TextInputBox.js';
+import { HidePasswordButton } from './utilityComponents/HidePasswordButton.js';
+
 import database from '@react-native-firebase/database';
-import LinearGradient from 'react-native-linear-gradient'
-import * as styles from './styles.js';
+import LinearGradient from 'react-native-linear-gradient';
 
-if (Platform.OS === 'android') {
-  if (UIManager.setLayoutAnimationEnabledExperimental) {
-    UIManager.setLayoutAnimationEnabledExperimental(true);
-  }
-}
-
-
-/**
- * Establishes the entire container with all the children under the bar
- * 
- * @param {tag} {children} The rest of the tags of LogIn
- * @returns Top blue bar with all its children below it
- */
-const TopBar = (props) => {
-  const [drawer, changeDrawer] = useState(false);
-  return (
-    <View style = {styles.container}>
-      <View style = {styles.topBarContainer}>
-        <View style = {styles.openContainer}>
-          <TouchableHighlight
-            onPress = {() => {
-              changeDrawer(!drawer);
-              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-            }}
-            style={styles.openDrawerButton}
-            
-          >
-            <Text>Open</Text>
-          </TouchableHighlight>
-        </View>
-      </View>
-      <View style = {[styles.drawerContainer, drawer? undefined: {width: 0}]}>
-        <TouchableHighlight onPress={()=> changeDrawer(!drawer)} style={styles.navigationButtons}>
-          <Text>Close</Text>
-        </TouchableHighlight>
-        <TouchableHighlight onPress={()=>props.navigation.navigate("CreateAccount")} style={styles.navigationButtons}>
-          <Text>Create an Account</Text>
-        </TouchableHighlight>
-       
-      </View>
-      {props.children}
-    </View>
-  )
-};
+import * as styles from './styles/styles.js';
+import * as basicStyles from './styles/basicStyles.js';
 
 /**
  * A page where the user logs in to their account.
@@ -63,116 +21,109 @@ const TopBar = (props) => {
  * 2 buttons for logging in and navigating to sign up
  * Once the user logs in, the user is forced into ProjectList
  * 
- * @param {object} navigation For the user to move between screens 
- * @returns {tag} The page of LogIn
  */
 export function LogIn({ navigation }){
-  const [username, changeUsername] = useState('');//For the Username Field
-  const [password, changePassword] = useState('');//For the Password Field
-  const [failed, changeFailed] = useState(false);//Only sets to true when they failed once on account and sets feedback message
-  //const FirstUsers = database().ref("/Database/Users").push(); //First Account and is structure of how it should look
-  //FirstUsers.set({ 
-  //  Username: "Fruit",
-  //  Password: "Apple",
-  //  Projects: [""],
-  //});
-  
-  /**
-   * Checks if the password is the same.
-   * If password is the same, resets the inputs and forces them to ProjectList
-   * 
-   * @param {object} snapshot User with the same username 
-   */
-  const isPassword = snapshot => { 
-    if(snapshot.val() != null && snapshot.val().Password === password){
-      changeUsername(""); 
-      changeFailed(false); 
-      navigation.navigate("Main",{screen: 'ProjectList', params: {user: snapshot.val().ID }});
-    }
-    database().ref("/Database/Users").orderByChild("Username").equalTo(username).off("child_added", isPassword); 
-  };
-  
-  /**
-   * Checks to see if the username is the same.
-   * If username is the same, goes to the function isPassword
-   * If wrong username or password, feedback is given through failed
-   */
+  const [username, changeUsername] = useState('');
+  const [password, changePassword] = useState('');
+  const [failedMessage, changeFailedMessage] = useState(false);
+  const [hidePassword, changeHidePassword] = useState(true);
+
+
   const isUsername = () => { 
-    database().ref("/Database/Users").orderByChild("Username").equalTo(username).on("child_added", isPassword);
-    if(username != ""){
-      changeFailed(true); 
-      changePassword("");
-    }
+    let checkAccount = database().ref("/Database/Users").orderByChild("Username").equalTo(username).on("value", snapshot => {
+      if(snapshot.val() == null){
+        userFailed();
+      } else {
+        console.log(Object.keys(snapshot.val())[0]);
+        isPassword(snapshot);
+      }
+      database().ref("/Database/Users").orderByChild("Username").equalTo(username).off("value", checkAccount);
+    });
   };  
 
-  /**
-   * Clears all inputs of username, passord, and failed.
-   * Navigates user to CreateAccount screen.
-   */
-  const goToCreateAccount = () => { //Goes to CreateAccount Screen
-    changeUsername(""); //Resets all changes made
+  const isPassword = snapshot => { 
+    let encryptPassword = require('./utils/encryptPassword.js');
+    let userKey = Object.keys(snapshot.val())[0];
+    if(snapshot.val()[userKey].Password == encryptPassword.encryptPassword(password)){
+      resetAllStates();
+      navigation.navigate("Main",{screen: 'ProjectList', params: { user: snapshot.val()[userKey].ID }});
+    } 
+    else{
+      userFailed();
+    }
+  };
+  
+  const userFailed = () => {
+    changeFailedMessage(true); 
     changePassword("");
-    changeFailed(false);
+  };
+
+  const goToCreateAccount = () => {
+    resetAllStates();
     navigation.navigate("CreateAccount");
   };
-    
+
+  const resetAllStates = () => {
+    changeUsername(""); 
+    changePassword("");
+    changeFailedMessage(false);
+  };
+
   return(
-    <TopBar navigation={navigation}> 
-      
-      <View style = {styles.flexAlignContainer}>
-      {/* Title */}
-        <View style = {styles.titleContainer}>
-          <Text style = {styles.titleText}>Sign In</Text>
+    <TopBar 
+      navigation = { navigation }
+      userInfo = { null }
+      listNavigation = {[ "CreateAccount" ]}  
+    > 
+      <Text style = {styles.topBarTitle}>Log In</Text>
+      <LinearGradient
+        colors = {["#F6F6F6", "#CCCCCC"]}
+        style = {{ width: "100%", height: "100%" }}
+      >
+        <View style = { [ basicStyles.flexAlignContainer, { paddingTop: "5%" } ] }>
+          <TextInputBox
+            changeValue = { changeUsername }
+            text = { "Username" }
+            value = { username }
+            outerViewStyle = { basicStyles.textAreaContainer }
+            textStyle = { basicStyles.defaultText }
+            innerViewStyle = { basicStyles.textInputContainer }
+            secureTextEntry = { false }
+          />
+          <TextInputBox
+            changeValue = { changePassword }
+            text = { "Password" }
+            value = { password }
+            outerViewStyle = { basicStyles.textAreaContainer }
+            textStyle = { basicStyles.defaultText }
+            innerViewStyle = { basicStyles.textInputContainer }
+            secureTextEntry = { hidePassword }
+          />
+          <HidePasswordButton
+            changeHidePassword = { changeHidePassword }
+            hidePassword = { hidePassword }
+          />
+          <ButtonBox
+            onClick = { isUsername }
+            text = "Sign In"
+            containerStyle = { basicStyles.buttonContainer }
+            buttonStyle = { basicStyles.button }
+            textStyle = { basicStyles.buttonText }
+          />
+          {failedMessage &&
+            <View style = { basicStyles.failedContainer }>
+              <Text style = { basicStyles.failedText }>Username does not exist or Password is false</Text>
+            </View>
+          }
+          <ButtonBox
+            onClick = { goToCreateAccount }
+            text = "Sign Up"
+            containerStyle = { basicStyles.buttonContainer }
+            buttonStyle = { basicStyles.button }
+            textStyle = { basicStyles.buttonText }
+          />
         </View>
-      {/* Username Input Box */}
-        <View style = {styles.textAreaContainer}>
-          <Text style = {styles.defaultText}>Username</Text>
-          <View style = {styles.textInputContainer}>
-            <TextInput
-              onChangeText = {text => changeUsername(text)}
-              placeholder = "UserName"
-              value = {username}
-            />
-          </View>
-        </View>
-      {/* Password Input Box */}
-        <View style = {styles.textAreaContainer}>
-          <Text style = {styles.defaultText}>Password</Text>
-          <View style = {styles.textInputContainer}>
-            <TextInput
-              onChangeText = {text => changePassword(text)}
-              placeholder = "Password"
-              value = {password}
-            />
-          </View>
-        </View>
-      {/* Log In Button */}
-        <View style = {styles.buttonContainer}>
-          <TouchableHighlight 
-            style = {styles.button}
-            onPress = {isUsername}
-          >
-            <Text style = {styles.buttonText}>Log In</Text>
-          </TouchableHighlight>
-        </View>
-      {/* Feedback Message */}
-        {failed &&
-          <View style = {styles.failedContainer}>
-            <Text style = {styles.failedText}>Username does not exist or Password is false</Text>
-          </View>
-        }
-      {/* Goto CreateAccount */}
-        <View style = {styles.buttonContainer}>
-          <TouchableHighlight 
-            style = {styles.button}
-            onPress = {goToCreateAccount}
-          >
-            <Text style = {styles.buttonText}>Sign Up</Text>
-          </TouchableHighlight>
-        </View>
-      </View>
+      </LinearGradient>
     </TopBar>
   );
 }
-
-
