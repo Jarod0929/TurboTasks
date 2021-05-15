@@ -21,7 +21,7 @@ import * as topBarStyles from './styles/topBarStyles.js';
 export function Settings({ route, navigation }){
   const [userEnteredPassword,changeUserEnteredPassword] = useState('');//password the user nters into the change password box
   const [userEnteredPasswordForUsername,changeUserEnteredPasswordForUsername] = useState('');//password the user enters into the change username box
-  const [password,changePassword] = useState('');//pulled database password
+  const [password,changePass] = useState('');//pulled database password
   const [username,changeUser] = useState('');//pulled databse username
   const [inputTextForPassword,changeInputTextForPassword] = useState('Password');//background text for change password box
   const [inputTextForUsername,changeInputTextForUsername] = useState('Password');//background text for change username box
@@ -35,15 +35,16 @@ export function Settings({ route, navigation }){
 
   //finds the password of the current logged in user
   const handlePassword = snapshot => {
-    changePassword(snapshot.val());
+    changePass(snapshot.val());
   }
+
   // For Password Change updates password to new password
   const acceptedPasswordEqualTrue = encryptedPasswordText => {
     if (userEnteredPassword != ''){
       database().ref("/Database/Users/" + route.params.user).update({
         Password: encryptedPasswordText
       });
-      changePassword(encryptedPasswordText);
+      changePass(encryptedPasswordText);
       changeUserEnteredPassword('');
       changeAccepted('False');
       changeInputTextForPassword('Enter your password');
@@ -59,12 +60,9 @@ export function Settings({ route, navigation }){
     changeAccepted('True');
     changeInputTextForPassword("Enter New Password");
   }
-
   
-
-  
-  //test to see if the typed in password is the correct one
-  const isPassword = () => {
+  //Funtction to change the users password
+  const changePassword = () => {
     //if the user entered the correct password and they have typed in a new password and hit enter
     //then their password will be changed
     let encryptPassword = require('./utils/encryptPassword.js');
@@ -74,10 +72,10 @@ export function Settings({ route, navigation }){
     } else if (encryptedPasswordText == password){
       encryptedEqualPassword();
     } else {
-      changeInputTextForPassword("wrong Password Try again");
+      changeUserEnteredPassword('');
+      changeInputTextForPassword("wrong try again");
     }
   }
-
 
   const encrpytedEqualPasswordForUsername = () => {
     changeUserEnteredPasswordForUsername('');
@@ -112,16 +110,16 @@ export function Settings({ route, navigation }){
     } else if (usernameChangeValid == 'True'){
       acceptedPasswordEqualTrueForUsername();
     } else {
-      changeInputTextForUsername("wrong password try again");
+      changeUserEnteredPasswordForUsername('');
+      changeInputTextForUsername("wrong try again");
     }
   }
   
   // finds username of current logged in user
   if(username == ''){
     database().ref("/Database/Users/" + route.params.user).once("value", handleUsername);
-    
-  //finds password of current logged in user
   }
+  //finds password of current logged in user
   if (password == ''){
     database().ref("/Database/Users/" + route.params.user+"/Password").once("value", handlePassword);
   }
@@ -156,7 +154,7 @@ export function Settings({ route, navigation }){
               value = { userEnteredPassword }
             />
             <ButtonBox
-              onClick = { () => isPassword() }
+              onClick = { () => changePassword() }
               text = { "Enter" }
               style = { basicStyles.buttonContainer }
             />
