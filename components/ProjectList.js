@@ -115,7 +115,7 @@ const UserProjectsFlatlist = props => {
             <ProjectPanel
               project = { item }
               navigation = { props.navigation }
-              user = { props.route.params.user }
+              user = { props.user }
               deletionPage = { props.deletionPage }
             />
           </React.StrictMode>

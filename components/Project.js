@@ -19,13 +19,19 @@ import {  useFocusEffect } from '@react-navigation/native';
 import Icon from "react-native-vector-icons/AntDesign";
  
 export function Project ({ navigation, route }) { 
-  const [allProjectTasks, changeAllProjectTasks] = useState([]); //ID's of all tasks for this project
   const [currentTask, changeCurrentTask] = useState(null); //ID of task being displayed in modal
-  let isFocused = navigation.isFocused();//Is true whenever the user is on the screen, but it isn't as efficient as it can be
   const [visibility, changeVisibility] = useState(false); //visibility toggle for modal
+
+  const [allProjectTasks, changeAllProjectTasks] = useState([]); //ID's of all tasks for this project
+  const [allTaskObjects, changeTaskObjects] = useState(null);
+
+  const [forceRerender, changeForceRerender] = useState(true);
+
+  let isFocused = navigation.isFocused();//Is true whenever the user is on the screen, but it isn't as efficient as it can be
+
   useEffect(() => {
     findTasks();
-  }, [isFocused]);
+  }, [isFocused, route.params.taskID, route.params.projectID]);
 
   const findTasks = () => {
     if(noParentTask()){
@@ -43,6 +49,7 @@ export function Project ({ navigation, route }) {
     database().ref(`/Database/Projects/${route.params.projectID}`).on('value', snapshot => {
       if(snapshot?.val()?.tasks != undefined){
         changeAllProjectTasks(snapshot?.val()?.tasks);
+        getAllTasksObjects(snapshot?.val()?.tasks);
       }
     });
   };
@@ -51,13 +58,20 @@ export function Project ({ navigation, route }) {
     database().ref(`/Database/Tasks/${route.params.taskID}`).on('value', snapshot => {
       if(snapshot?.val()?.subTasks != undefined){
         changeAllProjectTasks(snapshot?.val()?.subTasks);
+        getAllTasksObjects(snapshot?.val()?.subTasks);
       }
     });
   };
 
-  const changeTaskDescriptor = taskID => {
-    changeVisibility(true);
-    changeCurrentTask(taskID);
+  const getAllTasksObjects = tasksList => {
+    database().ref("/Database/Tasks").once("value", snapshot => {
+      let array = [];
+      for(let i = 0; i < tasksList.length; i++){
+        let obj = snapshot.val()[tasksList[i]];
+        array.push(obj);
+      }
+      changeTaskObjects(array);
+    });
   };
 
   const addNewTask = () => {
@@ -87,9 +101,9 @@ export function Project ({ navigation, route }) {
       ID: newTaskID,
       title: "Task",
       text: "Description",
-      status: "INCOMPLETE",
-      parentTask: "none",
+      parentTask: route.params.taskID == undefined ? "none" : route.params.taskID,
     });
+    addNewTaskToObject(newTaskID);
   };
 
   const addNewTaskInTasks = (newTask, newTaskID, listOfTasks) => {
@@ -100,13 +114,121 @@ export function Project ({ navigation, route }) {
       ID: newTaskID,
       title: "Task",
       text: "Description",
-      status: "INCOMPLETE",
-      parentTask: route.params.taskID,
+      parentTask: route.params.taskID == undefined ? "none" : route.params.taskID,
+    });
+    addNewTaskToObject(newTaskID);
+  };
+
+  const addNewTaskToObject = newTaskID => {
+    let array = [];
+    if(allTaskObjects != null){
+      array = allTaskObjects.slice();
+    }
+    let obj = {
+      ID: newTaskID,
+      title: "Task",
+      text: "Description",
+      parentTask: route.params.taskID == undefined ? "none" : route.params.taskID,
+    };
+    array.push(obj);
+    changeTaskObjects(array);
+  };
+
+  const changeTaskDescriptor = taskID => {
+    changeVisibility(true);
+    changeCurrentTask(taskID);
+  };
+
+  const deleteAllTasks = () => {
+    deleteTasks(currentTask);
+    changeVisibility(false);
+    deleteTaskToObject(currentTask);
+    deleteTaskToListID(currentTask);
+  };
+
+  const deleteTasks = delTaskID => {
+    database().ref("/Database/Tasks/" + delTaskID).once("value", snapshot => {
+      //Recursively calls on each of subtasks
+      if (snapshot?.val()?.subTasks != undefined){
+        let subTasks = snapshot?.val()?.subTasks;
+        for(let i = 0; i < subTasks.length; i++){
+          deleteShallowTasks(subTasks[i]);
+        }
+      }
+      //Then deletes delTaskID task from database, as well as from its parent's list of subtasks
+      if (snapshot.val().parentTask != "none"){
+        deleteTaskInTasks(delTaskID, snapshot);
+      } else {
+        deleteTaskInProjects(delTaskID);
+      }
+    });    
+  };
+
+  const deleteShallowTasks = delTaskID => {
+    database().ref("/Database/Tasks/" + delTaskID).once("value", snapshot => {
+      if (snapshot?.val()?.subTasks != undefined){
+        let subTasks = snapshot?.val()?.subTasks;
+        for(let i = 0; i < subTasks.length; i++){
+          deleteShallowTasks(subTasks[i]);
+        }
+      }
+      database().ref("/Database/Tasks/"+ delTaskID).remove();
     });
   };
 
-  const updateDeletedTasks = array => {
+  const deleteTaskInTasks = (delTaskID, snapshot) => {
+    database().ref("/Database/Tasks/" + snapshot.val().parentTask).once("value", snap => {
+      const array = snap.val().subTasks.filter(ID => ID != delTaskID);
+      database().ref("/Database/Tasks/" + snapshot.val().parentTask).update({
+        subTasks: array,
+      });
+      database().ref("/Database/Tasks/" + delTaskID).remove();
+    });
+  };
+
+  const deleteTaskInProjects = delTaskID => {
+    database().ref("/Database/Projects/" + route.params.projectID).once("value", snap => {
+      const array = snap.val().tasks.filter(ID => ID != delTaskID);
+      database().ref("/Database/Projects/" + route.params.projectID).update({
+        tasks: array,
+      });
+      database().ref("/Database/Tasks/" + delTaskID).remove();
+    });
+  };
+
+  const deleteTaskToObject = delTaskID => {
+    let array = allTaskObjects.filter(obj => obj.ID != delTaskID);
+    changeTaskObjects(array);
+    changeForceRerender(!forceRerender);
+  };
+
+  const deleteTaskToListID = delTaskID => {
+    const array = allProjectTasks.filter(ID => ID != delTaskID);
     changeAllProjectTasks(array);
+  };
+
+  const updatedTaskObjectTitle = (taskID, newTitle) => {
+    let array = allTaskObjects.slice();
+    for(let i = 0; i < array.length;i++){
+      if(array[i].ID == taskID){
+        array[i].title = newTitle;
+        changeTaskObjects(array);
+        changeForceRerender(!forceRerender);
+        return;
+      }
+    }
+  };
+
+  const updatedTaskObjectDescription = (taskID, newDescription) => {
+    let array = allTaskObjects.slice();
+    for(let i = 0; i < array.length;i++){
+      if(array[i].ID == taskID){
+        array[i].text = newDescription;
+        changeTaskObjects(array);
+        changeForceRerender(!forceRerender);
+        return;
+      }
+    }
   };
 
   return (
@@ -124,7 +246,9 @@ export function Project ({ navigation, route }) {
           currentProj = { route.params.projectID }
           visibility = { visibility }
           changeVisibility = { changeVisibility }
-          updateDeletedTasks = { updateDeletedTasks }
+          deleteAllTasks = { deleteAllTasks }
+          updatedTaskObjectTitle = { updatedTaskObjectTitle }
+          updatedTaskObjectDescription = { updatedTaskObjectDescription } 
         />
         <View style = { styles.projectListMainView }>
           {/* Add task button */}
@@ -139,6 +263,9 @@ export function Project ({ navigation, route }) {
             changeTaskDescriptor = { changeTaskDescriptor }
             allProjectTasks = { allProjectTasks }
             changeAllProjectTasks = { changeAllProjectTasks }
+            allTaskObjects ={ allTaskObjects }
+            projectTitle = { route.params.projectTitle }
+            forceRerender = { forceRerender }
           />        
         </View>
       </View>       
@@ -146,17 +273,38 @@ export function Project ({ navigation, route }) {
   );
 }
 
-const TaskPanel = (props) => {
-  const [task, changeTask] = useState(null);//all task information from database
+const TaskList = props =>{
+  return(
+    <View>
+    <FlatList
+    style = { { width: "75%" } }
+    data = { props.allTaskObjects }
+    extraData = { props.forceRerender }
+    renderItem = { ({item}) => 
+    <React.StrictMode>
+      <TaskPanel
+        taskID = { item.ID }
+        title = { item.title }
+        navigation = { props.navigation }
+        projectID = { props.projectID }
+        userId = { props.user }
+        changeTaskDescriptor = { props.changeTaskDescriptor }
+        changeAllProjectTasks = { props.changeAllProjectTasks }
+        projectTitle = { props.projectTitle }
+      />
+    </React.StrictMode>
+    }
+    keyExtractor = { item => item.ID }
+  />
+    { (props.allProjectTasks == null) &&
+      <Text>No Tasks</Text>
+    }
+  </View>
+  );
+}
 
-  useFocusEffect(() => {
-    database().ref("/Database/Tasks/" + props.taskID).once("value", handleTask);
-  });
+const TaskPanel = props => {
 
-  const handleTask = snapshot => {
-    changeTask(snapshot.val());
-  };
-  
   const goToSubTask = () => {
     props.navigation.push("Project", {
       taskID: props.taskID, 
@@ -166,53 +314,41 @@ const TaskPanel = (props) => {
     });
   };
 
-  const noTasks = () => {
-    return task != null;
-  };
-
-  if(noTasks()){
-    return (
-      <View style = { styles.taskPanel }>
-        {/* Task Title and click to open description modal */}
-        <View 
-          style = { styles.taskPanelLeft }
+  return (
+    <View style = { styles.taskPanel }>
+      {/* Task Title and click to open description modal */}
+      <View 
+        style = { styles.taskPanelLeft }
+      >
+        <Text style = { styles.defaultText }>
+          { props.title }   
+        </Text>
+      </View>
+      {/* Right side of task with edit and subtasks buttons */}
+      <View style = { { width: '50%' } }>
+        {/* Edit Button */}
+        <TouchableHighlight 
+          style = { styles.taskPanelEdit }
+          onPress = { () => {
+            props.changeTaskDescriptor(props.taskID);
+          }}
         >
-          <Text style = { styles.defaultText }>
-            { task.title }   
-          </Text>
-        </View>
-        {/* Right side of task with edit and subtasks buttons */}
-        <View style = { { width: '50%' } }>
-          {/* Edit Button */}
-          <TouchableHighlight 
-            style = { styles.taskPanelEdit }
-            onPress = { () => {
-              props.changeTaskDescriptor(task.ID);
-            }}
-          >
-            <View style = { { alignItems: 'center' } }>
-              <Text style = { [styles.defaultText, { fontSize: 20 }] }>Edit</Text>
-            </View>
-          </TouchableHighlight>
-          {/* Subtasks Button */}
-          <TouchableHighlight 
-            style = { styles.taskPanelSubtasks }
-            onPress = { goToSubTask }
-          >
-            <View style = { { alignItems: 'center' } }>
-              <Text style = { [styles.defaultText, { fontSize: 20 }] }>Subtasks</Text>
-            </View>
-          </TouchableHighlight>
-        </View>
+          <View style = { { alignItems: 'center' } }>
+            <Text style = { [styles.defaultText, { fontSize: 20 }] }>Edit</Text>
+          </View>
+        </TouchableHighlight>
+        {/* Subtasks Button */}
+        <TouchableHighlight 
+          style = { styles.taskPanelSubtasks }
+          onPress = { goToSubTask }
+        >
+          <View style = { { alignItems: 'center' } }>
+            <Text style = { [styles.defaultText, { fontSize: 20 }] }>Subtasks</Text>
+          </View>
+        </TouchableHighlight>
       </View>
-    );
-  } else {
-    return(
-      <View style = { styles.taskPanelEmpty }>
-        <Text>nothing</Text>
-      </View>
-    );
-  }
+    </View>
+  );
 }
 
 const AddTaskButton= props => {
@@ -228,38 +364,10 @@ const AddTaskButton= props => {
   );
 }
 
-const TaskList = props =>{
-
-  return(
-    <View>
-    <FlatList
-    style = { { width: "75%" } }
-    data = { props.allProjectTasks }
-    renderItem = { ({item}) => 
-    <React.StrictMode>
-      <TaskPanel
-        taskID = { item }
-        navigation = { props.navigation }
-        projectID = { props.projectID }
-        userId = { props.user }
-        changeTaskDescriptor = { props.changeTaskDescriptor }
-        changeAllProjectTasks = { props.changeAllProjectTasks }
-      />
-    </React.StrictMode>
-    }
-    keyExtractor = { item => item }
-  />
-    { (props.allProjectTasks == null) &&
-      <Text>No Tasks</Text>
-    }
-  </View>
-  );
-}
-
 //props.currentTask
 const TaskModal = props => {
   const [title, changeTitle] = useState("");
-  const [description, changeDescription] = useState("hello");
+  const [description, changeDescription] = useState("");
  
   useEffect(() => {
     database().ref(`/Database/Tasks/${props.currentTask}`).once("value", updateTaskInfo);
@@ -270,49 +378,12 @@ const TaskModal = props => {
     changeDescription(snapshot.val().text);
   }
 
-  const deleteAllTasks = () => {
-    deleteTasks(props.currentTask);
-    props.changeVisibility(false);
-  };
-
-  /** 
-  * Deletes deltaskID and its subtasks for the current project
-  * @param delTaskID is string representing id of task to delete along with its subtasks
-  */
-  const deleteTasks = delTaskID => {
-    database().ref("/Database/Tasks/" + delTaskID).once("value", snapshot => {
-      //Recursively calls on each of subtasks
-      if (snapshot?.val()?.subTasks != undefined){
-        for(let i = 0; i < snapshot?.val()?.subTasks.length; i++){
-          deleteTasks(snapshot?.val()?.subTasks[i]);
-        }
-      }
-      //Then deletes delTaskID task from database, as well as from its parent's list of subtasks
-      if (snapshot.val().parentTask != "none"){
-        database().ref("/Database/Tasks/" + snapshot.val().parentTask).once("value", snap => {
-          const array = snap.val().subTasks.filter(ID => ID != delTaskID);
-          database().ref("/Database/Tasks/" + snapshot.val().parentTask).update({
-            subTasks: array,
-          });
-        });
-        database().ref("/Database/Tasks/" + delTaskID).remove();
-      } else {
-        database().ref("/Database/Projects/" + props.currentProj).once("value", snap => {
-          const array = snap.val().tasks.filter(ID => ID != delTaskID);
-          database().ref("/Database/Projects/" + props.currentProj).update({
-            tasks: array,
-          });
-          database().ref("/Database/Tasks/" + delTaskID).remove();
-        });
-      }
-    });    
-  };
-
   const isTitle = () => {
     if (title != ""){
       database().ref("/Database/Tasks/" + props.currentTask).update({
         title: title
       });
+      props.updatedTaskObjectTitle(props.currentTask, title);
     }
   }
 
@@ -321,6 +392,7 @@ const TaskModal = props => {
       database().ref("/Database/Tasks/" + props.currentTask).update({
         text: description
       });
+      props.updatedTaskObjectDescription(props.currentTask, description);
     }
   }
 
@@ -362,7 +434,7 @@ const TaskModal = props => {
               />
               <DeleteProjectButton
                 deleteButtonText = { "Delete Tasks" }
-                deleteProjectFunction = { deleteAllTasks }
+                deleteProjectFunction = { props.deleteAllTasks }
               />
               <SaveOrCancelButtons
                 isTitle = {isTitle}
