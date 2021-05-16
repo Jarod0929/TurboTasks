@@ -53,7 +53,7 @@ export function Settings({ route, navigation }){
       changeInputTextForPassword('Enter your password');
     } else {
       changeAccepted('False');
-      changeInputTextForPassword("Something Went Wrong");
+      changeInputTextForPassword("None-Empty");
     }    
   };
 
@@ -97,7 +97,7 @@ export function Settings({ route, navigation }){
      
     } else {
       changeUserEnteredPassword('');
-      changeInputTextForUsername("Something Went Wrong");
+      changeInputTextForUsername("None-Empty");
     }   
    
   };
