@@ -19,6 +19,7 @@ import {  useFocusEffect } from '@react-navigation/native';
 import Icon from "react-native-vector-icons/AntDesign";
  
 export function Project ({ navigation, route }) { 
+ 
   const [currentTask, changeCurrentTask] = useState(null); //ID of task being displayed in modal
   const [visibility, changeVisibility] = useState(false); //visibility toggle for modal
 

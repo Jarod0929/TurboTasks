@@ -89,6 +89,7 @@ export function ProjectList({ route, navigation }) {
         deletionPage = { deletionPage }
         navigation = { navigation }
         route = { route }
+        user = { route.params.user }
       />
     </TopBar>
   );

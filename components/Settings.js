@@ -18,7 +18,8 @@ import * as topBarStyles from './styles/topBarStyles.js';
 //Settings Page for the current logged in User takes:
 //route, user- this is the usersID
 //navigation
-export function Settings({ route, navigation }){
+export function Settings({route, navigation }){
+  
   const [userEnteredPassword, changeUserEnteredPassword] = useState('');//password the user nters into the change password box
   const [userEnteredPasswordForUsername, changeUserEnteredPasswordForUsername] = useState('');//password the user enters into the change username box
  
